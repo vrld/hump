@@ -21,7 +21,7 @@ A vector class implementing everything you want to do with vectors, and some mor
 
 ### Basic ###
 
-#### `function vector(x,y)`  
+#### function vector(x,y)  
 Creates a new vector. Element access with `v.x` and `v.y`.  
 **Parameters:**
 
@@ -31,7 +31,7 @@ Creates a new vector. Element access with `v.x` and `v.y`.
 **Returns:** the vector
 <br /><br />
 
-#### `function isvector(v)`  
+#### function isvector(v)  
 Tests for vector type.  
 **Parameters:**
 
@@ -40,12 +40,12 @@ Tests for vector type.
 **Returns:** `true` if `v` is a vector
 <br /><br />
 
-#### `function Vector:clone()`  
+#### function Vector:clone()  
 Clones a vector. Use when you do not want to create references.  
 **Returns:** New vector with the same coordinates.
 <br /><br />
 
-#### `function Vector:unpack()`  
+#### function Vector:unpack()  
 Unpacks the vector.  
 **Returns:** the coordinate tuple `x, y`
 
@@ -70,19 +70,19 @@ Arithmetic (`+`, `-`, `*`, `/`) and comparative operators (`==`, `<=`, `<`) are 
 
 ### Even more! ###
 
-#### `function vector:permul(other)`  
+#### function vector:permul(other)  
 Perform element-wise multiplication.
 <br /><br />
 
-#### `function vector:len()`  
+#### function vector:len()  
 Get length of vector.
 <br /><br />
 
-#### `function vector:len2()`  
+#### function vector:len2()  
 Get squared length.
 <br /><br />
 
-#### `function vector:dist(other)`  
+#### function vector:dist(other)  
 Get distance to other vector.
 
 **Example:**
@@ -91,23 +91,23 @@ Get distance to other vector.
 	print(a:dist(b)) -- prints 1.4142135623731`
 <br /><br />
 
-#### `function vector:normalized()`  
+#### function vector:normalized()  
 Get normalized vector. The original vector remains unchanged.
 <br /><br />
 
-#### `function vector:normalize_inplace()`  
+#### function vector:normalize_inplace()  
 Normalize vector and return it.  
 **Warning:** This will change the state of all references to this vector.
 <br /><br />
 
-#### `function Vector:rotated(phi)`  
+#### function Vector:rotated(phi)  
 Get rotated vector. The original vector remains unchanged.  
 **Parameters:**
 
 *   _[number]_ `phi`: Rotation angle in radians.
 <br /><br />
 
-#### `function Vector:rotate_inplace(phi)`  
+#### function Vector:rotate_inplace(phi)  
 Rotate the vector and return it.  
 **Warning:** This will change the state of all references to this vector.
 <br /><br />
@@ -118,7 +118,7 @@ class.lua
 Simple class-like system for Lua. Supports definition of class types and inheritance of functions.
 For an example how to use this, see below.
 
-#### `function Class(constructor`)**</>
+#### function Class(constructor)
 Creates a new unnamed class.
 **Parameters:**
 
@@ -140,7 +140,7 @@ Creates a new unnamed class.
 	print("Garfield: " .. garfield:stats(), "Felix: " .. felix:stats())
 <br /><br />
 
-#### `function Class{name = name, constructor}`  
+#### function Class{name = name, constructor}  
 Create a named class, i.e. define a __tostring metamethod. Parameters are the same as above.
 Great for debugging. Both `name` and `constructor` can be omitted (but why would you want to?)
 
@@ -153,11 +153,11 @@ Great for debugging. Both `name` and `constructor` can be omitted (but why would
 	print(Feline) -- prints 'Feline'
 <br /><br />
 
-#### `function Interface(name)`  
+#### function Interface(name)  
 Shortcut to `Class{name = name}`, i.e. a possibly named class without constructor.
 
 
-#### `function Inherit(class, super, ...)`  
+#### function Inherit(class, super, ...)  
 Add functions of `super` to `class`. Multiple interfaces can be defined.  
 `super`'s constructor can be accessed via super.construct(self). See example below.
 
@@ -208,7 +208,7 @@ _Depends on vector.lua_
 Camera class to display only a certain zoomed and rotated region of the game.
 You can have multiple cameras in one game.
 
-#### `function Camera(pos, zoom, rotation)`  
+#### function Camera(pos, zoom, rotation)  
 Create a new camera with position `pos`, zoom `zoom` and rotation `rotation`.
 **Parameters:**
 
@@ -219,15 +219,15 @@ Create a new camera with position `pos`, zoom `zoom` and rotation `rotation`.
 **Returns:** The new camera object.
 <br /><br />
 
-#### `function camera:rotate(phi)`  
+#### function camera:rotate(phi)  
 Rotate camera by `phi` radians. Same as `camera.rot = camera.rot + phi`.
 <br /><br />
 
-#### `function camera:translate(t)`  
+#### function camera:translate(t)  
 Translate (move) camera by vector `t`. Same as `camera.pos = camera.pos + t.
 <br /><br />
 
-#### `function camera:draw(func)`  
+#### function camera:draw(func)  
 Apply camera transformation to drawings in function `func`. Shortcut to
 `camera:apply()` and `camera:deapply()` (see below).
 
@@ -236,11 +236,11 @@ Apply camera transformation to drawings in function `func`. Shortcut to
 	cam:draw(function() love.graphics.rectangle('fill', -100,-100, 200,200) end)
 <br /><br />
 
-#### `function camera:apply()`  
+#### function camera:apply()  
 Apply camera transformations to every drawing operation until the next `camera:deapply()`.
 <br /><br />
 
-#### `function camera:deapply()`  
+#### function camera:deapply()  
 Revert camera transformations for the rest of the drawing operations.
 
 **Example:** (equivalent to the `cam:draw()` example above)
@@ -250,12 +250,12 @@ Revert camera transformations for the rest of the drawing operations.
 	camera:deapply()
 <br /><br />
 
-#### `function camera:transform(p)`  
+#### function camera:transform(p)  
 Transform vector `p` from camera coordinates to world coordinates.
 You probably won't need this, but it is the basis to `camera:mousepos()`.
 <br /><br />
 
-#### `function camera:mousepos()`  
+#### function camera:mousepos()  
 Get mouse position in world coordinates, i.e. the position the users mouse
 is currently when camera transformations are applied. Use this for _any_
 mouse interaction with transformed objects in your game.
