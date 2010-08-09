@@ -1,0 +1,95 @@
+h1. HUMP - Helper Utilities for Massive Progression
+
+__HUMP__ is a small collection of tools for developing games with LÖVE.
+
+h2. Contents:
+
+* *vector.lua*: powerful vector class (pure lua)
+* *class.lua*: "class" system supporting function inheritance
+* *camera.lua*: translate-, zoom- and rotatable camera
+* *gamestate.lua*: class to handle gamestates
+
+h1. Documentation
+
+h2. vector.lua
+
+h4. Basic
+
+@function vector(x,y)@
+Creates a new vector. Element access with @v.x@ and @v.y@.
+|Parameters:| @x@ _number_ | x coordinate |
+|           | @y@ _number_ | y coordinate |
+|Returns:   | the vector   |              |
+
+
+@function isvector(v)@
+Tests for vector type.
+|Parameters:| @v@ |
+|Returns:   | @true@ if @v@ is a vector |
+
+
+@function Vector:clone()@
+Clones a vector.
+|Returns:   | new vector with the same coordinates |
+
+
+@function Vector:unpack()@
+Unpacks the vector.
+|Returns:   | the coordinate tuple @x, y@ |
+*Example:*
+@v = vector(1,2)
+print(v:unpack()) -- prints "1     2"@
+
+
+h4. Operators
+
+Arithmetic (@+@, @-@, @*@, @/@) and comparative operators (@==@, @<=@, @<@) are defined.
+
+* @+@ and @-@ _only_ work on vectors. @-@ is also the unary minus (e.g. @print(-vector(1,0)) -- prints (-1,0)@
+* @a * b@ works on vectors and numbers: ==<br />==If @a@ is a number and @b@ is a vector (or vice versa), the result the scalar multiplication. If @a@ and @b@ are vectors, then the result is the _dot product_.|
+* @a / b@ is only defined for @a@ being a vector and @b@ being a number. Result is the same as @a * 1/b@
+
+@<=@ and @<@ sort lexically, i.e. @a <= b@ if it holds: @a.x < b.x@ or @a.y < b.y@ if @a.x == b.x@
+
+
+h4. Even more!
+
+@function vector:permul(other)@
+Perform element-wise multiplication.
+
+@function vector:len()@
+Get length of vector.
+
+@function vector:len2()@
+Get squared length.
+
+@function vector:dist(other)@
+Get distance to other vector.
+*Example:*
+@a,b = vector(0,1), vector(1,0)
+print(a:dist(b)) -- prints 1.4142135623731@
+
+@function vector:normalized()@
+Get normalized vector. The original vector remains unchanged.
+
+@function vector:normalize_inplace()@
+Normalize vector and return it.
+*Warning:* This will change the state of all references to this vector.
+
+@function Vector:rotated(phi)@
+Get rotated vector. The original vector remains unchanged.
+|Parameters:| @phi@ | Rotation angle in radians. |
+
+@function Vector:rotate_inplace(phi)@
+Rotate the vector and return it.
+*Warning:* This will change the state of all references to this vector.
+
+
+h2. class.lua
+
+
+h2. camera.lua
+_Depends on vector.lua_
+
+
+h2. gamestate.lua
