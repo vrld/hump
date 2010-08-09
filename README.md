@@ -21,35 +21,35 @@ A vector class implementing everything you want to do with vectors, and some mor
 
 ### Basic ###
 
-**function vector(x,y)**<br />
-Creates a new vector. Element access with `v.x` and `v.y`.<br />
-*Parameters:*
+#### `function vector(x,y)`  
+Creates a new vector. Element access with `v.x` and `v.y`.  
+**Parameters:**
 
-*   `x` **[number]**: x coordinate
-*   `y` **[number]**: y coordinate
+*   _[number]_ `x`: x coordinate
+*   _[number]_ `y`: y coordinate
 
-*Returns:* the vector
+**Returns:** the vector
+<br /><br />
 
+#### `function isvector(v)`  
+Tests for vector type.  
+**Parameters:**
 
-**function isvector(v)**<br />
-Tests for vector type.<br />
-*Parameters:*
+*   `v`: variable to test  
 
-*   `v`: variable to test<br />
+**Returns:** `true` if `v` is a vector
+<br /><br />
 
-*Returns:* `true` if `v` is a vector
+#### `function Vector:clone()`  
+Clones a vector. Use when you do not want to create references.  
+**Returns:** New vector with the same coordinates.
+<br /><br />
 
+#### `function Vector:unpack()`  
+Unpacks the vector.  
+**Returns:** the coordinate tuple `x, y`
 
-**function Vector:clone()**<br />
-Clones a vector. Use when you do not want to create references.<br />
-*Returns:* New vector with the same coordinates.
-
-
-**function Vector:unpack()**<br />
-Unpacks the vector.<br />
-*Returns:* the coordinate tuple `x, y`
-
-*Example:*
+**Example:**
 
 	v = vector(1,2)
 	print(v:unpack()) -- prints "1     2"
@@ -60,8 +60,8 @@ Unpacks the vector.<br />
 Arithmetic (`+`, `-`, `*`, `/`) and comparative operators (`==`, `<=`, `<`) are defined.
 
 *   `+` and `-` _only_ work on vectors. `-` is also the unary minus (e.g. `print(-vector(1,0)) -- prints (-1,0)`
-*   `a * b` works on vectors and numbers:<br />
-    -   If `a` is a number and `b` is a vector (or vice versa), the result the scalar multiplication.<br />
+*   `a * b` works on vectors and numbers:  
+    -   If `a` is a number and `b` is a vector (or vice versa), the result the scalar multiplication.  
     -   If `a` and `b` both are vectors, then the result is the _dot product_.
 *   `a / b` is only defined for `a` being a vector and `b` being a number. Result is the same as `a * 1/b`
 
@@ -70,47 +70,47 @@ Arithmetic (`+`, `-`, `*`, `/`) and comparative operators (`==`, `<=`, `<`) are 
 
 ### Even more! ###
 
-**function vector:permul(other)**<br />
+#### `function vector:permul(other)`  
 Perform element-wise multiplication.
+<br /><br />
 
-
-**function vector:len()**<br />
+#### `function vector:len()`  
 Get length of vector.
+<br /><br />
 
-
-**function vector:len2()**<br />
+#### `function vector:len2()`  
 Get squared length.
+<br /><br />
 
-
-**function vector:dist(other)**<br />
+#### `function vector:dist(other)`  
 Get distance to other vector.
 
-*Example:*
+**Example:**
 
 	a,b = vector(0,1), vector(1,0)
 	print(a:dist(b)) -- prints 1.4142135623731`
+<br /><br />
 
-
-**function vector:normalized()**<br />
+#### `function vector:normalized()`  
 Get normalized vector. The original vector remains unchanged.
+<br /><br />
 
+#### `function vector:normalize_inplace()`  
+Normalize vector and return it.  
+**Warning:** This will change the state of all references to this vector.
+<br /><br />
 
-**function vector:normalize_inplace()**<br />
-Normalize vector and return it.<br />
-*Warning:* This will change the state of all references to this vector.
+#### `function Vector:rotated(phi)`  
+Get rotated vector. The original vector remains unchanged.  
+**Parameters:**
 
+*   _[number]_ `phi`: Rotation angle in radians.
+<br /><br />
 
-**function Vector:rotated(phi)**<br />
-Get rotated vector. The original vector remains unchanged.<br />
-*Parameters:*
-
-*   `phi` **[number]**: Rotation angle in radians.
-
-
-**function Vector:rotate_inplace(phi)**<br />
-Rotate the vector and return it.<br />
-*Warning:* This will change the state of all references to this vector.
-
+#### `function Vector:rotate_inplace(phi)`  
+Rotate the vector and return it.  
+**Warning:** This will change the state of all references to this vector.
+<br /><br />
 
 class.lua
 ---------
@@ -118,13 +118,13 @@ class.lua
 Simple class-like system for Lua. Supports definition of class types and inheritance of functions.
 For an example how to use this, see below.
 
-**function Class(constructor)**<br/>
+#### `function Class(constructor`)**</>
 Creates a new unnamed class.
-*Parameters:*
+**Parameters:**
 
-*   _(optional)_ `constructor`: A function used to construct the class. The first parameter of this function is the object, the others are parameters given upon construction.
+*   _[optional function]_ `constructor`: A function used to construct the class. The first parameter of this function is the object, the others are parameters given upon construction.
 
-*Example:*
+**Example:**
 
 	Feline = Class(function(self, size, weight)
 		self.size = size self.weight = weight
@@ -138,27 +138,27 @@ Creates a new unnamed class.
 	felix = Feline(.8, 12)
 
 	print("Garfield: " .. garfield:stats(), "Felix: " .. felix:stats())
+<br /><br />
 
-
-**function Class{name = name, constructor}**<br />
+#### `function Class{name = name, constructor}`  
 Create a named class, i.e. define a __tostring metamethod. Parameters are the same as above.
 Great for debugging. Both `name` and `constructor` can be omitted (but why would you want to?)
 
-*Example:*
+**Example:**
 
 	Feline = Class{name = "Feline", function(self, size, weight)
 		self.size = size self.weight = weight
 	end}
 	
 	print(Feline) -- prints 'Feline'
+<br /><br />
 
-
-**function Interface(name)**<br />
+#### `function Interface(name)`  
 Shortcut to `Class{name = name}`, i.e. a possibly named class without constructor.
 
 
-**function Inherit(class, super, ...)**<br />
-Add functions of `super` to `class`. Multiple interfaces can be defined.<br />
+#### `function Inherit(class, super, ...)`  
+Add functions of `super` to `class`. Multiple interfaces can be defined.  
 `super`'s constructor can be accessed via super.construct(self). See example below.
 
 
@@ -208,58 +208,89 @@ _Depends on vector.lua_
 Camera class to display only a certain zoomed and rotated region of the game.
 You can have multiple cameras in one game.
 
-**function Camera(pos, zoom, rotation)**<br />
+#### `function Camera(pos, zoom, rotation)`  
 Create a new camera with position `pos`, zoom `zoom` and rotation `rotation`.
 **Parameters:**
 
-*   _(optional)_ `pos` **[vector]**: Initial position of the camera. Defaults to (0,0).
-*   _(optional)_ `zoom` **[number]**: Initial zoom. Defaults to 1.
-*   _(optional)_ `rotation` **[number]**: Initial rotation in radians. Defaults to 0.
+*   _[optional vector]_ `pos`: Initial position of the camera. Defaults to (0,0).
+*   _[optional number]_ `zoom`: Initial zoom. Defaults to 1.
+*   _[optional number]_ `rotation`: Initial rotation in radians. Defaults to 0.
 
 **Returns:** The new camera object.
+<br /><br />
 
-
-**function camera:rotate(phi)**<br />
+#### `function camera:rotate(phi)`  
 Rotate camera by `phi` radians. Same as `camera.rot = camera.rot + phi`.
+<br /><br />
 
-
-**function camera:translate(t)**<br />
+#### `function camera:translate(t)`  
 Translate (move) camera by vector `t`. Same as `camera.pos = camera.pos + t.
+<br /><br />
 
-**function camera:draw(func)**<br />
+#### `function camera:draw(func)`  
 Apply camera transformation to drawings in function `func`. Shortcut to
 `camera:apply()` and `camera:deapply()` (see below).
 
-*Example:*
+**Example:**
 
 	cam:draw(function() love.graphics.rectangle('fill', -100,-100, 200,200) end)
+<br /><br />
 
-
-**function camera:apply()**<br />
+#### `function camera:apply()`  
 Apply camera transformations to every drawing operation until the next `camera:deapply()`.
+<br /><br />
 
-
-**function camera:deapply()**<br />
+#### `function camera:deapply()`  
 Revert camera transformations for the rest of the drawing operations.
 
-*Example:* (equivalent to the `cam:draw()` example above)
+**Example:** (equivalent to the `cam:draw()` example above)
 
 	camera:apply()
 	love.graphics.rectangle('fill', -100,-100, 200,200)
 	camera:deapply()
+<br /><br />
 
-
-**function camera:transform(p)**<br />
+#### `function camera:transform(p)`  
 Transform vector `p` from camera coordinates to world coordinates.
 You probably won't need this, but it is the basis to `camera:mousepos()`.
+<br /><br />
 
-
-**function camera:mousepos()**<br />
+#### `function camera:mousepos()`  
 Get mouse position in world coordinates, i.e. the position the users mouse
 is currently when camera transformations are applied. Use this for _any_
 mouse interaction with transformed objects in your game.
 
 
+
 gamestate.lua
 -------------
 **TODO**
+
+
+License
+=======
+Yay, *free software*:
+
+> Copyright (c) 2010 Matthias Richter  
+>  
+> Permission is hereby granted, free of charge, to any person obtaining a copy  
+> of this software and associated documentation files (the "Software"), to deal  
+> in the Software without restriction, including without limitation the rights  
+> to use, copy, modify, merge, publish, distribute, sublicense, and/or sell  
+> copies of the Software, and to permit persons to whom the Software is  
+> furnished to do so, subject to the following conditions:  
+>  
+> The above copyright notice and this permission notice shall be included in  
+> all copies or substantial portions of the Software.  
+>  
+> Except as contained in this notice, the name(s) of the above copyright holders  
+> shall not be used in advertising or otherwise to promote the sale, use or  
+> other dealings in this Software without prior written authorization.  
+>  
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  
+> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  
+> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  
+> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  
+> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  
+> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN  
+> THE SOFTWARE.  
