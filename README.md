@@ -118,24 +118,6 @@ class.lua
 Simple class-like system for Lua. Supports definition of class types and inheritance of functions.
 For an example how to use this, see below.
 
-Be careful when using metamethods like `__add` or `__mul`: When subclass inherits those methods
-from a superclass, but does not overwrite them, the result of the operation will be of the type
-superclass. Consider the following:
-
-    A = Class(function(self, x) self.x = x end)
-    function A:__add(other) return A(self.x + other.x) end
-    function A:print() print("A:", self.x) end
-    
-    B = Class(function(self, x, y) A.construct(self, x) self.y = y end)
-    Inherit(B, A)
-    function B:print() print("B:", self.x, self.y) end
-    function B:foo() print("foo") end
-    
-    one, two = B(1,2), B(3,4)
-    result = one + two
-    result:print()  -- prints "A:    4"
-    result:foo()    -- error: method does not exist
-
 
 #### function Class(constructor)
 Creates a new unnamed class.
@@ -218,6 +200,26 @@ Add functions of `super` to `class`. Multiple interfaces can be defined.
 	print(felix:stats(), hobbes:stats())
 	felix:speak()
 	hobbes:speak()
+
+### Warning ###
+
+Be careful when using metamethods like `__add` or `__mul`: When subclass inherits those methods
+from a superclass, but does not overwrite them, the result of the operation will be of the type
+superclass. Consider the following:
+
+    A = Class(function(self, x) self.x = x end)
+    function A:__add(other) return A(self.x + other.x) end
+    function A:print() print("A:", self.x) end
+    
+    B = Class(function(self, x, y) A.construct(self, x) self.y = y end)
+    Inherit(B, A)
+    function B:print() print("B:", self.x, self.y) end
+    function B:foo() print("foo") end
+    
+    one, two = B(1,2), B(3,4)
+    result = one + two
+    result:print()  -- prints "A:    4"
+    result:foo()    -- error: method does not exist
 
 
 camera.lua
