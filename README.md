@@ -315,26 +315,32 @@ the additionals arguments given to `Gamestate.switch`.
 *    `...`: Additional arguments to pass
 
 **Returns:** the result of `to:enter(current, ...)`
+<br /><br />
 
 
 #### function Gamestate.update(dt)  
 Calls `update(dt)` on current gamestate.
+<br /><br />
 
 
 #### function Gamestate.draw()  
 Calls `draw()` on current gamestate.
+<br /><br />
 
 
 #### function Gamestate.keypressed(key, unicode)  
 Calls `keypressed(key, unicode)` on current gamestate.
+<br /><br />
 
 
 #### function Gamestate.keyreleased(key)  
 Calls `keyreleased(key` on current gamestate.
+<br /><br />
 
 
 #### function Gamestate.mousereleased(x,y,btn)  
 Calls `mousereleased(x,y,btn) on the current gamestate.
+<br /><br />
 
 
 #### Gamestate.registerEvents()  
