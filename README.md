@@ -118,6 +118,25 @@ class.lua
 Simple class-like system for Lua. Supports definition of class types and inheritance of functions.
 For an example how to use this, see below.
 
+Be careful when using metamethods like `__add` or `__mul`: When subclass inherits those methods
+from a superclass, but does not overwrite them, the result of the operation will be of the type
+superclass. Consider the following:
+
+    A = Class(function(self, x) self.x = x end)
+    function A:__add(other) return A(self.x + other.x) end
+    function A:print() print("A:", self.x) end
+    
+    B = Class(function(self, x, y) A.construct(self, x) self.y = y end)
+    Inherit(B, A)
+    function B:print() print("B:", self.x, self.y) end
+    function B:foo() print("foo") end
+    
+    one, two = B(1,2), B(3,4)
+    result = one + two
+    result:print()  -- prints "A:    4"
+    result:foo()    -- error: method does not exist
+
+
 #### function Class(constructor)
 Creates a new unnamed class.
 **Parameters:**
@@ -219,13 +238,16 @@ Create a new camera with position `pos`, zoom `zoom` and rotation `rotation`.
 **Returns:** The new camera object.
 <br /><br />
 
+
 #### function camera:rotate(phi)  
 Rotate camera by `phi` radians. Same as `camera.rot = camera.rot + phi`.
 <br /><br />
 
+
 #### function camera:translate(t)  
 Translate (move) camera by vector `t`. Same as `camera.pos = camera.pos + t.
 <br /><br />
+
 
 #### function camera:draw(func)  
 Apply camera transformation to drawings in function `func`. Shortcut to
@@ -236,9 +258,11 @@ Apply camera transformation to drawings in function `func`. Shortcut to
 	cam:draw(function() love.graphics.rectangle('fill', -100,-100, 200,200) end)
 <br /><br />
 
+
 #### function camera:apply()  
 Apply camera transformations to every drawing operation until the next `camera:deapply()`.
 <br /><br />
+
 
 #### function camera:deapply()  
 Revert camera transformations for the rest of the drawing operations.
@@ -249,6 +273,7 @@ Revert camera transformations for the rest of the drawing operations.
 	love.graphics.rectangle('fill', -100,-100, 200,200)
 	camera:deapply()
 <br /><br />
+
 
 #### function camera:transform(p)  
 Transform vector `p` from camera coordinates to world coordinates.
@@ -264,7 +289,57 @@ mouse interaction with transformed objects in your game.
 
 gamestate.lua
 -------------
-**TODO**
+Useful to separate different states of your game (hence "gamestate") like
+title screens, level loading, main game, etc. Each gamestate can have it's
+own `update()`, `draw()`, `keyreleased()`, `keypressed()` and `mousereleased()`
+which correspond to the ones defined in `love`.
+
+Additionally, each gamestate can define a `enter` and `leave` function, which
+are called when using `Gamestate.switch`. See below.
+
+#### function Gamestate.new()  
+Create a new gamestate.  
+**Returns:** The new (but empty) gamestate object.
+
+
+#### function Gamestate.switch(to, ...)  
+Switch the gamestate.  
+Calls `leave` on the currently active gamestate.  
+Calls `enter(current, ...)` on the target gamestate, where
+`current` is the gamestate before the switch and `...` are 
+the additionals arguments given to `Gamestate.switch`.  
+**Parameters:**
+*    _[gamestate]_ `to`: The target gamestate.
+*    `...`: Additional arguments to pass
+
+**Returns:** the result of `to:enter(current, ...)`
+
+
+#### function Gamestate.update(dt)  
+Calls `update(dt)` on current gamestate.
+
+
+#### function Gamestate.draw()  
+Calls `draw()` on current gamestate.
+
+
+#### function Gamestate.keypressed(key, unicode)  
+Calls `keypressed(key, unicode)` on current gamestate.
+
+
+#### function Gamestate.keyreleased(key)  
+Calls `keyreleased(key` on current gamestate.
+
+
+#### function Gamestate.mousereleased(x,y,btn)  
+Calls `mousereleased(x,y,btn) on the current gamestate.
+
+
+#### Gamestate.registerEvents()  
+Registers all above events so you don't need to call then in your
+`love.*` routines. It is an error to call this anywhere else than
+`love.load()`, since it overwrites the callbacks. Dont worry though,
+your callbacks will still be executed.
 
 
 License
