@@ -14,7 +14,7 @@ Contents:
 Documentation
 =============
 
-You can find the documentation here: [http://vrld.github.com/hump/](http://vrld.github.com/hump/ "project page"]
+You can find the documentation here: [http://vrld.github.com/hump/](http://vrld.github.com/hump/ "project page")
 
 
 License
