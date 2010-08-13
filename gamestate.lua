@@ -1,10 +1,11 @@
 Gamestate = {}
 
+local function __NULL__() end
 -- default gamestate produces error on every callback
 local function __ERROR__() error("Gamestate not initialized. Use Gamestate.switch()") end
 Gamestate.current = {
     enter          = __ERROR__,
-    leave          = __ERROR__,
+    leave          = __NULL__,
     update         = __ERROR__,
     draw           = __ERROR__,
     keyreleased    = __ERROR__,
@@ -12,7 +13,6 @@ Gamestate.current = {
     mousereleased  = __ERROR__,
 }
 
-local function __NULL__() end
 function Gamestate.new()
 	return {
 		enter          = __NULL__,
@@ -27,9 +27,7 @@ end
 
 function Gamestate.switch(to, ...)
 	if not to then return end
-	if Gamestate.current then
-		Gamestate.current:leave()
-	end
+    Gamestate.current:leave()
 	local pre = Gamestate.current
 	Gamestate.current = to
 	Gamestate.current:enter(pre, ...)
