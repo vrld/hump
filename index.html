@@ -42,9 +42,12 @@
 	.functionlist a { text-decoration: none; font-weight:bold; color: #506060; }
 	.functionlist a:hover { color: black; }
 
+    td, th { vertical-align: top; }
 	.doc table { margin-top: 5px; }
+    td, th { border-top: 1px dashed #ddd; }
 	th { text-align: left; font-weight: normal; font-style: italic; text-decoration: underline; }
-	td { padding-left: 1em; }
+    td { padding-left: 1em; margin: 0; }
+    td.p { text-align: right; }
 	.doc td em { font-size: .8em; font-weight:bold; font-style:normal; padding-right: .6em;}
 
 	.doc pre, code { color: black; padding: 0; font-family: fixed; border: 1px solid #ddd; background: #e7ecec; }
@@ -121,8 +124,8 @@ module by clicking these:
 	<div class="doc"><span class="function">function vector(x,y)<a class="top" href="#vector.lua">^ top</a></span>
 		Creates a new vector. Element access with <code>v.x</code> and <code>v.y</code>.
 		<table>
-			<tr><th>Parameters:</th><td><em>[number]</em><code>x</code>:</td><td>x coordinate</td></tr>
-			<tr><td>           </td><td><em>[number]</em><code>y</code>:</td><td>y coordinate</td></tr>
+			<tr><th>Parameters:</th><td class="p"><em>[number]</em><code>x</code>:</td><td>x coordinate</td></tr>
+			<tr><td>           </td><td class="p"><em>[number]</em><code>y</code>:</td><td>y coordinate</td></tr>
 			<tr><th>Returns:</th><td colspan="2">the vector</td></tr>
 		</table>
 	</div>
@@ -131,7 +134,7 @@ module by clicking these:
 	<div class="doc"><span class="function">function isvector(v)<a class="top" href="#vector.lua">^ top</a></span>
 		Tests for vector type.
 		<table>
-			<tr><th>Parameters:</th><td><code>v</code></td><td>variable to test</td></tr>
+			<tr><th>Parameters:</th><td class="p"><code>v</code>:</td><td>variable to test</td></tr>
 			<tr><th>Returns:</th><td colspan="2"><code>true</code> if <code>v</code> is a vector</td></tr>
 		</table>
 	</div>
@@ -217,7 +220,7 @@ print(a:dist(b)) -- prints 1.4142135623731</pre></td></tr>
 	<div class="doc"><span class="function">function vector:rotated(phi)<a class="top" href="#vector.lua">^ top</a></span>
 		Get rotated vector. The original vector remains unchanged.
 		<table>
-			<tr><th>Parameters:</th><td><em>[number]</em><code>phi</code>:</td><td>Rotation angle in radians.</td></tr>
+			<tr><th>Parameters:</th><td class="p"><em>[number]</em><code>phi</code>:</td><td>Rotation angle in radians.</td></tr>
 		</table>
 	</div>
 
@@ -250,7 +253,7 @@ print(a:dist(b)) -- prints 1.4142135623731</pre></td></tr>
 	<div class="doc"><span class="function">function Class(constructor)<a class="top" href="#class.lua">^ top</a></span>
 		Creates a new unnamed class.
 		<table>
-			<tr><th>Parameters:</th><td><em>[optional function]</em><code>constructor</code></td>
+			<tr><th>Parameters:</th><td class="p" style="width:225px;"><em>[optional function]</em><code>constructor</code></td>
 				<td>A function used to construct the class. The first parameter of this function
 					is the object, the others are parameters given upon construction.</td></tr>
 			<tr><th>Returns:</th><td colspan="2">the new class</td></tr>
@@ -380,15 +383,15 @@ result:foo()    -- error: method does not exist</pre>
 
 	<a name="camera.lua-Camera"></a>
 	<div class="doc"><span class="function">function Camera(pos, zoom, rotation)<a class="top" href="#camera.lua">^ top</a></span>
-		Create a new camera with position pos, zoom zoom and rotation rotation. Parameters:
+		Create a new camera with position pos, zoom zoom and rotation rotation.
 		<table>
-			<tr><th>Parameters:</th><td><em>[optional vector]</em><code>pos</code>:</td>
+			<tr><th>Parameters:</th><td class="p"><em>[optional vector]</em><code>pos</code>:</td>
 				<td>Initial position of the camera. Defaults to <code>(0,0)</code>.</td></tr>
-			<tr><td>           </td><td><em>[optional number]</em><code>zoom</code>:</td>
+			<tr><td>           </td><td class="p"><em>[optional number]</em><code>zoom</code>:</td>
 				<td>Initial zoom. Defaults to <code>1</code>.</td></tr>
-			<tr><td>           </td><td><em>[optional number]</em><code>rotation</code>:</td>
+			<tr><td>           </td><td class="p"><em>[optional number]</em><code>rotation</code>:</td>
 				<td>Initial rotation in radians. Defaults to <code>0</code>.</td></tr>
-			<tr><th>Returns:</th><td colspan="2">a new camera object<td></tr>
+			<tr><th>Returns:</th><td colspan="2">a new camera object</td></tr>
 		</table>
 	</div>
 
@@ -481,8 +484,8 @@ camera:deapply()</pre></td></tr>
         is the gamestate before the switch and <code>...</code> are the additionals arguments given
         to <code>Gamestate.switch</code>.</p>
         <table>
-            <tr><th>Parameters:</th><td><em>[gamestate]</em><code>to</code>:</td><td>target gamestate.</td></tr>
-            <tr><td>           </td><td><code>...</code>:</td><td>additional arguments to pass</td></tr>
+            <tr><th>Parameters:</th><td class="p"><em>[gamestate]</em><code>to</code>:</td><td>target gamestate.</td></tr>
+            <tr><td>           </td><td class="p"><code>...</code>:</td><td>additional arguments to pass</td></tr>
             <tr><th>Returns:</th><td colspan="2">the result of <code>to:enter(current, ...)</code></td></tr>
         </table>
     </div>
@@ -522,27 +525,25 @@ camera:deapply()</pre></td></tr>
     </div>
 
     <a name="gamestate.lua-callbackList"></a>
-    <h4>List of callbacks</h4>
-    <div class="doc"><span class="function">Each gamestate can have a list of callbacks:<a class="top" href="#gamestate.lua">^ top</a></span>
-        <table>
-            <tr><td><code>enter(previous, ...)</code></td>
-                <td>Gets called upon entering the state. <em>Don't call this yourself, use
-                        <code>Gamestate.switch</code> instead.</em></td></tr>
-            <tr><td><code>leave()</code></td>
-                <td>Gets called upon leaving the state. The same warning as with <code>enter</code> applies.</td></tr>
-            <tr><td><code>update(dt)</code></td>
-                <td>Manully called by <code>Gamestate.update</code>, or automatically like <code>love.update</code>
-                    when using <code>Gamestate.registerEvents()</code>.</td></tr>
-            <tr><td><code>draw()</code></td>
-                <td>Manully called by <code>Gamestate.draw</code>, or automatically like <code>love.draw</code></td></tr>
-            <tr><td><code>keypressed(key, unicode)</code></td>
-                <td>Manully called by <code>Gamestate.keypressed</code>, or automatically like <code>love.keypressed</code></td></tr>
-            <tr><td><code>keyreleased(key)</code></td>
-                <td>Manully called by <code>Gamestate.keyreleased</code>, or automatically like <code>love.keyreleased</code></td></tr>
-            <tr><td><code>mousereleased(x,y,btn)</code></td>
-                <td>Manully called by <code>Gamestate.mousereleased</code>, or automatically like <code>love.mousereleased</code></td></tr>
-        </table>
-    </div> 
+    <h4>List of callbacks<a class="top" href="#gamestate.lua">^ top</a></h4>
+    <table class="functionlist">
+        <tr><td><code>enter(previous, ...)</code></td>
+            <td>Gets called upon entering the state. <em>Don't call this yourself, use
+                    <code>Gamestate.switch</code> instead.</em></td></tr>
+        <tr><td><code>leave()</code></td>
+            <td>Gets called upon leaving the state. The same warning as with <code>enter</code> applies.</td></tr>
+        <tr><td><code>update(dt)</code></td>
+            <td>Manully called by <code>Gamestate.update</code>, or automatically like <code>love.update</code>
+                when using <code>Gamestate.registerEvents()</code>.</td></tr>
+        <tr><td><code>draw()</code></td>
+            <td>Manully called by <code>Gamestate.draw</code>, or automatically like <code>love.draw</code></td></tr>
+        <tr><td><code>keypressed(key, unicode)</code></td>
+            <td>Manully called by <code>Gamestate.keypressed</code>, or automatically like <code>love.keypressed</code></td></tr>
+        <tr><td><code>keyreleased(key)</code></td>
+            <td>Manully called by <code>Gamestate.keyreleased</code>, or automatically like <code>love.keyreleased</code></td></tr>
+        <tr><td style="width:200px;"><code>mousereleased(x,y,btn)</code></td>
+            <td>Manully called by <code>Gamestate.mousereleased</code>, or automatically like <code>love.mousereleased</code></td></tr>
+    </table>
 </div>
 
 
