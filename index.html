@@ -384,9 +384,9 @@ result:foo()    -- error: method does not exist</pre>
 		<table>
 			<tr><th>Parameters:</th><td><em>[optional vector]</em><code>pos</code>:</td>
 				<td>Initial position of the camera. Defaults to <code>(0,0)</code>.</td></tr>
-			<tr><td></td><td><em>[optional number]</em><code>zoom</code>:</td>
+			<tr><td>           </td><td><em>[optional number]</em><code>zoom</code>:</td>
 				<td>Initial zoom. Defaults to <code>1</code>.</td></tr>
-			<tr><td></td><td><em>[optional number]</em><code>rotation</code>:</td>
+			<tr><td>           </td><td><em>[optional number]</em><code>rotation</code>:</td>
 				<td>Initial rotation in radians. Defaults to <code>0</code>.</td></tr>
 			<tr><th>Returns:</th><td colspan="2">a new camera object<td></tr>
 		</table>
@@ -446,52 +446,103 @@ camera:deapply()</pre></td></tr>
 	<a name="gamestate.lua"></a>
 	<h3>gamestate.lua<a class="top" href="#doc">^ top</a></h3>
 
-	Useful to separate different states of your game (hence "gamestate") like title screens, level loading, main game, etc. Each gamestate can have it's own update(), draw(), keyreleased(), keypressed() and mousereleased() which correspond to the ones defined in love.
+    <p>Useful to separate different states of your game (hence "gamestate") like title screens, 
+    level loading, main game, etc. Each gamestate can have it's own <code>update()</code>, <code>draw()</code>,
+    <code>keyreleased()</code>, <code>keypressed()</code> and <code>mousereleased()</code> which correspond 
+    to the ones defined in love. See the <a href="#gamestate.lua-callbackList">callback list</a> for more details.</p>
 
-	Additionally, each gamestate can define a enter and leave function, which are called when using Gamestate.switch. See below.
-	function Gamestate.new()
+    <p>Additionally, each gamestate can define a <code>enter(pre, ...)</code> and <code>leave()</code> function,
+    which are called when using <code>Gamestate.switch(to, ...)</code>. <em>Do not attempt to use these functions
+        yourself to initialize the first gamestate,</em> use the <code>switch</code> function instead.</p>
 
-	Create a new gamestate.
-	Returns: The new (but empty) gamestate object.
-	function Gamestate.switch(to, ...)
+    <p>The module defines the following functions:
+    <table class="functionlist">
+        <tr><td><a href="#gamestate.lua-new">Gamestate.new()</a></td><td>New gamestate</td></tr>
+        <tr><td><a href="#gamestate.lua-switch">Gamestate.switch(to, ...)</a></td><td>Switch gamestate</td></tr>
+        <tr><td><a href="#gamestate.lua-update">Gamestate.update(dt)</a></td><td>Call update callback</td></tr>
+        <tr><td><a href="#gamestate.lua-draw">Gamestate.draw()</a></td><td>Call draw callback</td></tr>
+        <tr><td><a href="#gamestate.lua-keypressed">Gamestate.keypressed(key, unicode)</a></td><td>Call keypressed callback</td></tr>
+        <tr><td><a href="#gamestate.lua-keyreleased">Gamestate.keyreleased(key)</a></td><td>Call keyreleased callback</td></tr>
+        <tr><td><a href="#gamestate.lua-mousereleased">Gamestate.mousereleased(x,y,btn)</a></td><td>Call mousereleased callback</td></tr>
+        <tr><td><a href="#gamestate.lua-registerEvents">Gamestate.registerEvents()</a></td><td>Register all callbacks</td></tr>
+	</table></p>
 
-	Switch the gamestate.
-	Calls leave on the currently active gamestate.
-	Calls enter(current, ...) on the target gamestate, where current is the gamestate before the switch and ... are the additionals arguments given to Gamestate.switch.
-	Parameters: * [gamestate] to: The target gamestate. * ...: Additional arguments to pass
+    <a name="gamestate.lua-new"></a>
+    <div class="doc"><span class="function">function Gamestate.new()<a class="top" href="#gamestate.lua">^ top</a></span>
+        Create a new gamestate.
+        <table><tr><th>Returns:</th><td>The new (but empty) gamestate object.</td></tr></table>
+    </div>
 
-	Returns: the result of to:enter(current, ...)
+    <a name="gamestate.lua-switch"></a>
+    <div class="doc"><span class="function">function Gamestate.switch(to, ...)<a class="top" href="#gamestate.lua">^ top</a></span>
+        Switch the gamestate.
+        <p>Calls <code>leave()</code> on the currently active gamestate.</p>
+        <p>Calls <code>enter(current, ...)</code> on the target gamestate, where <code>current</code>
+        is the gamestate before the switch and <code>...</code> are the additionals arguments given
+        to <code>Gamestate.switch</code>.</p>
+        <table>
+            <tr><th>Parameters:</th><td><em>[gamestate]</em><code>to</code>:</td><td>target gamestate.</td></tr>
+            <tr><td>           </td><td><code>...</code>:</td><td>additional arguments to pass</td></tr>
+            <tr><th>Returns:</th><td colspan="2">the result of <code>to:enter(current, ...)</code></td></tr>
+        </table>
+    </div>
+
+    <a name="gamestate.lua-update"></a>
+    <div class="doc"><span class="function">function Gamestate.update(dt)<a class="top" href="#gamestate.lua">^ top</a></span>
+        Calls <code>update(dt)</code> on current gamestate.
+    </div>
+
+    <a name="gamestate.lua-draw"></a>
+    <div class="doc"><span class="function">function Gamestate.draw()<a class="top" href="#gamestate.lua">^ top</a></span>
+        Calls <code>draw()</code> on current gamestate.
+    </div>
+
+    <a name="gamestate.lua-keypressed"></a>
+    <div class="doc"><span class="function">function Gamestate.keypressed(key, unicode)<a class="top" href="#gamestate.lua">^ top</a></span>
+        Calls <code>keypressed(key, unicode)</code> on current gamestate.
+    </div>
 
 
-	function Gamestate.update(dt)
-
-	Calls update(dt) on current gamestate.
-
-
-	function Gamestate.draw()
-
-	Calls draw() on current gamestate.
+    <a name="gamestate.lua-keyreleased"></a>
+    <div class="doc"><span class="function">function Gamestate.keyreleased(key)<a class="top" href="#gamestate.lua">^ top</a></span>
+        Calls <code>keyreleased(key)</code> on current gamestate.
+    </div>
 
 
-	function Gamestate.keypressed(key, unicode)
+    <a name="gamestate.lua-mousereleased"></a>
+    <div class="doc"><span class="function">function Gamestate.mousereleased(x,y,btn)<a class="top" href="#gamestate.lua">^ top</a></span>
+        Calls <code>mousereleased(x,y,btn)</code> on the current gamestate.
+    </div>
 
-	Calls keypressed(key, unicode) on current gamestate.
+    <a name="gamestate.lua-registerEvents"></a>
+    <div class="doc"><span class="function">function Gamestate.registerEvents()<a class="top" href="#gamestate.lua">^ top</a></span>
+        Registers all above events so you don't need to call then in your <code>love.*</code> routines. 
+        <p>It is an error to call this anywhere else than <code>love.load()</code>, since it overwrites the 
+        callbacks. Dont worry though, your callbacks will still be executed.</p>
+    </div>
 
-
-	function Gamestate.keyreleased(key)
-
-	Calls keyreleased(key on current gamestate.
-
-
-	function Gamestate.mousereleased(x,y,btn)
-
-	Calls `mousereleased(x,y,btn) on the current gamestate.
-
-
-	Gamestate.registerEvents()
-
-	Registers all above events so you don't need to call then in your love.* routines. It is an error to call this anywhere else than love.load(), since it overwrites the callbacks. Dont worry though, your callbacks will still be executed.
-
+    <a name="gamestate.lua-callbackList"></a>
+    <h4>List of callbacks</h4>
+    <div class="doc"><span class="function">Each gamestate can have a list of callbacks:<a class="top" href="#gamestate.lua">^ top</a></span>
+        <table>
+            <tr><td><code>enter(previous, ...)</code></td>
+                <td>Gets called upon entering the state. <em>Don't call this yourself, use
+                        <code>Gamestate.switch</code> instead.</em></td></tr>
+            <tr><td><code>leave()</code></td>
+                <td>Gets called upon leaving the state. The same warning as with <code>enter</code> applies.</td></tr>
+            <tr><td><code>update(dt)</code></td>
+                <td>Manully called by <code>Gamestate.update</code>, or automatically like <code>love.update</code>
+                    when using <code>Gamestate.registerEvents()</code>.</td></tr>
+            <tr><td><code>draw()</code></td>
+                <td>Manully called by <code>Gamestate.draw</code>, or automatically like <code>love.draw</code></td></tr>
+            <tr><td><code>keypressed(key, unicode)</code></td>
+                <td>Manully called by <code>Gamestate.keypressed</code>, or automatically like <code>love.keypressed</code></td></tr>
+            <tr><td><code>keyreleased(key)</code></td>
+                <td>Manully called by <code>Gamestate.keyreleased</code>, or automatically like <code>love.keyreleased</code></td></tr>
+            <tr><td><code>mousereleased(x,y,btn)</code></td>
+                <td>Manully called by <code>Gamestate.mousereleased</code>, or automatically like <code>love.mousereleased</code></td></tr>
+        </table>
+    </div> 
 </div>
 
 
