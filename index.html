@@ -81,6 +81,7 @@ for the excellent <a href="http://love2d.org/">L&Ouml;VE</a> Engine.</p>
 	<li><em>class.lua</em>: a simple and easy class system with function inheritance,</li>
 	<li><em>camera.lua</em>: a translate-, zoom- and rotatable camera and</li>
 	<li><em>gamestate.lua</em>: a gamestate system.</li>
+	<li><em>ringbuffer.lua</em>: a circular container.</li>
 </ul></p>
 
 <p><em>hump</em> differs from other libraries in that every component is independent of the
@@ -97,6 +98,7 @@ module by clicking these:
 	<li><a href="#class.lua">class.lua</a></li>
 	<li><a href="#camera.lua">camera.lua</a></li>
 	<li><a href="#gamestate.lua">gamestate.lua</a></li>
+	<li><a href="#ringbuffer.lua">ringbuffer.lua</a></li>
 </ul>
 
 <div class="module">
@@ -233,23 +235,23 @@ print(a:dist(b)) -- prints 1.4142135623731</pre></td></tr>
 		<p><strong>Warning:</strong> This will change the state of all references to this vector.</p>
 	</div>
 
-    <a name="vector.lua-perpendicular"></a>
-    <div class="doc"><span class="function">function vector:perpendicular()<a href="#vector.lua" class="top">^ top</a></span>
-        Get vector rotated by 90&deg; clockwise, e.g. the vector <code>(0,1)</code> results in <code>(1,0)</code>.
-        <table>
-        	<tr><th>Sketch:</th><td><img src="vector-perpendicular.png" alt="Perpendicular vector" /></td></tr>
-        </table>
-    </div>
+	<a name="vector.lua-perpendicular"></a>
+	<div class="doc"><span class="function">function vector:perpendicular()<a href="#vector.lua" class="top">^ top</a></span>
+	Get vector rotated by 90&deg; clockwise, e.g. the vector <code>(0,1)</code> results in <code>(1,0)</code>.
+	<table>
+		<tr><th>Sketch:</th><td><img src="vector-perpendicular.png" alt="Perpendicular vector" /></td></tr>
+	</table>
+	</div>
 
-    <a name="vector.lua-projectOn"></a>
-    <div class="doc"><span class="function">function vector:projectOn(v)<a href="#vector.lua" class="top">^ top</a></span>
-        Project this vector onto another one, e.g. <code>(2,2)</code> projected onto <code>(1,0)</code> results in <code>(2,0)</code>.
-        <table>
-        	<tr><th>Parameters:</th><td class="p"><em>[vector]</em><code>v</code></td><td>Vector to project onto</td></tr>
-            <tr><th>Returns:</th><td colspan="2">Vector with direction of <code>v</code> and length according to projection.</td></tr>
-            <tr><th>Sketch:</th><td colspan="2"><img src="vector-projectOn.png" alt="Projected vector" /></td></tr>
-        </table>
-    </div>
+	<a name="vector.lua-projectOn"></a>
+	<div class="doc"><span class="function">function vector:projectOn(v)<a href="#vector.lua" class="top">^ top</a></span>
+	Project this vector onto another one, e.g. <code>(2,2)</code> projected onto <code>(1,0)</code> results in <code>(2,0)</code>.
+	<table>
+		<tr><th>Parameters:</th><td class="p"><em>[vector]</em><code>v</code></td><td>Vector to project onto</td></tr>
+		<tr><th>Returns:</th><td colspan="2">Vector with direction of <code>v</code> and length according to projection.</td></tr>
+		<tr><th>Sketch:</th><td colspan="2"><img src="vector-projectOn.png" alt="Projected vector" /></td></tr>
+	</table>
+	</div>
 </div>
 
 
@@ -554,17 +556,132 @@ camera:deapply()</pre></td></tr>
         <tr><td><code>leave()</code></td>
             <td>Gets called upon leaving the state. The same warning as with <code>enter</code> applies.</td></tr>
         <tr><td><code>update(dt)</code></td>
-            <td>Manully called by <code>Gamestate.update</code>, or automatically like <code>love.update</code>
+            <td>Manually called by <code>Gamestate.update</code>, or automatically like <code>love.update</code>
                 when using <code>Gamestate.registerEvents()</code>.</td></tr>
         <tr><td><code>draw()</code></td>
-            <td>Manully called by <code>Gamestate.draw</code>, or automatically like <code>love.draw</code></td></tr>
+            <td>Manually called by <code>Gamestate.draw</code>, or automatically like <code>love.draw</code></td></tr>
         <tr><td><code>keypressed(key, unicode)</code></td>
-            <td>Manully called by <code>Gamestate.keypressed</code>, or automatically like <code>love.keypressed</code></td></tr>
+            <td>Manually called by <code>Gamestate.keypressed</code>, or automatically like <code>love.keypressed</code></td></tr>
         <tr><td><code>keyreleased(key)</code></td>
-            <td>Manully called by <code>Gamestate.keyreleased</code>, or automatically like <code>love.keyreleased</code></td></tr>
+            <td>Manually called by <code>Gamestate.keyreleased</code>, or automatically like <code>love.keyreleased</code></td></tr>
         <tr><td style="width:200px;"><code>mousereleased(x,y,btn)</code></td>
-            <td>Manully called by <code>Gamestate.mousereleased</code>, or automatically like <code>love.mousereleased</code></td></tr>
+            <td>Manually called by <code>Gamestate.mousereleased</code>, or automatically like <code>love.mousereleased</code></td></tr>
     </table>
+</div>
+
+<div class="module">
+	<a name="ringbuffer.lua"></a>
+	<h3>ringbuffer.lua<a href="#doc" class="top">^ top</a></h3>
+	<p>A circular container that can hold arbitrary items. It can be used to create <em>Tomb Raider</em> style
+	inventories, a looping music playlist, recurring dialog sequences and much more.</p>
+	
+	<p>ringbuffer.lua defines the following functions:
+	<table class="functionlist">
+		<tr><td><a href="#ringbuffer.lua-Ringbuffer">Ringbuffer(...)</a></td><td>Create new ringbuffer</td></tr>
+		<tr><td><a href="#ringbuffer.lua-insert">ringbuffer:insert(item, ...)</a></td><td>Insert items</td></tr>
+		<tr><td><a href="#ringbuffer.lua-append">ringbuffer:append(item, ...)</a></td><td>Append items to the "end"</td></tr>
+		<tr><td><a href="#ringbuffer.lua-remove">ringbuffer:remove()</a></td><td>Remove item</td></tr>
+		<tr><td><a href="#ringbuffer.lua-removeAt">ringbuffer:removeAt(k)</a></td><td>Remove item at position</td></tr>
+		<tr><td><a href="#ringbuffer.lua-get">ringbuffer:get()</a></td><td>Get item</td></tr>
+		<tr><td><a href="#ringbuffer.lua-size">ringbuffer:size()</a></td><td>Number of items in buffer</td></tr>
+		<tr><td><a href="#ringbuffer.lua-next">ringbuffer:next()</a></td><td>Get next item</td></tr>
+		<tr><td><a href="#ringbuffer.lua-prev">ringbuffer:prev()</a></td><td>Get previous item</td></tr>
+	</table></p>
+
+	<a name="ringbuffer.lua-Ringbuffer"></a>
+	<div class="doc">
+		<span class="function">function Ringbuffer(...)<a href="#ringbuffer.lua" class="top">^ top</a></span>
+		Create a new ringbuffer.
+		<table>
+			<tr><th>Parameters</th><td class="p"><em>[optional]</em><code>...</code>:</td><td>Initial items of the buffer.</td></tr>
+		</table>
+	</div>
+
+	<a name="ringbuffer.lua-insert"></a>
+	<div class="doc">
+		<span class="function">function ringbuffer:insert(item, ...)<a href="#ringbuffer.lua" class="top">^ top</a></span>
+		Insert items behind current item.
+		<table>
+			<tr><th>Parameters:</th><td class="p"><code>item</code>:</td><td>Item to insert</td></tr>
+			<tr><th></th><td class="p"><em>[optional]</em><code>...</code>:</td><td>Additional items to insert</td></tr>
+			<tr><th colspan="3">Example</th></tr>
+			<tr><td colspan="3"><pre>rb = Ringbuffer(1,2,5,6) -- rb = {1 ,2,5,6}, rb:get() == 1
+rb:next() -- rb = {1, 2 ,5,6}, rb:get() == 2
+rb:insert(3,4) -- rb = {1, 2 ,3,4,5,6}, rb:get() == 2
+rb:next() -- rb = {1,2, 3 ,4,5,6}, rb:get() == 3</pre></td></tr>
+		</table>
+	</div>
+	
+	<a name="ringbuffer.lua-append"></a>
+	<div class="doc">
+		<span class="function">function ringbuffer:append(item, ...)<a href="#ringbuffer.lua" class="top">^ top</a></span>
+		Append items to ringbuffer.
+		<p>This is less intuitive than <code>ringbuffer:insert(item, ...)</code> since it appears the items are added
+		at a random location. Use is only recommended before using <code>ringbuffer:next()</code> or <code>ringbuffer:prev()</code>.</p>
+		<table>
+			<tr><th>Parameters:</th><td class="p"><code>item</code>:</td><td>Item to append</td></tr>
+			<tr><th></th><td class="p"><em>[optional]</em><code>...</code>:</td><td>Additional items to append</td></tr>
+			<tr><th colspan="3">Example</th></tr>
+			<tr><td colspan="3"><pre>rb = Ringbuffer(1,2,5,6) -- rb = {1 ,2,5,6}, rb:get() == 1
+rb:next() -- rb = {1, 2 ,5,6}, rb:get() == 2
+rb:append(3,4) -- rb = {1, 2 ,5,6,3,4}, rb:get() == 2
+rb:next() -- rb = {1,2, 5 ,6,3,4}, rb:get() == 5</pre></td></tr>
+		</table>
+	</div>
+
+	<a name="ringbuffer.lua-remove"></a>
+	<div class="doc">
+		<span class="function">function ringbuffer:remove()<a href="#ringbuffer.lua" class="top">^ top</a></span>
+		Remove currently selected item. The next item will be selected.
+		<table>
+			<tr><th>Example</th></tr>
+			<tr><td><pre>rb = Ringbuffer(1,2,3) -- rb = {1 ,2,3}, rb:get() == 1
+rb:next() -- rb = {1, 2 ,3}, rb:get() == 2
+rb:remove() -- rb = {1, 3 }, rb:get() == 3</pre></td></tr>
+		</table>
+	</div>
+
+	<a name="ringbuffer.lua-removeAt"></a>
+	<div class="doc">
+		<span class="function">function ringbuffer:removeAt(k)<a href="#ringbuffer.lua" class="top">^ top</a></span>
+		Remove item at relative position <code>k</code>. <code>k</code> may be positive or negative and
+		even bigger than <code>ringbuffer:size()</code>.
+		<table>
+			<tr><th>Parameters:</th><td class="p"><em>[number]</em><code>k</code></td><td>Relative position of item to remove.</td></tr>
+			<tr><th colspan="3">Example:</th></tr>
+			<tr><td colspan="3"><pre>rb = Ringbuffer(1,2,3,4,5) -- rb = { 1 ,2,3,4,5}, rb:get() == 1
+rb:removeAt(2) -- rb = { 1 ,2,4,5}, rb:get() == 1
+rb:next() -- rb = {1, 2 ,4,5}, rb:get() == 2
+rb:removeAt(-1) -- rb = { 2 ,4,5}, rb:get() == 2</pre></td></tr>
+		</table>
+	</div>
+	
+	<a name="ringbuffer.lua-get"></a>
+	<div class="doc">
+		<span class="function">function ringbuffer:get()<a href="#ringbuffer.lua" class="top">^ top</a></span>
+		Get currently selected item.
+		<table> <tr> <th>Returns:</th> <td>The currently selected item.</td> </tr> </table>
+	</div>
+
+	<a name="ringbuffer.lua-size"></a>
+	<div class="doc">
+		<span class="function">function ringbuffer:size()<a href="#ringbuffer.lua" class="top">^ top</a></span>
+		<table> <tr> <th>Returns:</th> <td>Number of items in the buffer.</td> </tr> </table>
+	</div>
+	
+	<a name="ringbuffer.lua-next"></a>
+	<div class="doc">
+		<span class="function">function ringbuffer:next()<a href="#ringbuffer.lua" class="top">^ top</a></span>
+		Select next item and return it.
+		<table> <tr> <th>Return:</th> <td>Selected item after operation.</td> </tr> </table>
+	</div>
+	
+	<a name="ringbuffer.lua-prev"></a>
+	<div class="doc">
+		<span class="function">function ringbuffer:prev()<a href="#ringbuffer.lua" class="top">^ top</a></span>
+		Select previous item and return it.
+		<table> <tr> <th>Return:</th> <td>Selected item after operation.</td> </tr> </table>
+	</div>
 </div>
 
 
