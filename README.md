@@ -10,6 +10,8 @@ Contents:
 *   *class.lua*: "class" system supporting function inheritance (pure lua)
 *   *camera.lua*: translate-, zoom- and rotatable camera
 *   *gamestate.lua*: class to handle gamestates
+*   *ringbuffer.lua*: a circular container
+*   *sequence.lua*: utility to handle ingame cutscenes and such
 
 Documentation
 =============
