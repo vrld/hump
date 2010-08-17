@@ -42,12 +42,12 @@
 	.functionlist a { text-decoration: none; font-weight:bold; color: #506060; }
 	.functionlist a:hover { color: black; }
 
-    td, th { vertical-align: top; }
+	td, th { vertical-align: top; }
 	.doc table { margin-top: 5px; }
-    td, th { border-top: 1px dashed #ddd; }
+	td, th { border-top: 1px dashed #ddd; }
 	th { text-align: left; font-weight: normal; font-style: italic; text-decoration: underline; }
-    td { padding-left: 1em; margin: 0; }
-    td.p { text-align: right; }
+	td { padding-left: 1em; margin: 0; }
+	td.p { text-align: right; }
 	.doc td em { font-size: .8em; font-weight:bold; font-style:normal; padding-right: .6em;}
 
 	.doc pre, code { color: black; padding: 0; font-family: fixed; border: 1px solid #ddd; background: #e7ecec; }
@@ -82,10 +82,11 @@ for the excellent <a href="http://love2d.org/">L&Ouml;VE</a> Engine.</p>
 	<li><em>camera.lua</em>: a translate-, zoom- and rotatable camera and</li>
 	<li><em>gamestate.lua</em>: a gamestate system.</li>
 	<li><em>ringbuffer.lua</em>: a circular container.</li>
+	<li><em>sequence.lua</em>: utility to handle ingame cutscenes and such.</li>
 </ul></p>
 
 <p><em>hump</em> differs from other libraries in that every component is independent of the
-remaining ones (apart from camera.lua, which depends on the vector type).
+remaining ones (apart from camera.lua, which depends on the vector type, and sequence.lua which requires ringbuffer.lua).
 <em>hump</em>'s footprint is very small and thus should fit nicely into your projects.</p>
 
 <a name="doc"></a>
@@ -99,6 +100,7 @@ module by clicking these:
 	<li><a href="#camera.lua">camera.lua</a></li>
 	<li><a href="#gamestate.lua">gamestate.lua</a></li>
 	<li><a href="#ringbuffer.lua">ringbuffer.lua</a></li>
+	<li><a href="#sequence.lua">sequence.lua</a></li>
 </ul>
 
 <div class="module">
@@ -120,8 +122,8 @@ module by clicking these:
 		<tr><td><a href="#vector.lua-normalize_inplace">vector:normalize_inplace()</a></td><td>normalize vector in-place</td></tr>
 		<tr><td><a href="#vector.lua-rotated">vector:rotated(phi)</a></td><td>rotate vector</td></tr>
 		<tr><td><a href="#vector.lua-rotate_inplace">vector:rotate_inplace(phi)</a></td><td>rotate vector in-place</td></tr>
-        <tr><td><a href="#vector.lua-perpendicular">vector:perpendicular()</a></td><td>quick rotation by 90&deg;</td></tr>
-        <tr><td><a href="#vector.lua-projectOn">Vecor:projectOn(v)</a></td><td>projection on other vector</td></tr>
+		<tr><td><a href="#vector.lua-perpendicular">vector:perpendicular()</a></td><td>quick rotation by 90&deg;</td></tr>
+		<tr><td><a href="#vector.lua-projectOn">Vecor:projectOn(v)</a></td><td>projection on other vector</td></tr>
 	</table></p>
 
 	<a name="vector.lua-vector"></a>
@@ -472,101 +474,101 @@ camera:deapply()</pre></td></tr>
 	<a name="gamestate.lua"></a>
 	<h3>gamestate.lua<a class="top" href="#doc">^ top</a></h3>
 
-    <p>Useful to separate different states of your game (hence "gamestate") like title screens, 
-    level loading, main game, etc. Each gamestate can have it's own <code>update()</code>, <code>draw()</code>,
-    <code>keyreleased()</code>, <code>keypressed()</code> and <code>mousereleased()</code> which correspond 
-    to the ones defined in love. See the <a href="#gamestate.lua-callbackList">callback list</a> for more details.</p>
+	<p>Useful to separate different states of your game (hence "gamestate") like title screens, 
+	level loading, main game, etc. Each gamestate can have it's own <code>update()</code>, <code>draw()</code>,
+	<code>keyreleased()</code>, <code>keypressed()</code> and <code>mousereleased()</code> which correspond 
+	to the ones defined in love. See the <a href="#gamestate.lua-callbackList">callback list</a> for more details.</p>
 
-    <p>Additionally, each gamestate can define a <code>enter(pre, ...)</code> and <code>leave()</code> function,
-    which are called when using <code>Gamestate.switch(to, ...)</code>. <em>Do not attempt to use these functions
-        yourself to initialize the first gamestate,</em> use the <code>switch</code> function instead.</p>
+	<p>Additionally, each gamestate can define a <code>enter(pre, ...)</code> and <code>leave()</code> function,
+	which are called when using <code>Gamestate.switch(to, ...)</code>. <em>Do not attempt to use these functions
+		yourself to initialize the first gamestate,</em> use the <code>switch</code> function instead.</p>
 
-    <p>The module defines the following functions:
-    <table class="functionlist">
-        <tr><td><a href="#gamestate.lua-new">Gamestate.new()</a></td><td>New gamestate</td></tr>
-        <tr><td><a href="#gamestate.lua-switch">Gamestate.switch(to, ...)</a></td><td>Switch gamestate</td></tr>
-        <tr><td><a href="#gamestate.lua-update">Gamestate.update(dt)</a></td><td>Call update callback</td></tr>
-        <tr><td><a href="#gamestate.lua-draw">Gamestate.draw()</a></td><td>Call draw callback</td></tr>
-        <tr><td><a href="#gamestate.lua-keypressed">Gamestate.keypressed(key, unicode)</a></td><td>Call keypressed callback</td></tr>
-        <tr><td><a href="#gamestate.lua-keyreleased">Gamestate.keyreleased(key)</a></td><td>Call keyreleased callback</td></tr>
-        <tr><td><a href="#gamestate.lua-mousereleased">Gamestate.mousereleased(x,y,btn)</a></td><td>Call mousereleased callback</td></tr>
-        <tr><td><a href="#gamestate.lua-registerEvents">Gamestate.registerEvents()</a></td><td>Register all callbacks</td></tr>
+	<p>The module defines the following functions:
+	<table class="functionlist">
+		<tr><td><a href="#gamestate.lua-new">Gamestate.new()</a></td><td>New gamestate</td></tr>
+		<tr><td><a href="#gamestate.lua-switch">Gamestate.switch(to, ...)</a></td><td>Switch gamestate</td></tr>
+		<tr><td><a href="#gamestate.lua-update">Gamestate.update(dt)</a></td><td>Call update callback</td></tr>
+		<tr><td><a href="#gamestate.lua-draw">Gamestate.draw()</a></td><td>Call draw callback</td></tr>
+		<tr><td><a href="#gamestate.lua-keypressed">Gamestate.keypressed(key, unicode)</a></td><td>Call keypressed callback</td></tr>
+		<tr><td><a href="#gamestate.lua-keyreleased">Gamestate.keyreleased(key)</a></td><td>Call keyreleased callback</td></tr>
+		<tr><td><a href="#gamestate.lua-mousereleased">Gamestate.mousereleased(x,y,btn)</a></td><td>Call mousereleased callback</td></tr>
+		<tr><td><a href="#gamestate.lua-registerEvents">Gamestate.registerEvents()</a></td><td>Register all callbacks</td></tr>
 	</table></p>
 
-    <a name="gamestate.lua-new"></a>
-    <div class="doc"><span class="function">function Gamestate.new()<a class="top" href="#gamestate.lua">^ top</a></span>
-        Create a new gamestate.
-        <table><tr><th>Returns:</th><td>The new (but empty) gamestate object.</td></tr></table>
-    </div>
+	<a name="gamestate.lua-new"></a>
+	<div class="doc"><span class="function">function Gamestate.new()<a class="top" href="#gamestate.lua">^ top</a></span>
+		Create a new gamestate.
+		<table><tr><th>Returns:</th><td>The new (but empty) gamestate object.</td></tr></table>
+	</div>
 
-    <a name="gamestate.lua-switch"></a>
-    <div class="doc"><span class="function">function Gamestate.switch(to, ...)<a class="top" href="#gamestate.lua">^ top</a></span>
-        Switch the gamestate.
-        <p>Calls <code>leave()</code> on the currently active gamestate.</p>
-        <p>Calls <code>enter(current, ...)</code> on the target gamestate, where <code>current</code>
-        is the gamestate before the switch and <code>...</code> are the additionals arguments given
-        to <code>Gamestate.switch</code>.</p>
-        <table>
-            <tr><th>Parameters:</th><td class="p"><em>[gamestate]</em><code>to</code>:</td><td>target gamestate.</td></tr>
-            <tr><td>           </td><td class="p"><code>...</code>:</td><td>additional arguments to pass</td></tr>
-            <tr><th>Returns:</th><td colspan="2">the result of <code>to:enter(current, ...)</code></td></tr>
-        </table>
-    </div>
+	<a name="gamestate.lua-switch"></a>
+	<div class="doc"><span class="function">function Gamestate.switch(to, ...)<a class="top" href="#gamestate.lua">^ top</a></span>
+		Switch the gamestate.
+		<p>Calls <code>leave()</code> on the currently active gamestate.</p>
+		<p>Calls <code>enter(current, ...)</code> on the target gamestate, where <code>current</code>
+		is the gamestate before the switch and <code>...</code> are the additionals arguments given
+		to <code>Gamestate.switch</code>.</p>
+		<table>
+			<tr><th>Parameters:</th><td class="p"><em>[gamestate]</em><code>to</code>:</td><td>target gamestate.</td></tr>
+			<tr><td>           </td><td class="p"><code>...</code>:</td><td>additional arguments to pass</td></tr>
+			<tr><th>Returns:</th><td colspan="2">the result of <code>to:enter(current, ...)</code></td></tr>
+		</table>
+	</div>
 
-    <a name="gamestate.lua-update"></a>
-    <div class="doc"><span class="function">function Gamestate.update(dt)<a class="top" href="#gamestate.lua">^ top</a></span>
-        Calls <code>update(dt)</code> on current gamestate.
-    </div>
+	<a name="gamestate.lua-update"></a>
+	<div class="doc"><span class="function">function Gamestate.update(dt)<a class="top" href="#gamestate.lua">^ top</a></span>
+		Calls <code>update(dt)</code> on current gamestate.
+	</div>
 
-    <a name="gamestate.lua-draw"></a>
-    <div class="doc"><span class="function">function Gamestate.draw()<a class="top" href="#gamestate.lua">^ top</a></span>
-        Calls <code>draw()</code> on current gamestate.
-    </div>
+	<a name="gamestate.lua-draw"></a>
+	<div class="doc"><span class="function">function Gamestate.draw()<a class="top" href="#gamestate.lua">^ top</a></span>
+		Calls <code>draw()</code> on current gamestate.
+	</div>
 
-    <a name="gamestate.lua-keypressed"></a>
-    <div class="doc"><span class="function">function Gamestate.keypressed(key, unicode)<a class="top" href="#gamestate.lua">^ top</a></span>
-        Calls <code>keypressed(key, unicode)</code> on current gamestate.
-    </div>
-
-
-    <a name="gamestate.lua-keyreleased"></a>
-    <div class="doc"><span class="function">function Gamestate.keyreleased(key)<a class="top" href="#gamestate.lua">^ top</a></span>
-        Calls <code>keyreleased(key)</code> on current gamestate.
-    </div>
+	<a name="gamestate.lua-keypressed"></a>
+	<div class="doc"><span class="function">function Gamestate.keypressed(key, unicode)<a class="top" href="#gamestate.lua">^ top</a></span>
+		Calls <code>keypressed(key, unicode)</code> on current gamestate.
+	</div>
 
 
-    <a name="gamestate.lua-mousereleased"></a>
-    <div class="doc"><span class="function">function Gamestate.mousereleased(x,y,btn)<a class="top" href="#gamestate.lua">^ top</a></span>
-        Calls <code>mousereleased(x,y,btn)</code> on the current gamestate.
-    </div>
+	<a name="gamestate.lua-keyreleased"></a>
+	<div class="doc"><span class="function">function Gamestate.keyreleased(key)<a class="top" href="#gamestate.lua">^ top</a></span>
+		Calls <code>keyreleased(key)</code> on current gamestate.
+	</div>
 
-    <a name="gamestate.lua-registerEvents"></a>
-    <div class="doc"><span class="function">function Gamestate.registerEvents()<a class="top" href="#gamestate.lua">^ top</a></span>
-        Registers all above events so you don't need to call then in your <code>love.*</code> routines. 
-        <p>It is an error to call this anywhere else than <code>love.load()</code>, since it overwrites the 
-        callbacks. Dont worry though, your callbacks will still be executed.</p>
-    </div>
 
-    <a name="gamestate.lua-callbackList"></a>
-    <h4>List of callbacks<a class="top" href="#gamestate.lua">^ top</a></h4>
-    <table class="functionlist">
-        <tr><td><code>enter(previous, ...)</code></td>
-            <td>Gets called upon entering the state. <em>Don't call this yourself, use
-                    <code>Gamestate.switch</code> instead.</em></td></tr>
-        <tr><td><code>leave()</code></td>
-            <td>Gets called upon leaving the state. The same warning as with <code>enter</code> applies.</td></tr>
-        <tr><td><code>update(dt)</code></td>
-            <td>Manually called by <code>Gamestate.update</code>, or automatically like <code>love.update</code>
-                when using <code>Gamestate.registerEvents()</code>.</td></tr>
-        <tr><td><code>draw()</code></td>
-            <td>Manually called by <code>Gamestate.draw</code>, or automatically like <code>love.draw</code></td></tr>
-        <tr><td><code>keypressed(key, unicode)</code></td>
-            <td>Manually called by <code>Gamestate.keypressed</code>, or automatically like <code>love.keypressed</code></td></tr>
-        <tr><td><code>keyreleased(key)</code></td>
-            <td>Manually called by <code>Gamestate.keyreleased</code>, or automatically like <code>love.keyreleased</code></td></tr>
-        <tr><td style="width:200px;"><code>mousereleased(x,y,btn)</code></td>
-            <td>Manually called by <code>Gamestate.mousereleased</code>, or automatically like <code>love.mousereleased</code></td></tr>
-    </table>
+	<a name="gamestate.lua-mousereleased"></a>
+	<div class="doc"><span class="function">function Gamestate.mousereleased(x,y,btn)<a class="top" href="#gamestate.lua">^ top</a></span>
+		Calls <code>mousereleased(x,y,btn)</code> on the current gamestate.
+	</div>
+
+	<a name="gamestate.lua-registerEvents"></a>
+	<div class="doc"><span class="function">function Gamestate.registerEvents()<a class="top" href="#gamestate.lua">^ top</a></span>
+		Registers all above events so you don't need to call then in your <code>love.*</code> routines. 
+		<p>It is an error to call this anywhere else than <code>love.load()</code>, since it overwrites the 
+		callbacks. Dont worry though, your callbacks will still be executed.</p>
+	</div>
+
+	<a name="gamestate.lua-callbackList"></a>
+	<h4>List of callbacks<a class="top" href="#gamestate.lua">^ top</a></h4>
+	<table class="functionlist">
+		<tr><td><code>enter(previous, ...)</code></td>
+			<td>Gets called upon entering the state. <em>Don't call this yourself, use
+					<code>Gamestate.switch</code> instead.</em></td></tr>
+		<tr><td><code>leave()</code></td>
+			<td>Gets called upon leaving the state. The same warning as with <code>enter</code> applies.</td></tr>
+		<tr><td><code>update(dt)</code></td>
+			<td>Manually called by <code>Gamestate.update</code>, or automatically like <code>love.update</code>
+				when using <code>Gamestate.registerEvents()</code>.</td></tr>
+		<tr><td><code>draw()</code></td>
+			<td>Manually called by <code>Gamestate.draw</code>, or automatically like <code>love.draw</code></td></tr>
+		<tr><td><code>keypressed(key, unicode)</code></td>
+			<td>Manually called by <code>Gamestate.keypressed</code>, or automatically like <code>love.keypressed</code></td></tr>
+		<tr><td><code>keyreleased(key)</code></td>
+			<td>Manually called by <code>Gamestate.keyreleased</code>, or automatically like <code>love.keyreleased</code></td></tr>
+		<tr><td style="width:200px;"><code>mousereleased(x,y,btn)</code></td>
+			<td>Manually called by <code>Gamestate.mousereleased</code>, or automatically like <code>love.mousereleased</code></td></tr>
+	</table>
 </div>
 
 <div class="module">
@@ -684,6 +686,189 @@ rb:removeAt(-1) -- rb = { 2 ,4,5}, rb:get() == 2</pre></td></tr>
 	</div>
 </div>
 
+<div class="module">
+	<a name="sequence.lua"></a>
+	<h3>sequence.lua<a href="doc" class="top">^ top</a></h3>
+	<em>Depends on <a href="#ringbuffer.lua">ringbuffer.lua</a></em>
+	<p>sequence.lua offers basic support for automated switching of <em>Scenes</em>. You can use it to
+	add intros and cutscenes to your games.</p>
+	<p>sequence.lua defines two types: <code>Scene</code> and <code>Sequence</code>. A <code>Sequence</code>
+	holds several <code>Scene</code>s, but one <code>Scene</code> can belong to different <code>Sequences</code>
+	(but it should not due to side effects).</p>
+	<p>The module consists of the following:
+	<table class="functionlist">
+		<tr><td><a href="#sequence.lua-Sequence">Sequence(...)</a></td><td>Create new sequence</td></tr>
+		<tr><td><a href="#sequence.lua-add">sequence:add(...)</a></td>Add scenes<td></td></tr>
+		<tr><td><a href="#sequence.lua-select">sequence:select(k)</a></td><td>Select scene manually</td></tr>
+		<tr><td><a href="#sequence.lua-rewind">sequence:rewind()</a></td><td>Rewind sequence</td></tr>
+		<tr><td><a href="#sequence.lua-prevScene">sequence:prevScene</a></td><td>Manually select previous scene</td></tr>
+		<tr><td><a href="#sequence.lua-nextScene">sequence:nextScene</a></td><td>Manually select next scene</td></tr>
+		<tr><td><a href="#sequence.lua-draw">sequence:draw()</a></td><td>Draw current scene</td></tr>
+		<tr><td><a href="#sequence.lua-update">sequence:update(dt)</a></td><td>Update and switch current scene</td></tr>
+		<tr><td><a href="#sequence.lua-Scene">Scene(length)</a></td><td>New scene object</td></tr>
+		<tr><td><a href="#sequence.lua-isFinished">scene:isFinished()</a></td><td>Indicate end of scene</td></tr>
+	</table></p>
+	<p>A <code>Scene</code> defines three callback functions. <em>Do not</em> try to 
+	access them yourself; let <code>Sequence</code> do the job:
+	<table>
+		<tr><td><code>scene:draw()</code>:</td><td>Draw contents on screen <em>(mandatory)</em></td></tr>
+		<tr><td><code>scene:update(dt)</code>:</td><td>Update scene <em>(optional)</em></td></tr>
+		<tr><td><code>scene:enter()</code>:</td><td>Called when entering scene <em>(optional)</em></td></tr>
+		<tr><td><code>scene:leave()</code>:</td><td>Called when leaving scene <em>(optional)</em></td></tr>
+	</table></p>
+	<p>Additional to that, each <code>Scene</code> has a <code>time</code> variable corresponding to the time
+	spent in the scene.</p>
+	<p>The <a href="#sequence.lua-example">example</a> shows some of the concepts involved.</p>
+
+	<a name="sequence.lua-Sequence"></a>
+	<div class="doc">
+		<span class="function">function Sequence(...)<a href="#sequence.lua" class="top">^ top</a></span>
+		Create a new sequence with initial scenes.
+		<table>
+			<tr><th>Parameters:</th><td class="p"><em>[optional Scenes]</em><code>...</code></td>
+				<td>Initial scenes to add to sequence</td></tr>
+			<tr><th>Returns:</th><td colspan="2">Sequence object with initial scenes</td></tr>
+		</table>
+	</div>
+	
+	<a name="sequence.lua-add"></a>
+	<div class="doc">
+		<span class="function">function sequence:add(...)<a href="#sequence.lua" class="top">^ top</a></span>
+		Append scenes to the end of the sequence.
+		<table>
+			<tr><th>Parameters:</th><td class="p"><em>[Scenes]</em><code>...</code></td>
+				<td>Scenes to add to sequence</td></tr>
+		</table>
+	</div>
+	
+	<a name="sequence.lua-select"></a>
+	<div class="doc">
+		<span class="function">function sequence:select(k)<a href="#sequence.lua" class="top">^ top</a></span>
+		Manually selection of scene <code>k</code>. Usually this is not necessary but provided anyway.
+		<table>
+			<tr> <th>Parameters:</th> <td class="p"> <em>[number]</em> <code>k</code>: </td> <td>Number of the scene to select</td> </tr>
+		</table>
+	</div>
+	
+	<a name="sequence.lua-rewind"></a>
+	<div class="doc">
+		<span class="function">function sequence:rewind()<a href="#sequence.lua" class="top">^ top</a></span>
+		Select first scene in sequence.
+	</div>
+	
+	<a name="sequence.lua-prevScene"></a>
+	<div class="doc">
+		<span class="function">function sequence:prevScene()<a href="#sequence.lua" class="top">^ top</a></span>
+		Manually select previous scene. Usually not necessay but provided anyway.
+		<p><em>Warning:</em> May select the <em>last</em> scene when the current scene is the first scene in sequence.</p>
+	</div>
+	
+	<a name="sequence.lua-nextScene"></a>
+	<div class="doc">
+		<span class="function">function sequence:nextScene()<a href="#sequence.lua" class="top">^ top</a></span>
+		Manually select next scene. Usually not necessay but provided anyway.
+		<p><em>Warning:</em> May select the <em>first</em> scene when the current scene is the last scene in sequence.</p>
+	</div>
+	
+	<a name="sequence.lua-draw"></a>
+	<div class="doc">
+		<span class="function">function sequence:draw()<a href="#sequence.lua" class="top">^ top</a></span>
+		Draws current scene.
+		<p>Calls <code>scene:draw()</code> on currently active scene</p>
+	</div>
+	
+	<a name="sequence.lua-update"></a>
+	<div class="doc">
+		<span class="function">function sequence:update(dt)<a href="#sequence.lua" class="top">^ top</a></span>
+		Update current scene and increase <code>scene.time</code>.
+		<p>Switches scene if current scene is finished (see <a href="#sequence.lua-isFinished"><code>scene:isFinished()</code></a>).</p>
+	</div>
+
+	<a name="sequence.lua-Scene"></a>
+	<div class="doc">
+		<span class="function">function Scene(length)<a href="#sequence.lua" class="top">^ top</a></span>
+		Create a new scene of length <code>length</code>
+		<table>
+			<tr> <th>Parameters:</th> <td class="p"><em>[optional]</em><code>length</code></td> 
+				<td>Length of scene. If <code>< 0</code> scene will never finish. Defaults to <code>-1</code></td> </tr>
+			<tr> <th>Returns:</th> <td colspan="2">New scene object</td> </tr>
+		</table>
+	</div>
+
+	<a name="sequence.lua-isFinished"></a>
+	<div class="doc">
+		<span class="function"><a href="#sequence.lua" class="top">^ top</a></span>
+		Indicates that the scene is finished. Used by <code>sequence:update(dt)</code>.
+		<p>This can be overwritten, though it is not advised to do so.</p>
+		<table>
+			<tr> <th>Returns:</th> <td><code>true</code> if the scene is finished.</td> </tr>
+		</table>
+	</div>
+
+	<a name="sequence.lua-example"></a>
+	<h4>Example usage</h4>
+	<div class="doc">
+		<span class="function">Ending credits<a href="#sequence.lua" class="top">^ top</a></span>
+		<pre>local sc = {}
+-- moving and fading look cool
+sc.idea = Scene(5)
+function sc.idea:draw()
+    local frac = (self.time / self.length) ^ 3
+    love.graphics.setColor(255,255,255,160 - frac * 160)
+    love.graphics.print("Idea", 200 + frac * 30, 200)
+    love.graphics.setColor(255,255,255,255 - frac * 255)
+    love.graphics.print("Max Power", 300 - frac * 40, 250)
+end
+
+sc.code = Scene(5)
+function sc.code:draw()
+    local frac = (self.time / self.length) ^ 3
+    love.graphics.setColor(255,255,255,160 - frac * 160)
+    love.graphics.print("Code", 200 + frac * 30, 200)
+    love.graphics.setColor(255,255,255,255 - frac * 255)
+    love.graphics.print("Max Power", 300 - frac * 40, 250)
+end
+
+sc.gfx = Scene(5)
+function sc.gfx:draw()
+    local frac = (self.time / self.length) ^ 3
+    love.graphics.setColor(255,255,255,160 - frac * 160)
+    love.graphics.print("GFX", 200 + frac * 30, 200)
+    love.graphics.setColor(255,255,255,255 - frac * 255)
+    love.graphics.print("also Max Power", 300 - frac * 40, 250)
+end
+
+sc.endscreen = Scene(-1) -- last scene. no looping
+function sc.endscreen:enter()
+    self.frac = 0
+end
+
+function sc.endscreen:update(dt)
+    self.frac = math.min(1, self.time / 3) -- 3 sec fade in
+end
+
+function sc.endscreen:draw()
+    love.graphics.setColor(255,255,255, self.frac * 255)
+    love.graphics.print("The most awesome game in history", 280, 280)
+end
+
+
+-- create credit sequence
+credits = Sequence(sc.idea, sc.code, sc.gfx)
+credits:add(sc.endscreen)
+
+
+-- show and update sequence
+function love.draw()
+    credits:draw()
+end
+
+function love.update(dt)
+    credits:update(dt)
+end
+</pre>
+	</div>
+</div>
 
 <a name="license"></a>
 <h2>License<a class="top" href="#top">^ top</a></h2>
