@@ -14,8 +14,12 @@ function sequence:add(...)
 end
 
 function sequence:select(k)
-	self.scenes.current = k % self.scenes:size()
 	local scene = assert(self.scenes:get(), "No scene in sequence")
+	scene:leave()
+
+	self.scenes.current = k % self.scenes:size()
+	scene = assert(self.scenes:get(), "No scene in sequence")
+	scene:enter()
 	scene.time = 0
 end
 
@@ -24,12 +28,20 @@ function sequence:rewind()
 end
 
 function sequence:prevScene()
-	local scene = assert(self.scenes:prev(), "No scene in sequence")
+	local scene = assert(self.scenes:get(), "No scene in sequence")
+	scene:leave()
+
+	scene = assert(self.scenes:prev(), "No scene in sequence")
+	scene:enter()
 	scene.time = 0
 end
 
 function sequence:nextScene()
-	local scene = assert(self.scenes:next(), "No scene in sequence")
+	local scene = assert(self.scenes:get(), "No scene in sequence")
+	scene:leave()
+
+	scene = assert(self.scenes:next(), "No scene in sequence")
+	scene:enter()
 	scene.time = 0
 end
 
