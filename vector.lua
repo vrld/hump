@@ -102,3 +102,12 @@ end
 function Vector:rotated(phi)
 	return self:clone():rotate_inplace(phi)
 end
+
+function Vector:perpendicular()
+    return vector(-self.y, self.x)
+end
+
+function Vector:projectOn(v)
+    assert(isvector(v), "invalid argument: cannot project onto anything other than a vector.")
+    return (self * v) * v / v:len2()
+end
