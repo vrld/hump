@@ -107,8 +107,8 @@ module by clicking these:
 	<table class="functionlist">
 		<tr><td><a href="#vector.lua-vector">vector(x,y)</a></td><td>constructor</td></tr>
 		<tr><td><a href="#vector.lua-isvector">isvector(v)</a></td><td>type check</td></tr>
-		<tr><td><a href="#vector.lua-clone">Vector:clone()</a></td><td>deep copy</td></tr>
-		<tr><td><a href="#vector.lua-unpack">Vector:unpack()</a></td><td>element unfolding</td></tr>
+		<tr><td><a href="#vector.lua-clone">vector:clone()</a></td><td>deep copy</td></tr>
+		<tr><td><a href="#vector.lua-unpack">vector:unpack()</a></td><td>element unfolding</td></tr>
 		<tr><td><a href="#vector.lua-operators">Operators</a></td><td>Arithmetics and ordering</td></tr>
 		<tr><td><a href="#vector.lua-permul">vector:permul(other)</a></td><td>per-element multiplication</td></tr>
 		<tr><td><a href="#vector.lua-len">vector:len()</a></td><td>vector length</td></tr>
@@ -116,8 +116,10 @@ module by clicking these:
 		<tr><td><a href="#vector.lua-dist">vector:dist(other)</a></td><td>distance to vector</td></tr>
 		<tr><td><a href="#vector.lua-normalized">vector:normalized()</a></td><td>normalize vector</td></tr>
 		<tr><td><a href="#vector.lua-normalize_inplace">vector:normalize_inplace()</a></td><td>normalize vector in-place</td></tr>
-		<tr><td><a href="#vector.lua-rotated">Vector:rotated(phi)</a></td><td>rotate vector</td></tr>
-		<tr><td><a href="#vector.lua-rotate_inplace">Vector:rotate_inplace(phi)</a></td><td>rotate vector in-place</td></tr>
+		<tr><td><a href="#vector.lua-rotated">vector:rotated(phi)</a></td><td>rotate vector</td></tr>
+		<tr><td><a href="#vector.lua-rotate_inplace">vector:rotate_inplace(phi)</a></td><td>rotate vector in-place</td></tr>
+        <tr><td><a href="#vector.lua-perpendicular">vector:perpendicular()</a></td><td>quick rotation by 90&deg;</td></tr>
+        <tr><td><a href="#vector.lua-projectOn">Vecor:projectOn(v)</a></td><td>projection on other vector</td></tr>
 	</table></p>
 
 	<a name="vector.lua-vector"></a>
@@ -182,7 +184,7 @@ print(v:unpack()) -- prints "1     2"</pre></td></tr>
 
 	<a name="vector.lua-permul"></a>
 	<div class="doc"><span class="function">function vector:permul(other)<a class="top" href="#vector.lua">^ top</a></span>
-		Perform element-wise multiplication.
+        Perform element-wise multiplication, e.g. <code>(2,3) x (3,4) = (6,12)</code>
 	</div>
 
 	<a name="vector.lua-len"></a>
@@ -221,6 +223,7 @@ print(a:dist(b)) -- prints 1.4142135623731</pre></td></tr>
 		Get rotated vector. The original vector remains unchanged.
 		<table>
 			<tr><th>Parameters:</th><td class="p"><em>[number]</em><code>phi</code>:</td><td>Rotation angle in radians.</td></tr>
+            <tr><th>Sketch:</th><td colspan="3"><img src="vector-rotated.png" alt="Rotated vector" /></td></tr>
 		</table>
 	</div>
 
@@ -229,6 +232,24 @@ print(a:dist(b)) -- prints 1.4142135623731</pre></td></tr>
 		Rotate the vector and return it.
 		<p><strong>Warning:</strong> This will change the state of all references to this vector.</p>
 	</div>
+
+    <a name="vector.lua-perpendicular"></a>
+    <div class="doc"><span class="function">function vector:perpendicular()<a href="#vector.lua" class="top">^ top</a></span>
+        Get vector rotated by 90&deg; clockwise, e.g. the vector <code>(0,1)</code> results in <code>(1,0)</code>.
+        <table>
+        	<tr><th>Sketch:</th><td><img src="vector-perpendicular.png" alt="Perpendicular vector" /></td></tr>
+        </table>
+    </div>
+
+    <a name="vector.lua-projectOn"></a>
+    <div class="doc"><span class="function">function vector:projectOn(v)<a href="#vector.lua" class="top">^ top</a></span>
+        Project this vector onto another one, e.g. <code>(2,2)</code> projected onto <code>(1,0)</code> results in <code>(2,0)</code>.
+        <table>
+        	<tr><th>Parameters:</th><td class="p"><em>[vector]</em><code>v</code></td><td>Vector to project onto</td></tr>
+            <tr><th>Returns:</th><td colspan="2">Vector with direction of <code>v</code> and length according to projection.</td></tr>
+            <tr><th>Sketch:</th><td colspan="2"><img src="vector-projectOn.png" alt="Projected vector" /></td></tr>
+        </table>
+    </div>
 </div>
 
 
