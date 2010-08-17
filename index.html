@@ -693,12 +693,12 @@ rb:removeAt(-1) -- rb = { 2 ,4,5}, rb:get() == 2</pre></td></tr>
 	<p>sequence.lua offers basic support for automated switching of <em>Scenes</em>. You can use it to
 	add intros and cutscenes to your games.</p>
 	<p>sequence.lua defines two types: <code>Scene</code> and <code>Sequence</code>. A <code>Sequence</code>
-	holds several <code>Scene</code>s, but one <code>Scene</code> can belong to different <code>Sequences</code>
-	(but it should not due to side effects).</p>
+	holds several <code>Scene</code>s, but one <code>Scene</code> can belong to different <code>Sequence</code>s
+	(but due to side effects it shouldn't).</p>
 	<p>The module consists of the following:
 	<table class="functionlist">
 		<tr><td><a href="#sequence.lua-Sequence">Sequence(...)</a></td><td>Create new sequence</td></tr>
-		<tr><td><a href="#sequence.lua-add">sequence:add(...)</a></td>Add scenes<td></td></tr>
+		<tr><td><a href="#sequence.lua-add">sequence:add(...)</a></td><td>Add scenes</td></tr>
 		<tr><td><a href="#sequence.lua-select">sequence:select(k)</a></td><td>Select scene manually</td></tr>
 		<tr><td><a href="#sequence.lua-rewind">sequence:rewind()</a></td><td>Rewind sequence</td></tr>
 		<tr><td><a href="#sequence.lua-prevScene">sequence:prevScene</a></td><td>Manually select previous scene</td></tr>
@@ -709,7 +709,7 @@ rb:removeAt(-1) -- rb = { 2 ,4,5}, rb:get() == 2</pre></td></tr>
 		<tr><td><a href="#sequence.lua-isFinished">scene:isFinished()</a></td><td>Indicate end of scene</td></tr>
 	</table></p>
 	<p>A <code>Scene</code> defines three callback functions. <em>Do not</em> try to 
-	access them yourself; let <code>Sequence</code> do the job:
+	access them yourself. Let <code>Sequence</code> do the job:
 	<table>
 		<tr><td><code>scene:draw()</code>:</td><td>Draw contents on screen <em>(mandatory)</em></td></tr>
 		<tr><td><code>scene:update(dt)</code>:</td><td>Update scene <em>(optional)</em></td></tr>
