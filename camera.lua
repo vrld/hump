@@ -38,10 +38,7 @@ end
 
 function camera:transform(p)
 	local w,h = love.graphics.getWidth(), love.graphics.getHeight()
-	-- click to camera coords
-	p.x, p.y = p.x - w/2, p.y - h/2
-	-- to world coords
-	p = vector(p.x / self.zoom, p.y / self.zoom):rotate_inplace(-self.rot)
+	p = vector((p.x-w/2) / self.zoom, (p.y-w/2) / self.zoom):rotate_inplace(-self.rot)
 	return p + self.pos
 end
 
