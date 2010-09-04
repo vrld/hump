@@ -34,6 +34,8 @@
 	ul.nav li { display:inline; margin-right: 1em; }
 
 	a.top { font-size: 8pt; margin-left: 1em; float: right; }
+	a.source { border-radius: 5px; -moz-border-radius: 5px; font-weight:bold; float:right; border:1px solid #777; padding: 2px 4px 2px 4px; background: #e4e4e4; text-decoration:none; font-size: 9pt;}
+	a.source:hover { background: #eee; border-color: #aaa; color: #555;}
 
 	.doc { padding-left: 1em; margin-bottom: 1em; border-left: 1px dotted #aaa; }
 	.function { display:block; font-weight:bold; font-family: fixed; background: #f9f9f9; border:1px solid #ddd; margin-left: -1em; }
@@ -106,6 +108,7 @@ module by clicking these:
 <div class="module">
 	<a name="vector.lua"></a>
 	<h3>vector.lua<a class="top" href="#doc">^ top</a></h3>
+	<a href="http://github.com/vrld/hump/blob/master/vector.lua" class="source">view source</a>
 	<p>A vector class implementing everything you want to do with vectors, and some more.</p>
 	<p>Overview (click item for more details):
 	<table class="functionlist">
@@ -260,6 +263,7 @@ print(a:dist(b)) -- prints 1.4142135623731</pre></td></tr>
 <div class="module">
 	<a name="class.lua"></a>
 	<h3>class.lua<a class="top" href="#doc">^ top</a></h3>
+	<a href="http://github.com/vrld/hump/blob/master/class.lua" class="source">view source</a>
 	<p>class.lua provides a simple and easy to use class system. Albeit it's
 	limitations, class.lua offers multiple inheritance and minimal
 	reflection capabilities. Note that only methods will be inherited
@@ -388,6 +392,7 @@ result:foo()    -- error: method does not exist</pre>
 <div class="module">
 	<a name="camera.lua"></a>
 	<h3>camera.lua<a class="top" href="#doc">^ top</a></h3>
+	<a href="http://github.com/vrld/hump/blob/master/camera.lua" class="source">view source</a>
 	<em>Depends on <a href="#vector.lua">vector.lua</a></em>
 	<p>Camera object to display only a partial region of the game world. The region
 	can be zoomed and rotated. You can transform camera coordinates to world coordinated
@@ -428,6 +433,10 @@ result:foo()    -- error: method does not exist</pre>
 	<a name="camera.lua-translate"></a>
 	<div class="doc"><span class="function">function camera:translate(t)<a class="top" href="#camera.lua">^ top</a></span>
 		Translate (move) camera by vector <code>t</code>. Same as <code>camera.pos = camera.pos + t</code>.
+		<table>
+			<tr><th>Parameters:</th><td class="p"><em>[vector]</em><code>t</code>:</td>
+				<td>Translation vector</td></tr>
+		</table>
 	</div>
 
 	<a name="camera.lua-draw"></a>
@@ -460,6 +469,12 @@ camera:deapply()</pre></td></tr>
 	<div class="doc"><span class="function">function camera:transform(p)<a class="top" href="#camera.lua">^ top</a></span>
 		Transform vector <code>p</code> from camera coordinates to world coordinates.
 		You probably won't need this, but it is the basis to <code>camera:mousepos()</code>.
+
+		<table>
+			<tr><th>Parameters:</th><td class="p"><em>[vector]</em><code>p</code>:</td>
+				<td>Vector to transform to world coordinates</td></tr>
+			<tr><th>Returns:</th><td colspan="2"><em>[vector]</em> transformed vector.</td></tr>
+		</table>
 	</div>
 
 	<a name="camera.lua-mousepos"></a>
@@ -467,16 +482,20 @@ camera:deapply()</pre></td></tr>
 		Get mouse position in world coordinates, i.e. the position the users mouse is
 		currently pointing at when camera transformations are applied. Use this for any
 		mouse interaction with transformed objects in your game.
+		<table>
+			<tr><th>Returns:</th><td><em>[vector]</em> Mouse position in world coordinates.</td></tr>
+		</table>
 	</div>
 </div>
 
 <div class="module">
 	<a name="gamestate.lua"></a>
 	<h3>gamestate.lua<a class="top" href="#doc">^ top</a></h3>
+	<a href="http://github.com/vrld/hump/blob/master/gamestate.lua" class="source">view source</a>
 
-	<p>Useful to separate different states of your game (hence "gamestate") like title screens, 
+	<p>Useful to separate different states of your game (hence "gamestate") like title screens,
 	level loading, main game, etc. Each gamestate can have it's own <code>update()</code>, <code>draw()</code>,
-	<code>keyreleased()</code>, <code>keypressed()</code> and <code>mousereleased()</code> which correspond 
+	<code>keyreleased()</code>, <code>keypressed()</code> and <code>mousereleased()</code> which correspond
 	to the ones defined in love. See the <a href="#gamestate.lua-callbackList">callback list</a> for more details.</p>
 
 	<p>Additionally, each gamestate can define a <code>enter(pre, ...)</code> and <code>leave()</code> function,
@@ -544,8 +563,8 @@ camera:deapply()</pre></td></tr>
 
 	<a name="gamestate.lua-registerEvents"></a>
 	<div class="doc"><span class="function">function Gamestate.registerEvents()<a class="top" href="#gamestate.lua">^ top</a></span>
-		Registers all above events so you don't need to call then in your <code>love.*</code> routines. 
-		<p>It is an error to call this anywhere else than <code>love.load()</code>, since it overwrites the 
+		Registers all above events so you don't need to call then in your <code>love.*</code> routines.
+		<p>It is an error to call this anywhere else than <code>love.load()</code>, since it overwrites the
 		callbacks. Dont worry though, your callbacks will still be executed.</p>
 	</div>
 
@@ -574,6 +593,7 @@ camera:deapply()</pre></td></tr>
 <div class="module">
 	<a name="ringbuffer.lua"></a>
 	<h3>ringbuffer.lua<a href="#doc" class="top">^ top</a></h3>
+	<a href="http://github.com/vrld/hump/blob/master/ringbuffer.lua" class="source">view source</a>
 	<p>A circular container that can hold arbitrary items. It can be used to create <em>Tomb Raider</em> style
 	inventories, a looping music playlist, recurring dialog sequences and much more.</p>
 	
@@ -688,7 +708,8 @@ rb:removeAt(-1) -- rb = { 2 ,4,5}, rb:get() == 2</pre></td></tr>
 
 <div class="module">
 	<a name="sequence.lua"></a>
-	<h3>sequence.lua<a href="doc" class="top">^ top</a></h3>
+	<h3>sequence.lua<a href="#doc" class="top">^ top</a></h3>
+	<a href="http://github.com/vrld/hump/blob/master/sequence.lua" class="source">view source</a>
 	<em>Depends on <a href="#ringbuffer.lua">ringbuffer.lua</a></em>
 	<p>sequence.lua offers basic support for automated switching of <em>Scenes</em>. You can use it to
 	add intros and cutscenes to your games.</p>
@@ -708,7 +729,7 @@ rb:removeAt(-1) -- rb = { 2 ,4,5}, rb:get() == 2</pre></td></tr>
 		<tr><td><a href="#sequence.lua-Scene">Scene(length)</a></td><td>New scene object</td></tr>
 		<tr><td><a href="#sequence.lua-isFinished">scene:isFinished()</a></td><td>Indicate end of scene</td></tr>
 	</table></p>
-	<p>A <code>Scene</code> defines three callback functions. <em>Do not</em> try to 
+	<p>A <code>Scene</code> defines three callback functions. <em>Do not</em> try to
 	access them yourself. Let <code>Sequence</code> do the job:
 	<table>
 		<tr><td><code>scene:draw()</code>:</td><td>Draw contents on screen <em>(mandatory)</em></td></tr>
@@ -789,7 +810,7 @@ rb:removeAt(-1) -- rb = { 2 ,4,5}, rb:get() == 2</pre></td></tr>
 		<span class="function">function Scene(length)<a href="#sequence.lua" class="top">^ top</a></span>
 		Create a new scene of length <code>length</code>
 		<table>
-			<tr> <th>Parameters:</th> <td class="p"><em>[optional]</em><code>length</code></td> 
+			<tr> <th>Parameters:</th> <td class="p"><em>[optional]</em><code>length</code></td>
 				<td>Length of scene. If <code>< 0</code> scene will never finish. Defaults to <code>-1</code></td> </tr>
 			<tr> <th>Returns:</th> <td colspan="2">New scene object</td> </tr>
 		</table>
@@ -901,15 +922,14 @@ end
 <a name="download"></a>
 <h2>Download<a class="top" href="#top">^ top</a></h2>
 
-<p>You can download this project in either
+<p>You can view and download the individual modules on github: <a href="http://github.com/vrld/hump">vrld/hump</a>.
+You may also download the whole packed sourcecode either in
 <a href="http://github.com/vrld/hump/zipball/master">zip</a> or
 <a href="http://github.com/vrld/hump/tarball/master">tar</a> formats.</p>
-<p>You can also clone the project with <a href="http://git-scm.com">Git</a> by running:
-<pre>$ git clone git://github.com/vrld/hump</pre></p>
-
-<div class="footer">
-	get the source code on GitHub : <a href="http://github.com/vrld/hump">vrld/hump</a>
-</div>
+<p>You can clone the project with <a href="http://git-scm.com">Git</a> by running:
+<pre>git clone git://github.com/vrld/hump</pre>
+Once done, tou can check for updates by running
+<pre>git pull</pre></p>
 
 </div>
 
