@@ -36,6 +36,12 @@ function camera:draw(func)
 	self:postdraw()
 end
 
+function camera:toScreenCoords(p)
+	local w,h = love.graphics.getWidth(), love.graphics.getHeight()
+	local p = p - self.pos
+	return vector((p.x+w/2) * self.zoom, (p.y+h/2) / self.zoom):rotate_inplace(self.rot)
+end
+
 function camera:toCameraCoords(p)
 	local w,h = love.graphics.getWidth(), love.graphics.getHeight()
 	p = vector((p.x-w/2) / self.zoom, (p.y-h/2) / self.zoom):rotate_inplace(-self.rot)
@@ -43,5 +49,5 @@ function camera:toCameraCoords(p)
 end
 
 function camera:mousepos()
-	return self:transform(vector(love.mouse.getPosition()))
+	return self:toCameraCoords(vector(love.mouse.getPosition()))
 end
