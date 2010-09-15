@@ -17,7 +17,7 @@ function camera:translate(t)
 	self.pos = self.pos + t
 end
 
-function camera:apply()
+function camera:predraw()
 	local center = vector(love.graphics.getWidth(), love.graphics.getHeight()) / (self.zoom * 2)
 	love.graphics.push()
 	love.graphics.scale(self.zoom)
@@ -26,17 +26,17 @@ function camera:apply()
 	love.graphics.translate((-self.pos):unpack())
 end
 
-function camera:deapply()
+function camera:postdraw()
 	love.graphics.pop()
 end
 
 function camera:draw(func)
-	self:apply()
+	self:predraw()
 	func()
-	self:deapply()
+	self:postdraw()
 end
 
-function camera:transform(p)
+function camera:toCameraCoords(p)
 	local w,h = love.graphics.getWidth(), love.graphics.getHeight()
 	p = vector((p.x-w/2) / self.zoom, (p.y-w/2) / self.zoom):rotate_inplace(-self.rot)
 	return p + self.pos
