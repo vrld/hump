@@ -405,9 +405,10 @@ result:foo()    -- error: method does not exist</pre>
 		<tr><td><a href="#camera.lua-rotate">camera:rotate(phi)</a></td><td>rotate camera</td></tr>
 		<tr><td><a href="#camera.lua-translate">camera:translate(t)</a></td><td>move camera</td></tr>
 		<tr><td><a href="#camera.lua-draw">camera:draw(func)</a></td><td>apply camera transformations on function</td></tr>
-		<tr><td><a href="#camera.lua-apply">camera:apply()</a></td><td>apply camera transformations</td></tr>
-		<tr><td><a href="#camera.lua-deapply">camera:deapply()</a></td><td>revert camera transformations</td></tr>
-		<tr><td><a href="#camera.lua-transform">camera:transform(p)</a></td><td>get world coordinates</td></tr>
+		<tr><td><a href="#camera.lua-predraw">camera:predraw()</a></td><td>apply camera transformations</td></tr>
+		<tr><td><a href="#camera.lua-postdraw">camera:postdraw()</a></td><td>revert camera transformations</td></tr>
+		<tr><td><a href="#camera.lua-toCameraCoords">camera:toCameraCoords(p)</a></td><td>get camera coordinates of a point</td></tr>
+		<tr><td><a href="#camera.lua-toWorldCoords">camera:toWorldCoords(p)</a></td><td>get world coordinates of a point</td></tr>
 		<tr><td><a href="#camera.lua-mousepos">camera:mousepos()</a></td><td>get world coordinates of mouse</td></tr>
 	</table></p>
 
@@ -449,26 +450,40 @@ result:foo()    -- error: method does not exist</pre>
 		</table>
 	</div>
 
-	<a name="camera.lua-apply"></a>
-	<div class="doc"><span class="function">function camera:apply()<a class="top" href="#camera.lua">^ top</a></span>
-		Apply camera transformations to every drawing operation until the next <code>camera:deapply()</code>.
+	<a name="camera.lua-predraw"></a>
+	<div class="doc"><span class="function">function camera:predraw()<a class="top" href="#camera.lua">^ top</a></span>
+		Apply camera transformations to every drawing operation until the next <code>camera:postdraw()</code>.
 	</div>
 
-	<a name="camera.lua-deapply"></a>
-	<div class="doc"><span class="function">function camera:deapply()<a class="top" href="#camera.lua">^ top</a></span>
+	<a name="camera.lua-postdraw"></a>
+	<div class="doc"><span class="function">function camera:postdraw()<a class="top" href="#camera.lua">^ top</a></span>
 		Revert camera transformations for the rest of the drawing operations.
 
 		<table><tr><th>Example:</th><td>(equivalent to the <code>cam:draw()</code> example above)</td></tr>
-			<tr><td colspan="2"><pre>camera:apply()
+			<tr><td colspan="2"><pre>camera:predraw()
 love.graphics.rectangle('fill', -100,-100, 200,200)
-camera:deapply()</pre></td></tr>
+camera:postdraw()</pre></td></tr>
 		</table>
 	</div>
 
-	<a name="camera.lua-transform"></a>
-	<div class="doc"><span class="function">function camera:transform(p)<a class="top" href="#camera.lua">^ top</a></span>
-		Transform vector <code>p</code> from camera coordinates to world coordinates.
-		You probably won't need this, but it is the basis to <code>camera:mousepos()</code>.
+	<a name="camera.lua-toCameraCoords"></a>
+	<div class="doc"><span class="function">function camera:toCameraCoords(p)<a class="top" href="#camera.lua">^ top</a></span>
+		Transform vector <code>p</code> from world coordinates to camera coordinates, i.e.
+		you have the position of an object in the world and want to know where it will be
+		drawn on the screen.
+
+		<table>
+			<tr><th>Parameters:</th><td class="p"><em>[vector]</em><code>p</code>:</td>
+				<td>Vector to transform to camera coordinates</td></tr>
+			<tr><th>Returns:</th><td colspan="2"><em>[vector]</em> transformed vector.</td></tr>
+		</table>
+	</div>
+
+	<a name="camera.lua-toWorldCoords"></a>
+	<div class="doc"><span class="function">function camera:toWorldCoords(p)<a class="top" href="#camera.lua">^ top</a></span>
+		Transform vector <code>p</code> from camera coordinates to world coordinates, i.e.
+		you have the coordinates of a point on the screen (e.g. the mouse), and wan't to
+		know where it's location is in the world.
 
 		<table>
 			<tr><th>Parameters:</th><td class="p"><em>[vector]</em><code>p</code>:</td>
