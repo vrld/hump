@@ -59,7 +59,7 @@ function Vector.__add(a,b)
 end
 
 function Vector.__sub(a,b)
-	assert(isvector(a) and isvector(b), "Sub: wrong argument types (<vector> expexted)")
+	assert(isvector(a) and isvector(b), "Sub: wrong argument types (<vector> expected)")
 	return vector(a.x-b.x, a.y-b.y)
 end
 
