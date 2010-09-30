@@ -127,6 +127,7 @@ module by clicking these:
 		<tr><td><a href="#vector.lua-rotate_inplace">vector:rotate_inplace(phi)</a></td><td>rotate vector in-place</td></tr>
 		<tr><td><a href="#vector.lua-perpendicular">vector:perpendicular()</a></td><td>quick rotation by 90&deg;</td></tr>
 		<tr><td><a href="#vector.lua-projectOn">Vecor:projectOn(v)</a></td><td>projection on other vector</td></tr>
+		<tr><td><a href="#vector.lua-cross">Vecor:cross(v)</a></td><td>cross product of two vectors</td></tr>
 	</table></p>
 
 	<a name="vector.lua-vector"></a>
@@ -255,6 +256,18 @@ print(a:dist(b)) -- prints 1.4142135623731</pre></td></tr>
 		<tr><th>Parameters:</th><td class="p"><em>[vector]</em><code>v</code></td><td>Vector to project onto</td></tr>
 		<tr><th>Returns:</th><td colspan="2">Vector with direction of <code>v</code> and length according to projection.</td></tr>
 		<tr><th>Sketch:</th><td colspan="2"><img src="vector-projectOn.png" alt="Projected vector" /></td></tr>
+	</table>
+	</div>
+
+	<a name="vector.lua-cross"></a>
+	<div class="doc"><span class="function">function vector:cross(v)<a href="#vector.lua" class="top">^ top</a></span>
+		Calculates cross product between two vectors, i.e.:
+		<p>Treats both vectors as vectors of the xy-plane <em>(z-coordinate =0)</em> and calculates a vector perpendicular
+		on them. Because the result is perpendicular on to the input vectors, it has the form <em>(0,0,z)</em>.
+		The z-coordinate is returned.</p>
+	<table>
+		<tr><th>Parameters:</th><td class="p"><em>[vector]</em><code>v</code></td><td>Vector to calculate the cross product with</td></tr>
+		<tr><th>Returns:</th><td colspan="2">Cross product as described above</td></tr>
 	</table>
 	</div>
 </div>
