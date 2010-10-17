@@ -316,7 +316,8 @@ function love.update(dt)
 end
 
 function love.draw()
-    for _,c in ipairs(circle) do
+    love.graphics.print(tostring(time), 20,20)
+    for _,c in ipairs(circles) do
         love.graphics.circle('fill', c.x, c.y, c.r)
     end
 end</pre>
@@ -346,7 +347,7 @@ function love.update(dt)
 end
 
 function love.draw()
-    love.graphics.circle(xpos, 300, 80)
+    love.graphics.circle('fill', xpos, 300, 80, 36)
 end</pre>
 	</div>
 </div>
