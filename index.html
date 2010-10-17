@@ -80,10 +80,11 @@ for the excellent <a href="http://love2d.org/">L&Ouml;VE</a> Engine.</p>
 
 <p>It currently features
 <ul>
+	<li><em>gamestate.lua</em>: a gamestate system.</li>
+	<li><em>timer.lua</em>: timed function calling and interpolating functions,</li>
 	<li><em>vector.lua</em>: a mature vector type,</li>
 	<li><em>class.lua</em>: a simple and easy class system with function inheritance,</li>
 	<li><em>camera.lua</em>: a translate-, zoom- and rotatable camera and</li>
-	<li><em>gamestate.lua</em>: a gamestate system.</li>
 	<li><em>ringbuffer.lua</em>: a circular container.</li>
 	<li><em>sequence.lua</em>: utility to handle ingame cutscenes and such.</li>
 </ul></p>
@@ -98,16 +99,207 @@ remaining ones (apart from camera.lua, which depends on the vector type, and seq
 Below is the documentation of the various modules. You can directly jump to a
 module by clicking these:
 <ul>
+	<li><a href="#gamestate.lua">gamestate.lua</a></li>
+	<li><a href="#timer.lua">timer.lua</a></li>
 	<li><a href="#vector.lua">vector.lua</a></li>
 	<li><a href="#class.lua">class.lua</a></li>
 	<li><a href="#camera.lua">camera.lua</a></li>
-	<li><a href="#gamestate.lua">gamestate.lua</a></li>
 	<li><a href="#ringbuffer.lua">ringbuffer.lua</a></li>
 	<li><a href="#sequence.lua">sequence.lua</a></li>
 </ul>
 
-<div class="module">
-	<a name="vector.lua"></a>
+<div class="module"><a name="gamestate.lua"></a>
+	<h3>gamestate.lua<a class="top" href="#doc">^ top</a></h3>
+	<a href="http://github.com/vrld/hump/blob/master/gamestate.lua" class="source">view source</a>
+
+	<p>Useful to separate different states of your game (hence "gamestate") like title screens,
+	level loading, main game, etc. Each gamestate can have it's own <code>update()</code>, <code>draw()</code>,
+	<code>keyreleased()</code>, <code>keypressed()</code> and <code>mousereleased()</code> which correspond
+	to the ones defined in love. See the <a href="#gamestate.lua-callbackList">callback list</a> for more details.</p>
+
+	<p>Additionally, each gamestate can define a <code>enter(pre, ...)</code> and <code>leave()</code> function,
+	which are called when using <code>Gamestate.switch(to, ...)</code>. <em>Do not attempt to use these functions
+		yourself to initialize the first gamestate,</em> use the <code>switch</code> function instead.</p>
+
+	<p>The module defines the following functions:
+	<table class="functionlist">
+		<tr><td><a href="#gamestate.lua-new">Gamestate.new()</a></td><td>New gamestate</td></tr>
+		<tr><td><a href="#gamestate.lua-switch">Gamestate.switch(to, ...)</a></td><td>Switch gamestate</td></tr>
+		<tr><td><a href="#gamestate.lua-update">Gamestate.update(dt)</a></td><td>Call update callback</td></tr>
+		<tr><td><a href="#gamestate.lua-draw">Gamestate.draw()</a></td><td>Call draw callback</td></tr>
+		<tr><td><a href="#gamestate.lua-keypressed">Gamestate.keypressed(key, unicode)</a></td><td>Call keypressed callback</td></tr>
+		<tr><td><a href="#gamestate.lua-keyreleased">Gamestate.keyreleased(key)</a></td><td>Call keyreleased callback</td></tr>
+		<tr><td><a href="#gamestate.lua-mousereleased">Gamestate.mousereleased(x,y,btn)</a></td><td>Call mousereleased callback</td></tr>
+		<tr><td><a href="#gamestate.lua-registerEvents">Gamestate.registerEvents()</a></td><td>Register all callbacks</td></tr>
+	</table></p>
+
+	<a name="gamestate.lua-new"></a>
+	<div class="doc"><span class="function">function Gamestate.new()<a class="top" href="#gamestate.lua">^ top</a></span>
+		Create a new gamestate.
+		<table><tr><th>Returns:</th><td>The new (but empty) gamestate object.</td></tr></table>
+	</div>
+
+	<a name="gamestate.lua-switch"></a>
+	<div class="doc"><span class="function">function Gamestate.switch(to, ...)<a class="top" href="#gamestate.lua">^ top</a></span>
+		Switch the gamestate.
+		<p>Calls <code>leave()</code> on the currently active gamestate.</p>
+		<p>Calls <code>enter(current, ...)</code> on the target gamestate, where <code>current</code>
+		is the gamestate before the switch and <code>...</code> are the additionals arguments given
+		to <code>Gamestate.switch</code>.</p>
+		<table>
+			<tr><th>Parameters:</th><td class="p"><em>[gamestate]</em><code>to</code>:</td><td>target gamestate.</td></tr>
+			<tr><td>           </td><td class="p"><code>...</code>:</td><td>additional arguments to pass</td></tr>
+			<tr><th>Returns:</th><td colspan="2">the result of <code>to:enter(current, ...)</code></td></tr>
+		</table>
+	</div>
+
+	<a name="gamestate.lua-update"></a>
+	<div class="doc"><span class="function">function Gamestate.update(dt)<a class="top" href="#gamestate.lua">^ top</a></span>
+		Calls <code>update(dt)</code> on current gamestate.
+	</div>
+
+	<a name="gamestate.lua-draw"></a>
+	<div class="doc"><span class="function">function Gamestate.draw()<a class="top" href="#gamestate.lua">^ top</a></span>
+		Calls <code>draw()</code> on current gamestate.
+	</div>
+
+	<a name="gamestate.lua-keypressed"></a>
+	<div class="doc"><span class="function">function Gamestate.keypressed(key, unicode)<a class="top" href="#gamestate.lua">^ top</a></span>
+		Calls <code>keypressed(key, unicode)</code> on current gamestate.
+	</div>
+
+
+	<a name="gamestate.lua-keyreleased"></a>
+	<div class="doc"><span class="function">function Gamestate.keyreleased(key)<a class="top" href="#gamestate.lua">^ top</a></span>
+		Calls <code>keyreleased(key)</code> on current gamestate.
+	</div>
+
+
+	<a name="gamestate.lua-mousereleased"></a>
+	<div class="doc"><span class="function">function Gamestate.mousereleased(x,y,btn)<a class="top" href="#gamestate.lua">^ top</a></span>
+		Calls <code>mousereleased(x,y,btn)</code> on the current gamestate.
+	</div>
+
+	<a name="gamestate.lua-registerEvents"></a>
+	<div class="doc"><span class="function">function Gamestate.registerEvents()<a class="top" href="#gamestate.lua">^ top</a></span>
+		Registers all above events so you don't need to call then in your <code>love.*</code> routines.
+		<p>It is an error to call this anywhere else than <code>love.load()</code>, since it overwrites the
+		callbacks. Don't worry though, your callbacks will still be executed.</p>
+	</div>
+
+	<a name="gamestate.lua-callbackList"></a>
+	<h4>List of callbacks<a class="top" href="#gamestate.lua">^ top</a></h4>
+	<table class="functionlist">
+		<tr><td><code>enter(previous, ...)</code></td>
+			<td>Gets called upon entering the state. <strong>Don't call this yourself, use
+					<code>Gamestate.switch</code> instead.</strong></td></tr>
+		<tr><td><code>leave()</code></td>
+			<td>Gets called upon leaving the state. The same warning as with <code>enter</code> applies.</td></tr>
+		<tr><td><code>update(dt)</code></td>
+			<td>Manually called by <code>Gamestate.update</code>, or automatically like <code>love.update</code>
+				when using <code>Gamestate.registerEvents()</code>.</td></tr>
+		<tr><td><code>draw()</code></td>
+			<td>Manually called by <code>Gamestate.draw</code>, or automatically like <code>love.draw</code></td></tr>
+		<tr><td><code>keypressed(key, unicode)</code></td>
+			<td>Manually called by <code>Gamestate.keypressed</code>, or automatically like <code>love.keypressed</code></td></tr>
+		<tr><td><code>keyreleased(key)</code></td>
+			<td>Manually called by <code>Gamestate.keyreleased</code>, or automatically like <code>love.keyreleased</code></td></tr>
+		<tr><td style="width:200px;"><code>mousereleased(x,y,btn)</code></td>
+			<td>Manually called by <code>Gamestate.mousereleased</code>, or automatically like <code>love.mousereleased</code></td></tr>
+	</table>
+</div>
+
+<div class="module"><a name="timer.lua"></a>
+	<h3>timer.lua<a class="top" href="#doc">^ top</a></h3>
+	<a href="http://github.com/vrld/hump/blob/master/timer.lua" class="source">view source</a>
+
+	<p>This module consists of two parts:<ul>
+		<li><code>Timer</code> to enable delayed function calls and</li>
+		<li><code>Interpolator</code> for easy abstraction of functions that interpolate something over time.</li>
+	</ul>All functions are <a href="http://en.wikipedia.org/wiki/Higher-order_function">higher order functions</a>,
+	which is a concept that may seem confusing at first. The <a href="#timer.lua-Example">example</a> shows how to
+	use this concept.
+	</p>
+	<p>Functions:
+	<table class="functionlist">
+		<tr><td><a href="#timer.lua-add">Timer.add(delay, func)</a></td><td>Add a delayed function</td></tr>
+		<tr><td><a href="#timer.lua-addPeriodic">Timer.addPeriodic(delay, func, count)</a></td><td>Add a periodic function</td></tr>
+		<tr><td><a href="#timer.lua-clear">Timer.clear()</a></td><td>Clear functions</td></tr>
+		<tr><td><a href="#timer.lua-update">Timer.update(dt)</a></td><td>Update timer</td></tr>
+		<tr><td><a href="#timer.lua-Interpolator">Interpolator(length, func)</a></td><td>Create interpolating function</td></tr>
+	</table></p>
+	<p>Note the <em>.</em> (dot) in the function names. It is an error to call <code>Timer.add</code> with a colon! If you
+	get weird errors, that might be the cause.</p>
+	<p>The <code>Timer</code> stores it's timed functions in the table <code>Timer.functions</code>.
+	You can manipulate it, but probably shouldn't.</p>
+
+	<a name="timer.lua-add"></a>
+	<div class="doc"><span class="function">function Timer.add(delay, func)<a href="#timer.lua" class="top">^ top</a></span>
+		Add a timed function. The function will be executed when <code>delay</code> seconds have elapsed.
+		<p>Note that there is <em>no guarantee</em> that the delay will be exceeded. It is, however, guaranteed that
+		the function will not be executed before the delay has passed.</p>
+		<p>If the function is called, it will receive itself as only parameter. This may be useful to implement the
+		periodic behavior of <code>Timer.addPeriodic</code> <a href="#timer.lua-Example">(see the example)</a>.
+		<table>
+			<tr><th>Parameters:</th><td class="p"><em>[number]</em><code>delay</code>:</td>
+				<td>Time that has to pass before the function is called</td></tr>
+			<tr><th></th><td class="p"><em>[function]</em><code>func</code>:</td><td>The function to be called</td></tr>
+		</table>
+	</div>
+
+	<a name="timer.lua-addPeriodic"></a>
+	<div class="doc"><span class="function">function Timer.addPeriodic(delay, func, count)<a href="#timer.lua" class="top">^ top</a></span>
+		Add a periodic timed function, i.e. a function that will be called every <code>delay</code> seconds.
+		<p>The same things as with <code>Timer.add</code> apply.</p>
+		<table>
+			<tr><th>Parameters:</th><td class="p"><em>[number]</em><code>delay</code>:</td>
+				<td>Time that has to pass before the function is called</td></tr>
+			<tr><th></th><td class="p"><em>[function]</em><code>func</code>:</td><td>The function to be called.</td></tr>
+			<tr><th></th><td class="p"><em>[optional number]</em><code>count</code>:</td>
+				<td>Number of times the function should be called. If omitted, the function loops indefinitely.</td></tr>
+		</table>
+	</div>
+
+	<a name="timer.lua-clear"></a>
+	<div class="doc"><span class="function">function Timer.clear()<a href="#timer.lua" class="top">^ top</a></span>
+		Clears all timers. That is, it resets the table <code>Timer.functions</code>.
+	</div>
+
+	<a name="timer.lua-update"></a>
+	<div class="doc"><span class="function">function Timer.update(dt)<a href="#timer.lua" class="top">^ top</a></span>
+		Update timers and execute functions if the deadline is reached. Use this function in <code>love.update(dt)</code>.
+		<table>
+			<tr><th>Parameters:</th><td class="p"><em>[number]</em><code>dt</code>:</td>
+				<td>Time that has passed since the last <code>Timer.update</code>.</td></tr>
+		</table>
+	</div>
+
+	<a name="timer.lua-Interpolator"></a>
+	<div class="doc"><span class="function">function Interpolator(length, func)<a href="#timer.lua" class="top">^ top</a></span>
+		Helper to create interpolating functions, i.e. functions that changes it's behavior depending
+		on how much time has passed.
+		<p>The interpolating function <code>func</code> will receive the fraction (in respect to
+		the supplied <code>length</code>) of time that has passed, but 1.0 at max.</p>
+		<p><code>Interpolator</code> creates a function that will have to be called in <code>love.update</code>, which
+		will itself execute <code>func</code> with the right parameters. It returns <code>true</code> as long as
+		the interpolation is not yet finished or <code>nil</code> if the interpolation stopped.</p>
+		<table>
+			<tr><th>Parameters:</th><td class="p"><em>[number]</em><code>length</code>:</td><td>Interpolation length.</td></tr>
+			<tr><th></th><td class="p"><em>[function]</em><code>func</code>:</td><td>Interpolating function.</td></tr>
+			<tr><th>Returns</th><td colspan="2">A function <code>inter(dt)</code> with argument <code>dt</code> that has
+					to be called in <code>love.update</code>.</td></tr>
+		</table>
+	</div>
+
+	<a name="timer.lua-Example"></a>
+	<h4>Example usage</h4>
+	<div class="doc"><span class="function">Timer example <a class="top" href="#timer.lua">^ top</a></span>
+	</div>
+	<div class="doc"><span class="function">Implementing <code>Timer.addPeriodic()</code> <a class="top" href="#timer.lua">^ top</a></span>
+	</div>
+</div>
+
+<div class="module"><a name="vector.lua"></a>
 	<h3>vector.lua<a class="top" href="#doc">^ top</a></h3>
 	<a href="http://github.com/vrld/hump/blob/master/vector.lua" class="source">view source</a>
 	<p>A vector class implementing nearly everything you want to do with vectors, and some more.</p>
@@ -279,9 +471,7 @@ print(a:dist(b)) -- prints 1.4142135623731</pre></td></tr>
 	</div>
 </div>
 
-
-<div class="module">
-	<a name="class.lua"></a>
+<div class="module"><a name="class.lua"></a>
 	<h3>class.lua<a class="top" href="#doc">^ top</a></h3>
 	<a href="http://github.com/vrld/hump/blob/master/class.lua" class="source">view source</a>
 	<p>class.lua provides a simple and easy to use class system. Albeit it's
@@ -409,8 +599,7 @@ result:foo()    -- error: method does not exist</pre>
 	</div>
 </div>
 
-<div class="module">
-	<a name="camera.lua"></a>
+<div class="module"><a name="camera.lua"></a>
 	<h3>camera.lua<a class="top" href="#doc">^ top</a></h3>
 	<a href="http://github.com/vrld/hump/blob/master/camera.lua" class="source">view source</a>
 	<em>Depends on <a href="#vector.lua">vector.lua</a></em>
@@ -530,110 +719,7 @@ camera:postdraw()</pre></td></tr>
 	</div>
 </div>
 
-<div class="module">
-	<a name="gamestate.lua"></a>
-	<h3>gamestate.lua<a class="top" href="#doc">^ top</a></h3>
-	<a href="http://github.com/vrld/hump/blob/master/gamestate.lua" class="source">view source</a>
-
-	<p>Useful to separate different states of your game (hence "gamestate") like title screens,
-	level loading, main game, etc. Each gamestate can have it's own <code>update()</code>, <code>draw()</code>,
-	<code>keyreleased()</code>, <code>keypressed()</code> and <code>mousereleased()</code> which correspond
-	to the ones defined in love. See the <a href="#gamestate.lua-callbackList">callback list</a> for more details.</p>
-
-	<p>Additionally, each gamestate can define a <code>enter(pre, ...)</code> and <code>leave()</code> function,
-	which are called when using <code>Gamestate.switch(to, ...)</code>. <em>Do not attempt to use these functions
-		yourself to initialize the first gamestate,</em> use the <code>switch</code> function instead.</p>
-
-	<p>The module defines the following functions:
-	<table class="functionlist">
-		<tr><td><a href="#gamestate.lua-new">Gamestate.new()</a></td><td>New gamestate</td></tr>
-		<tr><td><a href="#gamestate.lua-switch">Gamestate.switch(to, ...)</a></td><td>Switch gamestate</td></tr>
-		<tr><td><a href="#gamestate.lua-update">Gamestate.update(dt)</a></td><td>Call update callback</td></tr>
-		<tr><td><a href="#gamestate.lua-draw">Gamestate.draw()</a></td><td>Call draw callback</td></tr>
-		<tr><td><a href="#gamestate.lua-keypressed">Gamestate.keypressed(key, unicode)</a></td><td>Call keypressed callback</td></tr>
-		<tr><td><a href="#gamestate.lua-keyreleased">Gamestate.keyreleased(key)</a></td><td>Call keyreleased callback</td></tr>
-		<tr><td><a href="#gamestate.lua-mousereleased">Gamestate.mousereleased(x,y,btn)</a></td><td>Call mousereleased callback</td></tr>
-		<tr><td><a href="#gamestate.lua-registerEvents">Gamestate.registerEvents()</a></td><td>Register all callbacks</td></tr>
-	</table></p>
-
-	<a name="gamestate.lua-new"></a>
-	<div class="doc"><span class="function">function Gamestate.new()<a class="top" href="#gamestate.lua">^ top</a></span>
-		Create a new gamestate.
-		<table><tr><th>Returns:</th><td>The new (but empty) gamestate object.</td></tr></table>
-	</div>
-
-	<a name="gamestate.lua-switch"></a>
-	<div class="doc"><span class="function">function Gamestate.switch(to, ...)<a class="top" href="#gamestate.lua">^ top</a></span>
-		Switch the gamestate.
-		<p>Calls <code>leave()</code> on the currently active gamestate.</p>
-		<p>Calls <code>enter(current, ...)</code> on the target gamestate, where <code>current</code>
-		is the gamestate before the switch and <code>...</code> are the additionals arguments given
-		to <code>Gamestate.switch</code>.</p>
-		<table>
-			<tr><th>Parameters:</th><td class="p"><em>[gamestate]</em><code>to</code>:</td><td>target gamestate.</td></tr>
-			<tr><td>           </td><td class="p"><code>...</code>:</td><td>additional arguments to pass</td></tr>
-			<tr><th>Returns:</th><td colspan="2">the result of <code>to:enter(current, ...)</code></td></tr>
-		</table>
-	</div>
-
-	<a name="gamestate.lua-update"></a>
-	<div class="doc"><span class="function">function Gamestate.update(dt)<a class="top" href="#gamestate.lua">^ top</a></span>
-		Calls <code>update(dt)</code> on current gamestate.
-	</div>
-
-	<a name="gamestate.lua-draw"></a>
-	<div class="doc"><span class="function">function Gamestate.draw()<a class="top" href="#gamestate.lua">^ top</a></span>
-		Calls <code>draw()</code> on current gamestate.
-	</div>
-
-	<a name="gamestate.lua-keypressed"></a>
-	<div class="doc"><span class="function">function Gamestate.keypressed(key, unicode)<a class="top" href="#gamestate.lua">^ top</a></span>
-		Calls <code>keypressed(key, unicode)</code> on current gamestate.
-	</div>
-
-
-	<a name="gamestate.lua-keyreleased"></a>
-	<div class="doc"><span class="function">function Gamestate.keyreleased(key)<a class="top" href="#gamestate.lua">^ top</a></span>
-		Calls <code>keyreleased(key)</code> on current gamestate.
-	</div>
-
-
-	<a name="gamestate.lua-mousereleased"></a>
-	<div class="doc"><span class="function">function Gamestate.mousereleased(x,y,btn)<a class="top" href="#gamestate.lua">^ top</a></span>
-		Calls <code>mousereleased(x,y,btn)</code> on the current gamestate.
-	</div>
-
-	<a name="gamestate.lua-registerEvents"></a>
-	<div class="doc"><span class="function">function Gamestate.registerEvents()<a class="top" href="#gamestate.lua">^ top</a></span>
-		Registers all above events so you don't need to call then in your <code>love.*</code> routines.
-		<p>It is an error to call this anywhere else than <code>love.load()</code>, since it overwrites the
-		callbacks. Don't worry though, your callbacks will still be executed.</p>
-	</div>
-
-	<a name="gamestate.lua-callbackList"></a>
-	<h4>List of callbacks<a class="top" href="#gamestate.lua">^ top</a></h4>
-	<table class="functionlist">
-		<tr><td><code>enter(previous, ...)</code></td>
-			<td>Gets called upon entering the state. <strong>Don't call this yourself, use
-					<code>Gamestate.switch</code> instead.</strong></td></tr>
-		<tr><td><code>leave()</code></td>
-			<td>Gets called upon leaving the state. The same warning as with <code>enter</code> applies.</td></tr>
-		<tr><td><code>update(dt)</code></td>
-			<td>Manually called by <code>Gamestate.update</code>, or automatically like <code>love.update</code>
-				when using <code>Gamestate.registerEvents()</code>.</td></tr>
-		<tr><td><code>draw()</code></td>
-			<td>Manually called by <code>Gamestate.draw</code>, or automatically like <code>love.draw</code></td></tr>
-		<tr><td><code>keypressed(key, unicode)</code></td>
-			<td>Manually called by <code>Gamestate.keypressed</code>, or automatically like <code>love.keypressed</code></td></tr>
-		<tr><td><code>keyreleased(key)</code></td>
-			<td>Manually called by <code>Gamestate.keyreleased</code>, or automatically like <code>love.keyreleased</code></td></tr>
-		<tr><td style="width:200px;"><code>mousereleased(x,y,btn)</code></td>
-			<td>Manually called by <code>Gamestate.mousereleased</code>, or automatically like <code>love.mousereleased</code></td></tr>
-	</table>
-</div>
-
-<div class="module">
-	<a name="ringbuffer.lua"></a>
+<div class="module"><a name="ringbuffer.lua"></a>
 	<h3>ringbuffer.lua<a href="#doc" class="top">^ top</a></h3>
 	<a href="http://github.com/vrld/hump/blob/master/ringbuffer.lua" class="source">view source</a>
 	<p>A circular container that can hold arbitrary items. It can be used to create <em>Tomb Raider</em> style
@@ -753,8 +839,7 @@ rb:removeAt(-1) -- rb = { 2 ,4,5}, rb:get() == 2</pre></td></tr>
 	</div>
 </div>
 
-<div class="module">
-	<a name="sequence.lua"></a>
+<div class="module"><a name="sequence.lua"></a>
 	<h3>sequence.lua<a href="#doc" class="top">^ top</a></h3>
 	<a href="http://github.com/vrld/hump/blob/master/sequence.lua" class="source">view source</a>
 	<em>Depends on <a href="#ringbuffer.lua">ringbuffer.lua</a></em>
@@ -878,7 +963,7 @@ rb:removeAt(-1) -- rb = { 2 ,4,5}, rb:get() == 2</pre></td></tr>
 	<div class="doc">
 		<span class="function">Ending credits<a href="#sequence.lua" class="top">^ top</a></span>
 		<pre>local sc = {}
--- moving and fading look cool
+-- moving and fading looks cool
 sc.idea = Scene(5)
 function sc.idea:draw()
     local frac = (self.time / self.length) ^ 3
