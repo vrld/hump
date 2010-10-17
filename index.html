@@ -282,7 +282,8 @@ module by clicking these:
 		the supplied <code>length</code>) of time that has passed, but 1.0 at max.</p>
 		<p><code>Interpolator</code> creates a function that will have to be called in <code>love.update</code>, which
 		will itself execute <code>func</code> with the right parameters. It returns <code>true</code> as long as
-		the interpolation is not yet finished or <code>nil</code> if the interpolation stopped.</p>
+		the interpolation is not yet finished or <code>nil</code> if the interpolation stopped as well
+		as any parameters that the function returns.</p>
 		<table>
 			<tr><th>Parameters:</th><td class="p"><em>[number]</em><code>length</code>:</td><td>Interpolation length.</td></tr>
 			<tr><th></th><td class="p"><em>[function]</em><code>func</code>:</td><td>Interpolating function.</td></tr>
@@ -294,8 +295,59 @@ module by clicking these:
 	<a name="timer.lua-Example"></a>
 	<h4>Example usage</h4>
 	<div class="doc"><span class="function">Timer example <a class="top" href="#timer.lua">^ top</a></span>
+		This example will print the number of elapsed seconds in the top left corner using a periodic function and
+		show five circles one after another using delayed functions:
+<pre>time = 0
+circles = {}
+function love.load()
+    Timer.add(1, function() circles[#circles+1] = {x = 100, y = 100, r = 10} end)
+    Timer.add(2, function() circles[#circles+1] = {x = 130, y = 130, r = 20} end)
+    Timer.add(3, function() circles[#circles+1] = {x = 180, y = 180, r = 30} end)
+    Timer.add(4, function() circles[#circles+1] = {x = 250, y = 250, r = 40} end)
+    Timer.add(5, function() circles[#circles+1] = {x = 340, y = 340, r = 50} end)
+    Timer.addPeriodic(1, function() time = time + 1 end)
+
+    love.graphics.setBackgroundColor(255,255,255)
+    love.graphics.setColor(0,0,0)
+end
+
+function love.update(dt)
+    Timer.update(dt)
+end
+
+function love.draw()
+    for _,c in ipairs(circle) do
+        love.graphics.circle('fill', c.x, c.y, c.r)
+    end
+end</pre>
 	</div>
-	<div class="doc"><span class="function">Implementing <code>Timer.addPeriodic()</code> <a class="top" href="#timer.lua">^ top</a></span>
+
+<div class="doc"><span class="function">Implementing <code>Timer.addPeriodic()</code> <a class="top" href="#timer.lua">^ top</a></span>
+		Since the function will receive itself as parameter when called, it is easy to implement
+		a function that will reschedule itself:
+<pre>Timer.add(1, function(func) print("foo") Timer.add(1, func) end)</pre>
+</pre>
+	</div>
+
+	<div class="doc"><span class="function">Using Interpolator <a class="top" href="#timer.lua">^ top</a></span>
+		This example uses an interpolating function to fade the background from black to white and
+		move a circle along the x-axis:
+<pre>function love.load()
+    love.graphics.setBackgroundColor(0,0,0)
+    love.graphics.setColor(0,0,0)
+end
+
+xpos = 100
+fader = Interpolator(5, function(frac) love.graphics.setBackgroundColor(frac*255,frac*255,frac*255) end)
+mover = Interpolator(10, function(frac) xpos = 10 + 600 * frac end)
+function love.update(dt)
+    fader(dt)
+    mover(dt)
+end
+
+function love.draw()
+    love.graphics.circle(xpos, 300, 80)
+end</pre>
 	</div>
 </div>
 
