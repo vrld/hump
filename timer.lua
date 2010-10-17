@@ -62,6 +62,6 @@ function Interpolator(length, func)
 	return function(dt)
 		func(math.min(1, t/length))
 		t = t + dt
-		return t - dt <= length
+		return t - dt <= length or nil
 	end
 end
