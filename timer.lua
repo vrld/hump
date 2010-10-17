@@ -60,8 +60,7 @@ function Interpolator(length, func)
 	assert(type(func) == "function", "second argument needs to be a function")
 	local t = 0
 	return function(dt)
-		func(math.min(1, t/length))
 		t = t + dt
-		return t - dt <= length or nil
+		return t <= length or nil, func(math.min(1, (t-dt)/length))
 	end
 end
