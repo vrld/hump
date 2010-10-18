@@ -59,8 +59,18 @@ end
 function Interpolator(length, func)
 	assert(type(func) == "function", "second argument needs to be a function")
 	local t = 0
-	return function(dt)
+	return function(dt, ...)
 		t = t + dt
-		return t <= length or nil, func(math.min(1, (t-dt)/length))
+		return t <= length or nil, func(math.min(1, (t-dt)/length), ...)
+	end
+end
+
+function Oscillator(length, func)
+	assert(type(func) == "function", "second argument needs to be a function")
+	local t = 0
+	return function(dt, ...)
+		t = t + dt
+		while t > length do t = t - length end
+		return func(t/length, ...)
 	end
 end
