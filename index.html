@@ -50,7 +50,7 @@
 	td, th { border-top: 1px dashed #ddd; }
 	th { text-align: left; font-weight: normal; font-style: italic; text-decoration: underline; }
 	td { padding-left: 1em; margin: 0; }
-	td.p { text-align: right; }
+	td.p { text-align: right; vertical-align: top; }
 	.doc td em { font-size: .8em; font-weight:bold; font-style:normal; padding-right: .6em;}
 
 	.doc pre, code { color: black; padding: 0; font-family: fixed; border: 1px solid #ddd; background: #e7ecec; }
@@ -84,7 +84,7 @@ for the excellent <a href="http://love2d.org/">L&Ouml;VE</a> Engine.</p>
 	<li><em>timer.lua</em>: timed function calling and interpolating functions,</li>
 	<li><em>vector.lua</em>: a mature vector type,</li>
 	<li><em>class.lua</em>: a simple and easy class system with function inheritance,</li>
-	<li><em>camera.lua</em>: a translate-, zoom- and rotatable camera and</li>
+	<li><em>camera.lua</em>: a move-, zoom- and rotatable camera and</li>
 	<li><em>ringbuffer.lua</em>: a circular container.</li>
 	<li><em>sequence.lua</em>: utility to handle ingame cutscenes and such.</li>
 </ul></p>
@@ -227,6 +227,7 @@ module by clicking these:
 		<tr><td><a href="#timer.lua-clear">Timer.clear()</a></td><td>Clear functions</td></tr>
 		<tr><td><a href="#timer.lua-update">Timer.update(dt)</a></td><td>Update timer</td></tr>
 		<tr><td><a href="#timer.lua-Interpolator">Interpolator(length, func)</a></td><td>Create interpolating function</td></tr>
+		<tr><td><a href="#timer.lua-Oscillator">Oscillator(length, func)</a></td><td>Create interpolating function</td></tr>
 	</table></p>
 	<p>Note the <em>.</em> (dot) in the function names. It is an error to call <code>Timer.add</code> with a colon! If you
 	get weird errors, that might be the cause.</p>
@@ -255,7 +256,7 @@ module by clicking these:
 			<tr><th>Parameters:</th><td class="p"><em>[number]</em><code>delay</code>:</td>
 				<td>Time that has to pass before the function is called</td></tr>
 			<tr><th></th><td class="p"><em>[function]</em><code>func</code>:</td><td>The function to be called.</td></tr>
-			<tr><th></th><td class="p"><em>[optional number]</em><code>count</code>:</td>
+			<tr><th></th><td class="p" style="width:12em;"><em>[optional number]</em><code>count</code>:</td>
 				<td>Number of times the function should be called. If omitted, the function loops indefinitely.</td></tr>
 		</table>
 	</div>
@@ -284,10 +285,30 @@ module by clicking these:
 		will itself execute <code>func</code> with the right parameters. It returns <code>true</code> as long as
 		the interpolation is not yet finished or <code>nil</code> if the interpolation stopped as well
 		as any parameters that the function returns.</p>
+		<p>The prototype of the functions are:<ul>
+			<li>Argument function: <code>function arg(fraction, ...)</code> where <code>...</code> are additional arguments.</li>
+			<li>Returned function: <code>function inter(dt, ...)</code> where <code>...</code> are arguments that get passed to arg</li>
+		</ul>
+		</p>
 		<table>
 			<tr><th>Parameters:</th><td class="p"><em>[number]</em><code>length</code>:</td><td>Interpolation length.</td></tr>
 			<tr><th></th><td class="p"><em>[function]</em><code>func</code>:</td><td>Interpolating function.</td></tr>
-			<tr><th>Returns</th><td colspan="2">A function <code>inter(dt)</code> with argument <code>dt</code> that has
+			<tr><th>Returns</th><td colspan="2">A function <code>inter(dt, ...)</code> that has
+					to be called in <code>love.update</code>.</td></tr>
+		</table>
+	</div>
+
+	<a name="timer.lua-Oscillator"></a>
+	<div class="doc"><span class="function">function Oscillator(length, func)<a href="#timer.lua" class="top">^ top</a></span>
+		Create oscillating function, i.e. a looped interpolating function.
+		<p>The function does the same as <code>Interpolator</code>, except that if the passed time reaches <code>length</code>,
+		the internal timer will be reset. That means that the <code>fraction</code>-argument of the oscillating
+		function will loop from 0 to 1.</p>
+		<p>See the example for clarification</p>
+		<table>
+			<tr><th>Parameters:</th><td class="p"><em>[number]</em><code>length</code>:</td><td>Length of one period.</td></tr>
+			<tr><th></th><td class="p"><em>[function]</em><code>func</code>:</td><td>Oscillating function.</td></tr>
+			<tr><th>Returns</th><td colspan="2">A function <code>osc(dt, ...)</code> that has
 					to be called in <code>love.update</code>.</td></tr>
 		</table>
 	</div>
@@ -330,9 +351,9 @@ end</pre>
 </pre>
 	</div>
 
-	<div class="doc"><span class="function">Using Interpolator <a class="top" href="#timer.lua">^ top</a></span>
+	<div class="doc"><span class="function">Using Interpolator and Oscillator<a class="top" href="#timer.lua">^ top</a></span>
 		This example uses an interpolating function to fade the background from black to white and
-		move a circle along the x-axis:
+		swings a circle around the screen center:
 <pre>function love.load()
     love.graphics.setBackgroundColor(0,0,0)
     love.graphics.setColor(0,0,0)
@@ -340,7 +361,7 @@ end
 
 xpos = 100
 fader = Interpolator(5, function(frac) love.graphics.setBackgroundColor(frac*255,frac*255,frac*255) end)
-mover = Interpolator(10, function(frac) xpos = 10 + 600 * frac end)
+mover = Oscillator(10, function(frac) xpos = 400 + 300 * math.sin(2*math.pi*frac) end)
 function love.update(dt)
     fader(dt)
     mover(dt)
@@ -657,7 +678,7 @@ result:foo()    -- error: method does not exist</pre>
 	<a href="http://github.com/vrld/hump/blob/master/camera.lua" class="source">view source</a>
 	<em>Depends on <a href="#vector.lua">vector.lua</a></em>
 	<p>Camera object to display only a partial region of the game world. The region
-	can be zoomed and rotated. You can transform camera coordinates to world coordinated
+	can be moved, zoomed and rotated. You can transform camera coordinates to world coordinated
 	(e.g. get the location of the mouse in the game world). It is possible to have
 	more than one camera per game.</p>
 
