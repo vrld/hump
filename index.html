@@ -125,11 +125,14 @@ module by clicking these:
 	<table class="functionlist">
 		<tr><td><a href="#gamestate.lua-new">Gamestate.new()</a></td><td>New gamestate</td></tr>
 		<tr><td><a href="#gamestate.lua-switch">Gamestate.switch(to, ...)</a></td><td>Switch gamestate</td></tr>
-		<tr><td><a href="#gamestate.lua-update">Gamestate.update(dt)</a></td><td>Call update callback</td></tr>
-		<tr><td><a href="#gamestate.lua-draw">Gamestate.draw()</a></td><td>Call draw callback</td></tr>
-		<tr><td><a href="#gamestate.lua-keypressed">Gamestate.keypressed(key, unicode)</a></td><td>Call keypressed callback</td></tr>
-		<tr><td><a href="#gamestate.lua-keyreleased">Gamestate.keyreleased(key)</a></td><td>Call keyreleased callback</td></tr>
-		<tr><td><a href="#gamestate.lua-mousereleased">Gamestate.mousereleased(x,y,btn)</a></td><td>Call mousereleased callback</td></tr>
+		<tr><td><a href="#gamestate.lua-update">Gamestate.update(...)</a></td><td>Call update callback</td></tr>
+		<tr><td><a href="#gamestate.lua-draw">Gamestate.draw(...)</a></td><td>Call draw callback</td></tr>
+		<tr><td><a href="#gamestate.lua-keypressed">Gamestate.keypressed(...)</a></td><td>Call keypressed callback</td></tr>
+		<tr><td><a href="#gamestate.lua-keyreleased">Gamestate.keyreleased(...)</a></td><td>Call keyreleased callback</td></tr>
+		<tr><td><a href="#gamestate.lua-mousepressed">Gamestate.mousepressed(...)</a></td><td>Call mousepressed callback</td></tr>
+		<tr><td><a href="#gamestate.lua-mousereleased">Gamestate.mousereleased(...)</a></td><td>Call mousereleased callback</td></tr>
+		<tr><td><a href="#gamestate.lua-joystickpressed">Gamestate.joystickpressed(...)</a></td><td>Call joystickpressed callback</td></tr>
+		<tr><td><a href="#gamestate.lua-joystickreleased">Gamestate.joystickreleased(...)</a></td><td>Call joystickreleased callback</td></tr>
 		<tr><td><a href="#gamestate.lua-registerEvents">Gamestate.registerEvents()</a></td><td>Register all callbacks</td></tr>
 	</table></p>
 
@@ -168,16 +171,29 @@ module by clicking these:
 		Calls <code>keypressed(key, unicode)</code> on current gamestate.
 	</div>
 
-
 	<a name="gamestate.lua-keyreleased"></a>
 	<div class="doc"><span class="function">function Gamestate.keyreleased(key)<a class="top" href="#gamestate.lua">^ top</a></span>
 		Calls <code>keyreleased(key)</code> on current gamestate.
 	</div>
 
+	<a name="gamestate.lua-mousepressed"></a>
+	<div class="doc"><span class="function">function Gamestate.mousepressed(x,y,btn)<a class="top" href="#gamestate.lua">^ top</a></span>
+		Calls <code>mousepressed(x,y,btn)</code> on the current gamestate.
+	</div>
 
 	<a name="gamestate.lua-mousereleased"></a>
 	<div class="doc"><span class="function">function Gamestate.mousereleased(x,y,btn)<a class="top" href="#gamestate.lua">^ top</a></span>
 		Calls <code>mousereleased(x,y,btn)</code> on the current gamestate.
+	</div>
+
+	<a name="gamestate.lua-joystickpressed"></a>
+	<div class="doc"><span class="function">function Gamestate.joystickpressed(joystick, button)<a class="top" href="#gamestate.lua">^ top</a></span>
+		Calls <code>joystickpressed(joystick, button)</code> on the current gamestate.
+	</div>
+
+	<a name="gamestate.lua-joystickpressed"></a>
+	<div class="doc"><span class="function">function Gamestate.joystickreleased(joystick, button)<a class="top" href="#gamestate.lua">^ top</a></span>
+		Calls <code>joystickreleased(joystick, button)</code> on the current gamestate.
 	</div>
 
 	<a name="gamestate.lua-registerEvents"></a>
@@ -204,8 +220,14 @@ module by clicking these:
 			<td>Manually called by <code>Gamestate.keypressed</code>, or automatically like <code>love.keypressed</code></td></tr>
 		<tr><td><code>keyreleased(key)</code></td>
 			<td>Manually called by <code>Gamestate.keyreleased</code>, or automatically like <code>love.keyreleased</code></td></tr>
-		<tr><td style="width:200px;"><code>mousereleased(x,y,btn)</code></td>
+		<tr><td><code>mousepressed(x,y,btn)</code></td>
+			<td>Manually called by <code>Gamestate.mousepressed</code>, or automatically like <code>love.mousepressed</code></td></tr>
+		<tr><td><code>mousereleased(x,y,btn)</code></td>
 			<td>Manually called by <code>Gamestate.mousereleased</code>, or automatically like <code>love.mousereleased</code></td></tr>
+		<tr><td><code>joystickpressed(joystick,btn)</code></td>
+			<td>Manually called by <code>Gamestate.joystickpressed</code>, or automatically like <code>love.joystickpressed</code></td></tr>
+		<tr><td style="width:200px;"><code>joystickreleased(joystick,btn)</code></td>
+			<td>Manually called by <code>Gamestate.joystickreleased</code>, or automatically like <code>love.joystickreleased</code></td></tr>
 	</table>
 </div>
 
