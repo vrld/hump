@@ -55,7 +55,6 @@ function Class(constructor)
 
 	return setmetatable(c, meta)
 end
-function Interface(name) return Class{name = name or "<unnamed interface>"} end
 
 function Inherit(class, interface, ...)
 	if not interface then return end
