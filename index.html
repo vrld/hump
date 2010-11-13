@@ -38,7 +38,7 @@
 	a.source:hover { background: #eee; border-color: #aaa; color: #555;}
 
 	.doc { padding-left: 1em; margin-bottom: 1em; border-left: 1px dotted #aaa; }
-	.function { display:block; font-weight:bold; font-family: fixed; background: #f9f9f9; border:1px solid #ddd; margin-left: -1em; }
+	.functiondoc { display:block; font-weight:bold; font-family: fixed; background: #f9f9f9; border:1px solid #ddd; margin-left: -1em; }
 
 	.functionlist { border-left: 1px dotted #aaa; margin: -.6em 0 0 2em; }
 	.functionlist a { text-decoration: none; font-weight:bold; color: #506060; }
@@ -54,7 +54,19 @@
 	.doc td em { font-size: .8em; font-weight:bold; font-style:normal; padding-right: .6em;}
 
 	.doc pre, code { color: black; padding: 0; font-family: fixed; border: 1px solid #ddd; background: #e7ecec; }
+	pre code.lua { border: 0; }
 </style>
+<link rel="stylesheet" type="text/css" href="highlight.css" />
+<script type="text/javascript" src="highlight.pack.js"></script>
+<script type="text/javascript">
+	window.onload = function() {
+		var examples = document.getElementsByTagName("code");
+		for (i = 0; i < examples.length; ++i) {
+			if (examples[i].className == "lua")
+				hljs.highlightBlock(examples[i], "    ");
+		}
+	};
+</script>
 </head>
 
 <body>
@@ -137,13 +149,13 @@ module by clicking these:
 	</table></p>
 
 	<a name="gamestate.lua-new"></a>
-	<div class="doc"><span class="function">function Gamestate.new()<a class="top" href="#gamestate.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Gamestate.new()<a class="top" href="#gamestate.lua">^ top</a></span>
 		Create a new gamestate.
 		<table><tr><th>Returns:</th><td>The new (but empty) gamestate object.</td></tr></table>
 	</div>
 
 	<a name="gamestate.lua-switch"></a>
-	<div class="doc"><span class="function">function Gamestate.switch(to, ...)<a class="top" href="#gamestate.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Gamestate.switch(to, ...)<a class="top" href="#gamestate.lua">^ top</a></span>
 		Switch the gamestate.
 		<p>Calls <code>leave()</code> on the currently active gamestate.</p>
 		<p>Calls <code>enter(current, ...)</code> on the target gamestate, where <code>current</code>
@@ -157,47 +169,47 @@ module by clicking these:
 	</div>
 
 	<a name="gamestate.lua-update"></a>
-	<div class="doc"><span class="function">function Gamestate.update(dt)<a class="top" href="#gamestate.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Gamestate.update(dt)<a class="top" href="#gamestate.lua">^ top</a></span>
 		Calls <code>update(dt)</code> on current gamestate.
 	</div>
 
 	<a name="gamestate.lua-draw"></a>
-	<div class="doc"><span class="function">function Gamestate.draw()<a class="top" href="#gamestate.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Gamestate.draw()<a class="top" href="#gamestate.lua">^ top</a></span>
 		Calls <code>draw()</code> on current gamestate.
 	</div>
 
 	<a name="gamestate.lua-keypressed"></a>
-	<div class="doc"><span class="function">function Gamestate.keypressed(key, unicode)<a class="top" href="#gamestate.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Gamestate.keypressed(key, unicode)<a class="top" href="#gamestate.lua">^ top</a></span>
 		Calls <code>keypressed(key, unicode)</code> on current gamestate.
 	</div>
 
 	<a name="gamestate.lua-keyreleased"></a>
-	<div class="doc"><span class="function">function Gamestate.keyreleased(key)<a class="top" href="#gamestate.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Gamestate.keyreleased(key)<a class="top" href="#gamestate.lua">^ top</a></span>
 		Calls <code>keyreleased(key)</code> on current gamestate.
 	</div>
 
 	<a name="gamestate.lua-mousepressed"></a>
-	<div class="doc"><span class="function">function Gamestate.mousepressed(x,y,btn)<a class="top" href="#gamestate.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Gamestate.mousepressed(x,y,btn)<a class="top" href="#gamestate.lua">^ top</a></span>
 		Calls <code>mousepressed(x,y,btn)</code> on the current gamestate.
 	</div>
 
 	<a name="gamestate.lua-mousereleased"></a>
-	<div class="doc"><span class="function">function Gamestate.mousereleased(x,y,btn)<a class="top" href="#gamestate.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Gamestate.mousereleased(x,y,btn)<a class="top" href="#gamestate.lua">^ top</a></span>
 		Calls <code>mousereleased(x,y,btn)</code> on the current gamestate.
 	</div>
 
 	<a name="gamestate.lua-joystickpressed"></a>
-	<div class="doc"><span class="function">function Gamestate.joystickpressed(joystick, button)<a class="top" href="#gamestate.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Gamestate.joystickpressed(joystick, button)<a class="top" href="#gamestate.lua">^ top</a></span>
 		Calls <code>joystickpressed(joystick, button)</code> on the current gamestate.
 	</div>
 
 	<a name="gamestate.lua-joystickpressed"></a>
-	<div class="doc"><span class="function">function Gamestate.joystickreleased(joystick, button)<a class="top" href="#gamestate.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Gamestate.joystickreleased(joystick, button)<a class="top" href="#gamestate.lua">^ top</a></span>
 		Calls <code>joystickreleased(joystick, button)</code> on the current gamestate.
 	</div>
 
 	<a name="gamestate.lua-registerEvents"></a>
-	<div class="doc"><span class="function">function Gamestate.registerEvents()<a class="top" href="#gamestate.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Gamestate.registerEvents()<a class="top" href="#gamestate.lua">^ top</a></span>
 		Registers all above events so you don't need to call then in your <code>love.*</code> routines.
 		<p>It is an error to call this anywhere else than <code>love.load()</code>, since it overwrites the
 		callbacks. Don't worry though, your callbacks will still be executed.</p>
@@ -257,7 +269,7 @@ module by clicking these:
 	You can manipulate it, but probably shouldn't.</p>
 
 	<a name="timer.lua-add"></a>
-	<div class="doc"><span class="function">function Timer.add(delay, func)<a href="#timer.lua" class="top">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Timer.add(delay, func)<a href="#timer.lua" class="top">^ top</a></span>
 		Add a timed function. The function will be executed when <code>delay</code> seconds have elapsed.
 		<p>Note that there is <em>no guarantee</em> that the delay will be exceeded. It is, however, guaranteed that
 		the function will not be executed before the delay has passed.</p>
@@ -271,7 +283,7 @@ module by clicking these:
 	</div>
 
 	<a name="timer.lua-addPeriodic"></a>
-	<div class="doc"><span class="function">function Timer.addPeriodic(delay, func, count)<a href="#timer.lua" class="top">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Timer.addPeriodic(delay, func, count)<a href="#timer.lua" class="top">^ top</a></span>
 		Add a periodic timed function, i.e. a function that will be called every <code>delay</code> seconds.
 		<p>The same things as with <code>Timer.add</code> apply.</p>
 		<table>
@@ -284,12 +296,12 @@ module by clicking these:
 	</div>
 
 	<a name="timer.lua-clear"></a>
-	<div class="doc"><span class="function">function Timer.clear()<a href="#timer.lua" class="top">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Timer.clear()<a href="#timer.lua" class="top">^ top</a></span>
 		Clears all timers. That is, it resets the table <code>Timer.functions</code>.
 	</div>
 
 	<a name="timer.lua-update"></a>
-	<div class="doc"><span class="function">function Timer.update(dt)<a href="#timer.lua" class="top">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Timer.update(dt)<a href="#timer.lua" class="top">^ top</a></span>
 		Update timers and execute functions if the deadline is reached. Use this function in <code>love.update(dt)</code>.
 		<table>
 			<tr><th>Parameters:</th><td class="p"><em>[number]</em><code>dt</code>:</td>
@@ -298,7 +310,7 @@ module by clicking these:
 	</div>
 
 	<a name="timer.lua-Interpolator"></a>
-	<div class="doc"><span class="function">function Interpolator(length, func)<a href="#timer.lua" class="top">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Interpolator(length, func)<a href="#timer.lua" class="top">^ top</a></span>
 		Helper to create interpolating functions, i.e. functions that changes it's behavior depending
 		on how much time has passed.
 		<p>The interpolating function <code>func</code> will receive the fraction (in respect to
@@ -321,7 +333,7 @@ module by clicking these:
 	</div>
 
 	<a name="timer.lua-Oscillator"></a>
-	<div class="doc"><span class="function">function Oscillator(length, func)<a href="#timer.lua" class="top">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Oscillator(length, func)<a href="#timer.lua" class="top">^ top</a></span>
 		Create oscillating function, i.e. a looped interpolating function.
 		<p>The function does the same as <code>Interpolator</code>, except that if the passed time reaches <code>length</code>,
 		the internal timer will be reset. That means that the <code>fraction</code>-argument of the oscillating
@@ -337,61 +349,67 @@ module by clicking these:
 
 	<a name="timer.lua-Example"></a>
 	<h4>Example usage</h4>
-	<div class="doc"><span class="function">Timer example <a class="top" href="#timer.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">Timer example <a class="top" href="#timer.lua">^ top</a></span>
 		This example will print the number of elapsed seconds in the top left corner using a periodic function and
 		show five circles one after another using delayed functions:
-<pre>time = 0
+<pre><code class="lua">time = 0
 circles = {}
 function love.load()
-    Timer.add(1, function() circles[#circles+1] = {x = 100, y = 100, r = 10} end)
-    Timer.add(2, function() circles[#circles+1] = {x = 130, y = 130, r = 20} end)
-    Timer.add(3, function() circles[#circles+1] = {x = 180, y = 180, r = 30} end)
-    Timer.add(4, function() circles[#circles+1] = {x = 250, y = 250, r = 40} end)
-    Timer.add(5, function() circles[#circles+1] = {x = 340, y = 340, r = 50} end)
-    Timer.addPeriodic(1, function() time = time + 1 end)
+	Timer.add(1, function() circles[#circles+1] = {x = 100, y = 100, r = 10} end)
+	Timer.add(2, function() circles[#circles+1] = {x = 130, y = 130, r = 20} end)
+	Timer.add(3, function() circles[#circles+1] = {x = 180, y = 180, r = 30} end)
+	Timer.add(4, function() circles[#circles+1] = {x = 250, y = 250, r = 40} end)
+	Timer.add(5, function() circles[#circles+1] = {x = 340, y = 340, r = 50} end)
+	Timer.addPeriodic(1, function() time = time + 1 end)
 
-    love.graphics.setBackgroundColor(255,255,255)
-    love.graphics.setColor(0,0,0)
+	love.graphics.setBackgroundColor(255,255,255)
+	love.graphics.setColor(0,0,0)
 end
 
 function love.update(dt)
-    Timer.update(dt)
+	Timer.update(dt)
 end
 
 function love.draw()
-    love.graphics.print(tostring(time), 20,20)
-    for _,c in ipairs(circles) do
-        love.graphics.circle('fill', c.x, c.y, c.r)
-    end
-end</pre>
+	love.graphics.print(tostring(time), 20,20)
+	for _,c in ipairs(circles) do
+		love.graphics.circle('fill', c.x, c.y, c.r)
+	end
+end</code></pre>
 	</div>
 
-<div class="doc"><span class="function">Implementing <code>Timer.addPeriodic()</code> <a class="top" href="#timer.lua">^ top</a></span>
+<div class="doc"><span class="functiondoc">Implementing <code>Timer.addPeriodic()</code> <a class="top" href="#timer.lua">^ top</a></span>
 		Since the function will receive itself as parameter when called, it is easy to implement
 		a function that will reschedule itself:
-<pre>Timer.add(1, function(func) print("foo") Timer.add(1, func) end)</pre>
+<pre><code class="lua">Timer.add(1, function(func) print("foo") Timer.add(1, func) end)</code></pre>
 </pre>
 	</div>
 
-	<div class="doc"><span class="function">Using Interpolator and Oscillator<a class="top" href="#timer.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">Using Interpolator and Oscillator<a class="top" href="#timer.lua">^ top</a></span>
 		This example uses an interpolating function to fade the background from black to white and
 		swings a circle around the screen center:
-<pre>function love.load()
-    love.graphics.setBackgroundColor(0,0,0)
-    love.graphics.setColor(0,0,0)
+<pre><code class="lua">function love.load()
+	love.graphics.setBackgroundColor(0,0,0)
+	love.graphics.setColor(0,0,0)
 end
 
 xpos = 100
-fader = Interpolator(5, function(frac) love.graphics.setBackgroundColor(frac*255,frac*255,frac*255) end)
-mover = Oscillator(10, function(frac) xpos = 400 + 300 * math.sin(2*math.pi*frac) end)
+fader = Interpolator(5, function(frac)
+	love.graphics.setBackgroundColor(frac*255,frac*255,frac*255)
+end)
+
+mover = Oscillator(10, function(frac)
+	xpos = 400 + 300 * math.sin(2*math.pi*frac)
+end)
+
 function love.update(dt)
-    fader(dt)
-    mover(dt)
+	fader(dt)
+	mover(dt)
 end
 
 function love.draw()
-    love.graphics.circle('fill', xpos, 300, 80, 36)
-end</pre>
+	love.graphics.circle('fill', xpos, 300, 80, 36)
+end</code></pre>
 	</div>
 </div>
 
@@ -426,7 +444,7 @@ end</pre>
 	</table></p>
 
 	<a name="vector.lua-vector"></a>
-	<div class="doc"><span class="function">function vector(x,y)<a class="top" href="#vector.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function vector(x,y)<a class="top" href="#vector.lua">^ top</a></span>
 		Creates a new vector. Element access with <code>v.x</code> and <code>v.y</code>.
 		<table>
 			<tr><th>Parameters:</th><td class="p"><em>[number]</em><code>x</code>:</td><td>x coordinate</td></tr>
@@ -436,7 +454,7 @@ end</pre>
 	</div>
 
 	<a name="vector.lua-isvector"></a>
-	<div class="doc"><span class="function">function isvector(v)<a class="top" href="#vector.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function isvector(v)<a class="top" href="#vector.lua">^ top</a></span>
 		Tests for vector type.
 		<table>
 			<tr><th>Parameters:</th><td class="p"><code>v</code>:</td><td>variable to test</td></tr>
@@ -445,7 +463,7 @@ end</pre>
 	</div>
 
 	<a name="vector.lua-clone"></a>
-	<div class="doc"><span class="function">function vector:clone()<a class="top" href="#vector.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function vector:clone()<a class="top" href="#vector.lua">^ top</a></span>
 		Clones a vector. Use when you do not want to create references.
 		<table>
 			<tr><th>Returns:</th><td colspan="2">New vector with the same coordinates.</td></tr>
@@ -453,18 +471,18 @@ end</pre>
 	</div>
 
 	<a name="vector.lua-unpack"></a>
-	<div class="doc"><span class="function">function vector:unpack()<a class="top" href="#vector.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function vector:unpack()<a class="top" href="#vector.lua">^ top</a></span>
 		Unpacks the vector.
 		<table>
 			<tr><th>Returns:</th><td colspan="2">the coordinate tuple <code>x, y</code></td></tr>
 			<tr><th colspan="3">Example:</th></tr>
-			<tr><td colspan="3"><pre>v = vector(1,2)
-print(v:unpack()) -- prints "1     2"</pre></td></tr>
+			<tr><td colspan="3"><pre><code class="lua">v = vector(1,2)
+print(v:unpack()) -- prints "1     2"</code></pre></td></tr>
 		</table>
 	</div>
 
 	<a name="vector.lua-operators"></a>
-	<div class="doc"><span class="function">Operators<a class="top" href="#vector.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">Operators<a class="top" href="#vector.lua">^ top</a></span>
 		<p>Arithmetic (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>) and
 		comparative operators (<code>==</code>, <code>&lt;=</code>, <code>&lt;</code>) are defined:</p>
 
@@ -486,43 +504,43 @@ print(v:unpack()) -- prints "1     2"</pre></td></tr>
 	</div>
 
 	<a name="vector.lua-permul"></a>
-	<div class="doc"><span class="function">function vector:permul(other)<a class="top" href="#vector.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function vector:permul(other)<a class="top" href="#vector.lua">^ top</a></span>
         Perform element-wise multiplication, e.g. <code>(2,3) x (3,4) = (6,12)</code>
 	</div>
 
 	<a name="vector.lua-len"></a>
-	<div class="doc"><span class="function">function vector:len()<a class="top" href="#vector.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function vector:len()<a class="top" href="#vector.lua">^ top</a></span>
 		Get length of vector.
 	</div>
 
 	<a name="vector.lua-len2"></a>
-	<div class="doc"><span class="function">function vector:len2()<a class="top" href="#vector.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function vector:len2()<a class="top" href="#vector.lua">^ top</a></span>
 		Get squared length.
 	</div>
 
 	<a name="vector.lua-dist"></a>
-	<div class="doc"><span class="function">function vector:dist(other)<a class="top" href="#vector.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function vector:dist(other)<a class="top" href="#vector.lua">^ top</a></span>
 		Get distance to other vector.
 
 		<table><tr><th>Example:</th></tr>
-			<tr><td><pre>a,b = vector(0,1), vector(1,0)
-print(a:dist(b)) -- prints 1.4142135623731</pre></td></tr>
+			<tr><td><pre><code class="lua">a,b = vector(0,1), vector(1,0)
+print(a:dist(b)) -- prints 1.4142135623731</code></pre></td></tr>
 		</table>
 	</div>
 
 	<a name="vector.lua-normalized"></a>
-	<div class="doc"><span class="function">function vector:normalized()<a class="top" href="#vector.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function vector:normalized()<a class="top" href="#vector.lua">^ top</a></span>
 		Get normalized vector. The original vector remains unchanged.
 	</div>
 
 	<a name="vector.lua-normalize_inplace"></a>
-	<div class="doc"><span class="function">function vector:normalize_inplace()<a class="top" href="#vector.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function vector:normalize_inplace()<a class="top" href="#vector.lua">^ top</a></span>
 		Normalize vector and return it.
 		<p><strong>Warning:</strong> This will change the state of all references to this vector.</p>
 	</div>
 
 	<a name="vector.lua-rotated"></a>
-	<div class="doc"><span class="function">function vector:rotated(phi)<a class="top" href="#vector.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function vector:rotated(phi)<a class="top" href="#vector.lua">^ top</a></span>
 		Get rotated vector. The original vector remains unchanged.
 		<table>
 			<tr><th>Parameters:</th><td class="p"><em>[number]</em><code>phi</code>:</td><td>Rotation angle in radians.</td></tr>
@@ -531,13 +549,13 @@ print(a:dist(b)) -- prints 1.4142135623731</pre></td></tr>
 	</div>
 
 	<a name="vector.lua-rotate_inplace"></a>
-	<div class="doc"><span class="function">function vector:rotate_inplace(phi)<a class="top" href="#vector.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function vector:rotate_inplace(phi)<a class="top" href="#vector.lua">^ top</a></span>
 		Rotate the vector and return it.
 		<p><strong>Warning:</strong> This will change the state of all references to this vector.</p>
 	</div>
 
 	<a name="vector.lua-perpendicular"></a>
-	<div class="doc"><span class="function">function vector:perpendicular()<a href="#vector.lua" class="top">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function vector:perpendicular()<a href="#vector.lua" class="top">^ top</a></span>
 	Get vector rotated by 90&deg; clockwise, e.g. the vector <code>(0,1)</code> results in <code>(1,0)</code>.
 	<table>
 		<tr><th>Sketch:</th><td><img src="vector-perpendicular.png" alt="Perpendicular vector" /></td></tr>
@@ -545,7 +563,7 @@ print(a:dist(b)) -- prints 1.4142135623731</pre></td></tr>
 	</div>
 
 	<a name="vector.lua-projectOn"></a>
-	<div class="doc"><span class="function">function vector:projectOn(v)<a href="#vector.lua" class="top">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function vector:projectOn(v)<a href="#vector.lua" class="top">^ top</a></span>
 	Project this vector onto another one, e.g. <code>(2,2)</code> projected onto <code>(1,0)</code> results in <code>(2,0)</code>.
 	<table>
 		<tr><th>Parameters:</th><td class="p"><em>[vector]</em><code>v</code></td><td>Vector to project onto</td></tr>
@@ -555,7 +573,7 @@ print(a:dist(b)) -- prints 1.4142135623731</pre></td></tr>
 	</div>
 
 	<a name="vector.lua-cross"></a>
-	<div class="doc"><span class="function">function vector:cross(v)<a href="#vector.lua" class="top">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function vector:cross(v)<a href="#vector.lua" class="top">^ top</a></span>
 		Calculates cross product between two vectors, i.e.:
 		<p>Treats both vectors as vectors of the xy-plane <em>(z-coordinate =0)</em> and calculates a vector perpendicular
 		on them. Because the result is perpendicular on to the input vectors, it has the form <em>(0,0,z)</em>.
@@ -585,7 +603,7 @@ print(a:dist(b)) -- prints 1.4142135623731</pre></td></tr>
 	<a href="#class.lua-Warning">warning</a> regarding metamethods.</p>
 
 	<a name="class.lua-Class"></a>
-	<div class="doc"><span class="function">function Class(constructor)<a class="top" href="#class.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Class(constructor)<a class="top" href="#class.lua">^ top</a></span>
 		Creates a new unnamed class.
 		<table>
 			<tr><th>Parameters:</th><td class="p" style="width:225px;"><em>[optional function]</em><code>constructor</code></td>
@@ -593,73 +611,76 @@ print(a:dist(b)) -- prints 1.4142135623731</pre></td></tr>
 					is the object, the others are parameters given upon construction.</td></tr>
 			<tr><th>Returns:</th><td colspan="2">the new class</td></tr>
 			<tr><th colspan="3">Example</th></tr>
-			<tr><td colspan="3"><pre>Feline = Class(function(self, size, weight)
-self.size = size self.weight = weight
+			<tr><td colspan="3"><pre><code class="lua">Feline = Class(function(self, size, weight)
+	self.size = size
+	self.weight = weight
 end)
 
 function Feline:stats()
-return string.format("size: %.02f, weight %.02f", self.size, self.weight)
+	return string.format("size: %.02f, weight %.02f", self.size, self.weight)
 end
 
 garfield = Feline(.7, 45)
 felix = Feline(.8, 12)
 
-print("Garfield: " .. garfield:stats(), "Felix: " .. felix:stats())</pre></td></tr>
+print("Garfield: " .. garfield:stats(), "Felix: " .. felix:stats())</code></pre></td></tr>
 		</table>
 	</div>
 
 	<a name="class.lua-Class2"></a>
-	<div class="doc"><span class="function">function Class{name = name, constructor}<a class="top" href="#class.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Class{name = name, constructor}<a class="top" href="#class.lua">^ top</a></span>
 		Create a named class, i.e. define a <code>__tostring</code> metamethod. Parameters are the same as above.
 		Great for debugging. Both <code>name</code> and <code>constructor</code> can be omitted (but why would you want to?)
 
 		<table><tr><th>Example:</th></tr>
-			<tr><td><pre>Feline = Class{name = "Feline", function(self, size, weight)
-self.size = size self.weight = weight
+			<tr><td><pre><code class="lua">Feline = Class{name = "Feline", function(self, size, weight)
+	self.size = size
+	self.weight = weight
 end}
 
-print(Feline) -- prints 'Feline'</pre></td></tr>
+print(Feline) -- prints 'Feline'</code></pre></td></tr>
 		</table>
 	</div>
 
 	<a name="class.lua-Interface"></a>
-	<div class="doc"><span class="function">function Interface(name)<a class="top" href="#class.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Interface(name)<a class="top" href="#class.lua">^ top</a></span>
 		Shortcut to <code>Class{name = name}</code>, i.e. a possibly named class without constructor.
 	</div>
 
 	<a name="class.lua-Inherit"></a>
-	<div class="doc"><span class="function">function Inherit(class, super, ...)<a class="top" href="#class.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Inherit(class, super, ...)<a class="top" href="#class.lua">^ top</a></span>
 		Add functions of <code>super</code> to <code>class</code>. Multiple interfaces can be defined.
 		<p><code>super</code>'s constructor can be accessed via super.construct(self). See example below.</p>
 	</div>
 
 	<a name="class.lua-Example"></a>
 	<h4>Example usage</h4>
-	<div class="doc"><span class="function">Everybody loves cats!<a class="top" href="#class.lua">^ top</a></span>
-<pre>Feline = Class{name = "Feline", function(self, size, weight)
-self.size = size self.weight = weight
+	<div class="doc"><span class="functiondoc">Everybody loves cats!<a class="top" href="#class.lua">^ top</a></span>
+<pre><code class="lua">Feline = Class{name = "Feline", function(self, size, weight)
+	self.size = size
+	self.weight = weight
 end}
 
 function Feline:stats()
-return string.format("size: %.02f, weight %.02f", self.size, self.weight)
+	return string.format("size: %.02f, weight %.02f", self.size, self.weight)
 end
 
 function Feline:speak() print("meow") end
 
 
 Cat = Class{name = "Cat", function(self, name, size, weight)
-Feline.construct(self, size, weight)
-self.name = name
+	Feline.construct(self, size, weight)
+	self.name = name
 end}
 Inherit(Cat, Feline)
 
 function Cat:stats()
-return string.format("name: %s, %s", self.name, Feline.stats(self))
+	return string.format("name: %s, %s", self.name, Feline.stats(self))
 end
 
 
 Tiger = Class{name = "tiger", function(self, size, weight)
-Feline.construct(self, size, weight)
+	Feline.construct(self, size, weight)
 end}
 Inherit(Tiger, Feline)
 
@@ -670,28 +691,28 @@ hobbes = Tiger(2.2, 68)
 
 print(felix:stats(), hobbes:stats())
 felix:speak()
-hobbes:speak()</pre>
+hobbes:speak()</code></pre>
 	</div>
 
 	<a name="class.lua-Warning"></a>
 	<h4>Warning</h4>
-	<div class="doc"><span class="function">Nothing is perfect<a class="top" href="#class.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">Nothing is perfect<a class="top" href="#class.lua">^ top</a></span>
 		<p>Be careful when using metamethods like <code>__add</code> or <code>__mul</code>:
 		When subclass inherits those methods from a superclass, but does not overwrite
 		them, the result of the operation may be of the type superclass. Consider the following:</p>
-<pre>A = Class(function(self, x) self.x = x end)
+<pre><code class="lua">A = Class(function(self, x) self.x = x end)
 function A:__add(other) return A(self.x + other.x) end
-function A:print() print("A:", self.x) end
+function A:show() print("A:", self.x) end
 
 B = Class(function(self, x, y) A.construct(self, x) self.y = y end)
 Inherit(B, A)
-function B:print() print("B:", self.x, self.y) end
+function B:show() print("B:", self.x, self.y) end
 function B:foo() print("foo") end
 
 one, two = B(1,2), B(3,4)
 result = one + two
-result:print()  -- prints "A:    4"
-result:foo()    -- error: method does not exist</pre>
+result:show()   -- prints "A:    4"
+result:foo()    -- error: method does not exist</code></pre>
 	</div>
 </div>
 
@@ -725,7 +746,7 @@ result:foo()    -- error: method does not exist</pre>
 	</table></p>
 
 	<a name="camera.lua-Camera"></a>
-	<div class="doc"><span class="function">function Camera(pos, zoom, rotation)<a class="top" href="#camera.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function Camera(pos, zoom, rotation)<a class="top" href="#camera.lua">^ top</a></span>
 		Create a new camera with position pos, zoom zoom and rotation rotation.
 		<table>
 			<tr><th>Parameters:</th><td class="p"><em>[optional vector]</em><code>pos</code>:</td>
@@ -739,12 +760,12 @@ result:foo()    -- error: method does not exist</pre>
 	</div>
 
 	<a name="camera.lua-rotate"></a>
-	<div class="doc"><span class="function">function camera:rotate(phi)<a class="top" href="#camera.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function camera:rotate(phi)<a class="top" href="#camera.lua">^ top</a></span>
 		Rotate camera by <code>phi</code> radians. Same as <code>camera.rot = camera.rot + phi.</code>
 	</div>
 
 	<a name="camera.lua-translate"></a>
-	<div class="doc"><span class="function">function camera:translate(t)<a class="top" href="#camera.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function camera:translate(t)<a class="top" href="#camera.lua">^ top</a></span>
 		Translate (move) camera by vector <code>t</code>. Same as <code>camera.pos = camera.pos + t</code>.
 		<table>
 			<tr><th>Parameters:</th><td class="p"><em>[vector]</em><code>t</code>:</td>
@@ -753,33 +774,33 @@ result:foo()    -- error: method does not exist</pre>
 	</div>
 
 	<a name="camera.lua-draw"></a>
-	<div class="doc"><span class="function">function camera:draw(func)<a class="top" href="#camera.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function camera:draw(func)<a class="top" href="#camera.lua">^ top</a></span>
 		Apply camera transformation to drawings in function <code>func</code>.
 		Shortcut to <code>camera:apply()</code> and <code>camera:deapply()</code> (see below).
 
 		<table><tr><th>Example</th></tr>
-			<tr><td><pre>cam:draw(function() love.graphics.rectangle('fill', -100,-100, 200,200) end)</pre></td></tr>
+			<tr><td><pre><code class="lua">cam:draw(function() love.graphics.rectangle('fill', -100,-100, 200,200) end)</code></pre></td></tr>
 		</table>
 	</div>
 
 	<a name="camera.lua-predraw"></a>
-	<div class="doc"><span class="function">function camera:predraw()<a class="top" href="#camera.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function camera:predraw()<a class="top" href="#camera.lua">^ top</a></span>
 		Apply camera transformations to every drawing operation until the next <code>camera:postdraw()</code>.
 	</div>
 
 	<a name="camera.lua-postdraw"></a>
-	<div class="doc"><span class="function">function camera:postdraw()<a class="top" href="#camera.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function camera:postdraw()<a class="top" href="#camera.lua">^ top</a></span>
 		Revert camera transformations for the rest of the drawing operations.
 
 		<table><tr><th>Example:</th><td>(equivalent to the <code>cam:draw()</code> example above)</td></tr>
-			<tr><td colspan="2"><pre>camera:predraw()
+			<tr><td colspan="2"><pre><code class="lua">camera:predraw()
 love.graphics.rectangle('fill', -100,-100, 200,200)
-camera:postdraw()</pre></td></tr>
+camera:postdraw()</code></pre></td></tr>
 		</table>
 	</div>
 
 	<a name="camera.lua-toCameraCoords"></a>
-	<div class="doc"><span class="function">function camera:toCameraCoords(p)<a class="top" href="#camera.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function camera:toCameraCoords(p)<a class="top" href="#camera.lua">^ top</a></span>
 		Transform vector <code>p</code> from world coordinates to camera coordinates, i.e.
 		you have the position of an object in the world and want to know where it will be
 		drawn on the screen.
@@ -792,7 +813,7 @@ camera:postdraw()</pre></td></tr>
 	</div>
 
 	<a name="camera.lua-toWorldCoords"></a>
-	<div class="doc"><span class="function">function camera:toWorldCoords(p)<a class="top" href="#camera.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function camera:toWorldCoords(p)<a class="top" href="#camera.lua">^ top</a></span>
 		Transform vector <code>p</code> from camera coordinates to world coordinates, i.e.
 		you have the coordinates of a point on the screen (e.g. the mouse), and wan't to
 		know where it's location is in the world.
@@ -805,7 +826,7 @@ camera:postdraw()</pre></td></tr>
 	</div>
 
 	<a name="camera.lua-mousepos"></a>
-	<div class="doc"><span class="function">function camera:mousepos()<a class="top" href="#camera.lua">^ top</a></span>
+	<div class="doc"><span class="functiondoc">function camera:mousepos()<a class="top" href="#camera.lua">^ top</a></span>
 		Get mouse position in world coordinates, i.e. the position the users mouse is
 		currently pointing at when camera transformations are applied. Use this for any
 		mouse interaction with transformed objects in your game.
@@ -841,7 +862,7 @@ camera:postdraw()</pre></td></tr>
 
 	<a name="ringbuffer.lua-Ringbuffer"></a>
 	<div class="doc">
-		<span class="function">function Ringbuffer(...)<a href="#ringbuffer.lua" class="top">^ top</a></span>
+		<span class="functiondoc">function Ringbuffer(...)<a href="#ringbuffer.lua" class="top">^ top</a></span>
 		Create a new ringbuffer.
 		<table>
 			<tr><th>Parameters</th><td class="p"><em>[optional]</em><code>...</code>:</td><td>Initial items of the buffer.</td></tr>
@@ -850,86 +871,88 @@ camera:postdraw()</pre></td></tr>
 
 	<a name="ringbuffer.lua-insert"></a>
 	<div class="doc">
-		<span class="function">function ringbuffer:insert(item, ...)<a href="#ringbuffer.lua" class="top">^ top</a></span>
+		<span class="functiondoc">function ringbuffer:insert(item, ...)<a href="#ringbuffer.lua" class="top">^ top</a></span>
 		Insert items behind current item.
 		<table>
 			<tr><th>Parameters:</th><td class="p"><code>item</code>:</td><td>Item to insert</td></tr>
 			<tr><th></th><td class="p"><em>[optional]</em><code>...</code>:</td><td>Additional items to insert</td></tr>
 			<tr><th colspan="3">Example</th></tr>
-			<tr><td colspan="3"><pre>rb = Ringbuffer(1,2,5,6) -- rb = {1 ,2,5,6}, rb:get() == 1
-rb:next() -- rb = {1, 2 ,5,6}, rb:get() == 2
-rb:insert(3,4) -- rb = {1, 2 ,3,4,5,6}, rb:get() == 2
-rb:next() -- rb = {1,2, 3 ,4,5,6}, rb:get() == 3</pre></td></tr>
+			<tr><td colspan="3"><pre><code class="lua">rb = Ringbuffer(1,2,5,6) -- rb = {<u>1</u>, 2, 5, 6}
+rb:next()                -- rb = {<u>2</u>, 5, 6, 1}
+rb:insert(3,4)           -- rb = {<u>2</u>, 3, 4, 5, 6, 1}
+rb:next()                -- rb = {<u>3</u>, 4, 5, 6, 1, 2}</code></pre></td></tr>
 		</table>
 	</div>
 	
 	<a name="ringbuffer.lua-append"></a>
 	<div class="doc">
-		<span class="function">function ringbuffer:append(item, ...)<a href="#ringbuffer.lua" class="top">^ top</a></span>
+		<span class="functiondoc">function ringbuffer:append(item, ...)<a href="#ringbuffer.lua" class="top">^ top</a></span>
 		Append items to ringbuffer.
 		<p>This is less intuitive than <code>ringbuffer:insert(item, ...)</code> since it appears the items are added
-		at a random location. Use is only recommended before using <code>ringbuffer:next()</code> or <code>ringbuffer:prev()</code>.</p>
+		at a random location. To understand why this function works how it does, remember that a ringbuffer is basically
+		just a list with a current active element. The active element is <b><u>underlined</u></b> in the example below.</p>
+		<p>Use is only recommended before using <code>ringbuffer:next()</code> or <code>ringbuffer:prev()</code>.</p>
 		<table>
 			<tr><th>Parameters:</th><td class="p"><code>item</code>:</td><td>Item to append</td></tr>
 			<tr><th></th><td class="p"><em>[optional]</em><code>...</code>:</td><td>Additional items to append</td></tr>
 			<tr><th colspan="3">Example</th></tr>
-			<tr><td colspan="3"><pre>rb = Ringbuffer(1,2,5,6) -- rb = {1 ,2,5,6}, rb:get() == 1
-rb:next() -- rb = {1, 2 ,5,6}, rb:get() == 2
-rb:append(3,4) -- rb = {1, 2 ,5,6,3,4}, rb:get() == 2
-rb:next() -- rb = {1,2, 5 ,6,3,4}, rb:get() == 5</pre></td></tr>
+			<tr><td colspan="3"><pre><code class="lua">rb = Ringbuffer(1,2,5,6) -- rb = {<b><u>1</u></b>, 2, 5, 6}       rb:get() == 1
+rb:next()                -- rb = {1, <b><u>2</u></b>, 5, 6}       rb:get() == 2
+rb:append(3,4)           -- rb = {1, <b><u>2</u></b>, 5, 6, 3, 4} rb:get() == 2
+rb:next()                -- rb = {1, 2, <b><u>5</u></b>, 6, 3, 4} rb:get() == 5</code></pre></td></tr>
 		</table>
 	</div>
 
 	<a name="ringbuffer.lua-remove"></a>
 	<div class="doc">
-		<span class="function">function ringbuffer:remove()<a href="#ringbuffer.lua" class="top">^ top</a></span>
+		<span class="functiondoc">function ringbuffer:remove()<a href="#ringbuffer.lua" class="top">^ top</a></span>
 		Remove currently selected item. The next item will be selected.
 		<table>
 			<tr><th>Example</th></tr>
-			<tr><td><pre>rb = Ringbuffer(1,2,3) -- rb = {1 ,2,3}, rb:get() == 1
-rb:next() -- rb = {1, 2 ,3}, rb:get() == 2
-rb:remove() -- rb = {1, 3 }, rb:get() == 3</pre></td></tr>
+			<tr><td><pre><code class="lua">rb = Ringbuffer(1,2,3) -- rb = {<u>1</u>, 2, 3}
+rb:next()              -- rb = {<u>2</u>, 3, 1}
+rb:remove()            -- rb = {<u>3</u>, 1}</code></pre></td></tr>
 		</table>
 	</div>
 
 	<a name="ringbuffer.lua-removeAt"></a>
 	<div class="doc">
-		<span class="function">function ringbuffer:removeAt(k)<a href="#ringbuffer.lua" class="top">^ top</a></span>
+		<span class="functiondoc">function ringbuffer:removeAt(k)<a href="#ringbuffer.lua" class="top">^ top</a></span>
 		Remove item at relative position <code>k</code>. <code>k</code> may be positive or negative and
 		even bigger than <code>ringbuffer:size()</code>.
 		<table>
 			<tr><th>Parameters:</th><td class="p"><em>[number]</em><code>k</code></td><td>Relative position of item to remove.</td></tr>
 			<tr><th colspan="3">Example:</th></tr>
-			<tr><td colspan="3"><pre>rb = Ringbuffer(1,2,3,4,5) -- rb = { 1 ,2,3,4,5}, rb:get() == 1
-rb:removeAt(2) -- rb = { 1 ,2,4,5}, rb:get() == 1
-rb:next() -- rb = {1, 2 ,4,5}, rb:get() == 2
-rb:removeAt(-1) -- rb = { 2 ,4,5}, rb:get() == 2</pre></td></tr>
+			<tr><td colspan="3"><pre><code class="lua">rb = Ringbuffer(1,2,3,4,5) -- rb = {<u>1</u>, 2, 3, 4, 5}
+rb:removeAt(2)             -- rb = {<u>1</u>, 2, 4, 5}
+rb:next()                  -- rb = {<u>2</u>, 4, 5, 1}
+rb:removeAt(-1)            -- rb = {<u>2</u>, 4, 5}</code></pre></td></tr>
 		</table>
 	</div>
 	
 	<a name="ringbuffer.lua-get"></a>
 	<div class="doc">
-		<span class="function">function ringbuffer:get()<a href="#ringbuffer.lua" class="top">^ top</a></span>
+		<span class="functiondoc">function ringbuffer:get()<a href="#ringbuffer.lua" class="top">^ top</a></span>
 		Get currently selected item.
 		<table> <tr> <th>Returns:</th> <td>The currently selected item.</td> </tr> </table>
 	</div>
 
 	<a name="ringbuffer.lua-size"></a>
 	<div class="doc">
-		<span class="function">function ringbuffer:size()<a href="#ringbuffer.lua" class="top">^ top</a></span>
+		<span class="functiondoc">function ringbuffer:size()<a href="#ringbuffer.lua" class="top">^ top</a></span>
 		<table> <tr> <th>Returns:</th> <td>Number of items in the buffer.</td> </tr> </table>
 	</div>
 	
 	<a name="ringbuffer.lua-next"></a>
 	<div class="doc">
-		<span class="function">function ringbuffer:next()<a href="#ringbuffer.lua" class="top">^ top</a></span>
+		<span class="functiondoc">function ringbuffer:next()<a href="#ringbuffer.lua" class="top">^ top</a></span>
 		Select next item and return it.
 		<table> <tr> <th>Return:</th> <td>Selected item after operation.</td> </tr> </table>
 	</div>
 	
 	<a name="ringbuffer.lua-prev"></a>
 	<div class="doc">
-		<span class="function">function ringbuffer:prev()<a href="#ringbuffer.lua" class="top">^ top</a></span>
+		<span class="functiondoc">function ringbuffer:prev()<a href="#ringbuffer.lua" class="top">^ top</a></span>
 		Select previous item and return it.
 		<table> <tr> <th>Return:</th> <td>Selected item after operation.</td> </tr> </table>
 	</div>
@@ -971,7 +994,7 @@ rb:removeAt(-1) -- rb = { 2 ,4,5}, rb:get() == 2</pre></td></tr>
 
 	<a name="sequence.lua-Sequence"></a>
 	<div class="doc">
-		<span class="function">function Sequence(...)<a href="#sequence.lua" class="top">^ top</a></span>
+		<span class="functiondoc">function Sequence(...)<a href="#sequence.lua" class="top">^ top</a></span>
 		Create a new sequence with initial scenes.
 		<table>
 			<tr><th>Parameters:</th><td class="p"><em>[optional Scenes]</em><code>...</code></td>
@@ -982,7 +1005,7 @@ rb:removeAt(-1) -- rb = { 2 ,4,5}, rb:get() == 2</pre></td></tr>
 	
 	<a name="sequence.lua-add"></a>
 	<div class="doc">
-		<span class="function">function sequence:add(...)<a href="#sequence.lua" class="top">^ top</a></span>
+		<span class="functiondoc">function sequence:add(...)<a href="#sequence.lua" class="top">^ top</a></span>
 		Append scenes to the end of the sequence.
 		<table>
 			<tr><th>Parameters:</th><td class="p"><em>[Scenes]</em><code>...</code></td>
@@ -992,7 +1015,7 @@ rb:removeAt(-1) -- rb = { 2 ,4,5}, rb:get() == 2</pre></td></tr>
 	
 	<a name="sequence.lua-select"></a>
 	<div class="doc">
-		<span class="function">function sequence:select(k)<a href="#sequence.lua" class="top">^ top</a></span>
+		<span class="functiondoc">function sequence:select(k)<a href="#sequence.lua" class="top">^ top</a></span>
 		Manually selection of scene <code>k</code>. Usually this is not necessary but provided anyway.
 		<table>
 			<tr> <th>Parameters:</th> <td class="p"> <em>[number]</em> <code>k</code>: </td> <td>Number of the scene to select</td> </tr>
@@ -1001,41 +1024,41 @@ rb:removeAt(-1) -- rb = { 2 ,4,5}, rb:get() == 2</pre></td></tr>
 	
 	<a name="sequence.lua-rewind"></a>
 	<div class="doc">
-		<span class="function">function sequence:rewind()<a href="#sequence.lua" class="top">^ top</a></span>
+		<span class="functiondoc">function sequence:rewind()<a href="#sequence.lua" class="top">^ top</a></span>
 		Select first scene in sequence.
 	</div>
 	
 	<a name="sequence.lua-prevScene"></a>
 	<div class="doc">
-		<span class="function">function sequence:prevScene()<a href="#sequence.lua" class="top">^ top</a></span>
+		<span class="functiondoc">function sequence:prevScene()<a href="#sequence.lua" class="top">^ top</a></span>
 		Manually select previous scene. Usually not necessay but provided anyway.
 		<p><em>Warning:</em> May select the <em>last</em> scene when the current scene is the first scene in sequence.</p>
 	</div>
 	
 	<a name="sequence.lua-nextScene"></a>
 	<div class="doc">
-		<span class="function">function sequence:nextScene()<a href="#sequence.lua" class="top">^ top</a></span>
+		<span class="functiondoc">function sequence:nextScene()<a href="#sequence.lua" class="top">^ top</a></span>
 		Manually select next scene. Usually not necessay but provided anyway.
 		<p><em>Warning:</em> May select the <em>first</em> scene when the current scene is the last scene in sequence.</p>
 	</div>
 	
 	<a name="sequence.lua-draw"></a>
 	<div class="doc">
-		<span class="function">function sequence:draw()<a href="#sequence.lua" class="top">^ top</a></span>
+		<span class="functiondoc">function sequence:draw()<a href="#sequence.lua" class="top">^ top</a></span>
 		Draws current scene.
 		<p>Calls <code>scene:draw()</code> on currently active scene</p>
 	</div>
 	
 	<a name="sequence.lua-update"></a>
 	<div class="doc">
-		<span class="function">function sequence:update(dt)<a href="#sequence.lua" class="top">^ top</a></span>
+		<span class="functiondoc">function sequence:update(dt)<a href="#sequence.lua" class="top">^ top</a></span>
 		Update current scene and increase <code>scene.time</code>.
 		<p>Switches scene if current scene is finished (see <a href="#sequence.lua-isFinished"><code>scene:isFinished()</code></a>).</p>
 	</div>
 
 	<a name="sequence.lua-Scene"></a>
 	<div class="doc">
-		<span class="function">function Scene(length)<a href="#sequence.lua" class="top">^ top</a></span>
+		<span class="functiondoc">function Scene(length)<a href="#sequence.lua" class="top">^ top</a></span>
 		Create a new scene of length <code>length</code>
 		<table>
 			<tr> <th>Parameters:</th> <td class="p"><em>[optional]</em><code>length</code></td>
@@ -1046,7 +1069,7 @@ rb:removeAt(-1) -- rb = { 2 ,4,5}, rb:get() == 2</pre></td></tr>
 
 	<a name="sequence.lua-isFinished"></a>
 	<div class="doc">
-		<span class="function"><a href="#sequence.lua" class="top">^ top</a></span>
+		<span class="functiondoc"><a href="#sequence.lua" class="top">^ top</a></span>
 		Indicates that the scene is finished. Used by <code>sequence:update(dt)</code>.
 		<p>This can be overwritten, though it is not advised to do so.</p>
 		<table>
@@ -1057,48 +1080,48 @@ rb:removeAt(-1) -- rb = { 2 ,4,5}, rb:get() == 2</pre></td></tr>
 	<a name="sequence.lua-example"></a>
 	<h4>Example usage</h4>
 	<div class="doc">
-		<span class="function">Ending credits<a href="#sequence.lua" class="top">^ top</a></span>
-		<pre>local sc = {}
+		<span class="functiondoc">Ending credits<a href="#sequence.lua" class="top">^ top</a></span>
+		<pre><code class="lua">local sc = {}
 -- moving and fading looks cool
 sc.idea = Scene(5)
 function sc.idea:draw()
-    local frac = (self.time / self.length) ^ 3
-    love.graphics.setColor(255,255,255,160 - frac * 160)
-    love.graphics.print("Idea", 200 + frac * 30, 200)
-    love.graphics.setColor(255,255,255,255 - frac * 255)
-    love.graphics.print("Max Power", 300 - frac * 40, 250)
+	local frac = (self.time / self.length) ^ 3
+	love.graphics.setColor(255,255,255,160 - frac * 160)
+	love.graphics.print("Idea", 200 + frac * 30, 200)
+	love.graphics.setColor(255,255,255,255 - frac * 255)
+	love.graphics.print("Max Power", 300 - frac * 40, 250)
 end
 
 sc.code = Scene(5)
 function sc.code:draw()
-    local frac = (self.time / self.length) ^ 3
-    love.graphics.setColor(255,255,255,160 - frac * 160)
-    love.graphics.print("Code", 200 + frac * 30, 200)
-    love.graphics.setColor(255,255,255,255 - frac * 255)
-    love.graphics.print("Max Power", 300 - frac * 40, 250)
+	local frac = (self.time / self.length) ^ 3
+	love.graphics.setColor(255,255,255,160 - frac * 160)
+	love.graphics.print("Code", 200 + frac * 30, 200)
+	love.graphics.setColor(255,255,255,255 - frac * 255)
+	love.graphics.print("Max Power", 300 - frac * 40, 250)
 end
 
 sc.gfx = Scene(5)
 function sc.gfx:draw()
-    local frac = (self.time / self.length) ^ 3
-    love.graphics.setColor(255,255,255,160 - frac * 160)
-    love.graphics.print("GFX", 200 + frac * 30, 200)
-    love.graphics.setColor(255,255,255,255 - frac * 255)
-    love.graphics.print("also Max Power", 300 - frac * 40, 250)
+	local frac = (self.time / self.length) ^ 3
+	love.graphics.setColor(255,255,255,160 - frac * 160)
+	love.graphics.print("GFX", 200 + frac * 30, 200)
+	love.graphics.setColor(255,255,255,255 - frac * 255)
+	love.graphics.print("also Max Power", 300 - frac * 40, 250)
 end
 
 sc.endscreen = Scene(-1) -- last scene. no looping
 function sc.endscreen:enter()
-    self.frac = 0
+	self.frac = 0
 end
 
 function sc.endscreen:update(dt)
-    self.frac = math.min(1, self.time / 3) -- 3 sec fade in
+	self.frac = math.min(1, self.time / 3) -- 3 sec fade in
 end
 
 function sc.endscreen:draw()
-    love.graphics.setColor(255,255,255, self.frac * 255)
-    love.graphics.print("The most awesome game in history", 280, 280)
+	love.graphics.setColor(255,255,255, self.frac * 255)
+	love.graphics.print("The most awesome game in history", 280, 280)
 end
 
 
@@ -1109,13 +1132,12 @@ credits:add(sc.endscreen)
 
 -- show and update sequence
 function love.draw()
-    credits:draw()
+	credits:draw()
 end
 
 function love.update(dt)
-    credits:update(dt)
-end
-</pre>
+	credits:update(dt)
+end</code></pre>
 	</div>
 </div>
 
