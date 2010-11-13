@@ -596,8 +596,8 @@ print(a:dist(b)) -- prints 1.4142135623731</code></pre></td></tr>
 	<table class="functionlist">
 		<tr><td><a href="#class.lua-Class">Class(constructor)</a></td><td>define class</td></tr>
 		<tr><td><a href="#class.lua-Class2">Class{name = name, constructor}</a></td><td>define named class</td></tr>
-		<tr><td><a href="#class.lua-Interface">Interface(name)</a></td><td>define interface</td></tr>
 		<tr><td><a href="#class.lua-Inherit">Inherit(class, super, ...)</a></td><td>subclassing</td></tr>
+		<tr><td><a href="#class.lua-Construct">Class.construct(object, ...)</a></td><td>call parent classe's constructor</td></tr>
 	</table></p>
 	<p>For an example, <a href="#class.lua-Example">see below</a>. Also be sure to read the
 	<a href="#class.lua-Warning">warning</a> regarding metamethods.</p>
@@ -642,15 +642,19 @@ print(Feline) -- prints 'Feline'</code></pre></td></tr>
 		</table>
 	</div>
 
-	<a name="class.lua-Interface"></a>
-	<div class="doc"><span class="functiondoc">function Interface(name)<a class="top" href="#class.lua">^ top</a></span>
-		Shortcut to <code>Class{name = name}</code>, i.e. a possibly named class without constructor.
-	</div>
-
 	<a name="class.lua-Inherit"></a>
 	<div class="doc"><span class="functiondoc">function Inherit(class, super, ...)<a class="top" href="#class.lua">^ top</a></span>
 		Add functions of <code>super</code> to <code>class</code>. Multiple interfaces can be defined.
-		<p><code>super</code>'s constructor can be accessed via super.construct(self). See example below.</p>
+		<p><code>super</code>'s constructor can be accessed via super.construct(self). See below.</p>
+	</div>
+	<div class="doc"><span class="functiondoc">function Class:Inherit(super, ...)<a class="top" href="#class.lua">^ top</a></span>
+		Syntatic sugar for <code>Inherit(Class, super, ...)</code>. Using a lowercase <code>Class:inherit(super, ...)</code> is also valid.
+	</div>
+
+	<a name="class.lua-Construct"></a>
+	<div class="doc"><span class="functiondoc">function Class.construct(object, ...)<a class="top" href="#class.lua">^ top</a></span>
+		Calls constructor for <code>Class</code> on <code>object</code>. This is done to initialize the
+		super-classe's context in a sub-class. See the example below.
 	</div>
 
 	<a name="class.lua-Example"></a>
@@ -672,7 +676,7 @@ Cat = Class{name = "Cat", function(self, name, size, weight)
 	Feline.construct(self, size, weight)
 	self.name = name
 end}
-Inherit(Cat, Feline)
+Cat:Inherit(Feline)
 
 function Cat:stats()
 	return string.format("name: %s, %s", self.name, Feline.stats(self))
@@ -682,16 +686,17 @@ end
 Tiger = Class{name = "tiger", function(self, size, weight)
 	Feline.construct(self, size, weight)
 end}
-Inherit(Tiger, Feline)
+Tiger:Inherit(Feline)
 
 function Tiger:speak() print("ROAR!") end
 
 felix = Cat("Felix", .8, 12)
 hobbes = Tiger(2.2, 68)
 
-print(felix:stats(), hobbes:stats())
-felix:speak()
-hobbes:speak()</code></pre>
+print(felix:stats())   -- "name: Felix, size: 0.80, weight 12.00"
+print(hobbes:stats())  -- "size: 2.20, weight 68.00"
+felix:speak()          -- "meow"
+hobbes:speak()         -- "ROAR!"</code></pre>
 	</div>
 
 	<a name="class.lua-Warning"></a>
@@ -705,7 +710,7 @@ function A:__add(other) return A(self.x + other.x) end
 function A:show() print("A:", self.x) end
 
 B = Class(function(self, x, y) A.construct(self, x) self.y = y end)
-Inherit(B, A)
+B:Inherit(A)
 function B:show() print("B:", self.x, self.y) end
 function B:foo() print("foo") end
 
