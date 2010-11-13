@@ -40,6 +40,9 @@ function Class(constructor)
 	c.__index = c
 	c.__tostring = function() return string.format("<instance of %s>", name) end
 	c.construct = constructor or __NULL__
+	c.Construct = constructor or __NULL__
+	c.inherit = Inherit
+	c.Inherit = Inherit
 
 	local meta = {
 		__call = function(self, ...)
