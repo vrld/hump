@@ -58,7 +58,7 @@ function Gamestate.new()
 end
 
 function Gamestate.switch(to, ...)
-	if not to then return end
+	assert(to, "Missing argument: Gamestate to switch to")
 	Gamestate.current:leave()
 	local pre = Gamestate.current
 	Gamestate.current = to
