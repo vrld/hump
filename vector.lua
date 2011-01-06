@@ -140,5 +140,5 @@ end
 
 function Vector:cross(other)
 	assert(isvector(other), "cross: wrong argument types (<vector> expected)")
-	return self.x * other.y - self.y * other.y
+	return self.x * other.y - self.y * other.x
 end
