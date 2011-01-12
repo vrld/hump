@@ -27,14 +27,18 @@ THE SOFTWARE.
 Timer = {}
 Timer.functions = {}
 function Timer.update(dt)
+	local to_remove = {}
 	for func, delay in pairs(Timer.functions) do
 		delay = delay - dt
 		if delay <= 0 then
-			Timer.functions[func] = nil
-			func(func)
+			to_remove[#to_remove+1] = func
 		else
 			Timer.functions[func] = delay
 		end
+	end
+	for _,func in ipairs(to_remove) do
+		Timer.functions[func] = nil
+		func(func)
 	end
 end
 
