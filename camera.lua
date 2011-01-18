@@ -24,11 +24,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]--
 
-require 'vector'
+local setmetatable, require, love = setmetatable, require, love
+module(...)
+local vector = require(_PACKAGE..'vector')
 
 local camera = {}
 camera.__index = camera
-function Camera(pos, zoom, rot)
+
+function new(pos, zoom, rot)
 	local pos  = pos or vector(love.graphics.getWidth(), love.graphics.getHeight()) / 2
 	local zoom = zoom or 1
 	local rot  = rot or 0
@@ -42,6 +45,7 @@ end
 function camera:translate(t)
 	self.pos = self.pos + t
 end
+camera.move = camera.translate
 
 function camera:predraw()
 	local center = vector(love.graphics.getWidth(), love.graphics.getHeight()) / (self.zoom * 2)
@@ -76,4 +80,11 @@ end
 
 function camera:mousepos()
 	return self:toWorldCoords(vector(love.mouse.getPosition()))
+end
+
+-- camera() as a shortcut to new()
+do
+	local m = {}
+	m.__call = function(_, ...) return new(...) end
+	setmetatable(_M, m)
 end

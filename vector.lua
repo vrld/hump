@@ -24,121 +24,133 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]--
 
-local Vector = {}
-Vector.__index = Vector
+local setmetatable, getmetatable = setmetatable, getmetatable
+local assert, type, tonumber = assert, type, tonumber
+local sqrt, cos, sin = math.sqrt, math.cos, math.sin
+module(...)
 
-function vector(x,y)
+local vector = {}
+vector.__index = vector
+
+function new(x,y)
 	local v = {x = x or 0, y = y or 0}
-	setmetatable(v, Vector)
+	setmetatable(v, vector)
 	return v
 end
 
 function isvector(v)
-	return getmetatable(v) == Vector
+	return getmetatable(v) == vector
 end
 
-function Vector:clone()
-	return vector(self.x, self.y)
+function vector:clone()
+	return new(self.x, self.y)
 end
 
-function Vector:unpack()
+function vector:unpack()
 	return self.x, self.y
 end
 
-function Vector:__tostring()
+function vector:__tostring()
 	return "("..tonumber(self.x)..","..tonumber(self.y)..")"
 end
 
-function Vector.__unm(a)
-	return vector(-a.x, -a.y)
+function vector.__unm(a)
+	return new(-a.x, -a.y)
 end
 
-function Vector.__add(a,b)
+function vector.__add(a,b)
 	assert(isvector(a) and isvector(b), "Add: wrong argument types (<vector> expected)")
-	return vector(a.x+b.x, a.y+b.y)
+	return new(a.x+b.x, a.y+b.y)
 end
 
-function Vector.__sub(a,b)
+function vector.__sub(a,b)
 	assert(isvector(a) and isvector(b), "Sub: wrong argument types (<vector> expected)")
-	return vector(a.x-b.x, a.y-b.y)
+	return new(a.x-b.x, a.y-b.y)
 end
 
-function Vector.__mul(a,b)
+function vector.__mul(a,b)
 	if type(a) == "number" then
-		return vector(a*b.x, a*b.y)
+		return new(a*b.x, a*b.y)
 	elseif type(b) == "number" then
-		return vector(b*a.x, b*a.y)
+		return new(b*a.x, b*a.y)
 	else
 		assert(isvector(a) and isvector(b), "Mul: wrong argument types (<vector> or <number> expected)")
 		return a.x*b.x + a.y*b.y
 	end
 end
 
-function Vector.__div(a,b)
+function vector.__div(a,b)
 	assert(isvector(a) and type(b) == "number", "wrong argument types (expected <vector> / <number>)")
-	return vector(a.x / b, a.y / b)
+	return new(a.x / b, a.y / b)
 end
 
-function Vector.__eq(a,b)
+function vector.__eq(a,b)
 	return a.x == b.x and a.y == b.y
 end
 
-function Vector.__lt(a,b)
+function vector.__lt(a,b)
 	return a.x < b.x or (a.x == b.x and a.y < b.y)
 end
 
-function Vector.__le(a,b)
+function vector.__le(a,b)
 	return a.x <= b.x and a.y <= b.y
 end
 
-function Vector.permul(a,b)
+function vector.permul(a,b)
 	assert(isvector(a) and isvector(b), "permul: wrong argument types (<vector> expected)")
-	return vector(a.x*b.x, a.y*b.y)
+	return new(a.x*b.x, a.y*b.y)
 end
 
-function Vector:len2()
+function vector:len2()
 	return self * self
 end
 
-function Vector:len()
-	return math.sqrt(self*self)
+function vector:len()
+	return sqrt(self*self)
 end
 
-function Vector.dist(a, b)
+function vector.dist(a, b)
 	assert(isvector(a) and isvector(b), "dist: wrong argument types (<vector> expected)")
 	return (b-a):len()
 end
 
-function Vector:normalize_inplace()
+function vector:normalize_inplace()
 	local l = self:len()
 	self.x, self.y = self.x / l, self.y / l
 	return self
 end
 
-function Vector:normalized()
+function vector:normalized()
 	return self / self:len()
 end
 
-function Vector:rotate_inplace(phi)
-	local c, s = math.cos(phi), math.sin(phi)
+function vector:rotate_inplace(phi)
+	local c, s = cos(phi), sin(phi)
 	self.x, self.y = c * self.x - s * self.y, s * self.x + c * self.y
 	return self
 end
 
-function Vector:rotated(phi)
+function vector:rotated(phi)
 	return self:clone():rotate_inplace(phi)
 end
 
-function Vector:perpendicular()
-	return vector(-self.y, self.x)
+function vector:perpendicular()
+	return new(-self.y, self.x)
 end
 
-function Vector:projectOn(v)
-	assert(isvector(v), "invalid argument: cannot project onto anything other than a vector.")
+function vector:projectOn(v)
+	assert(isvector(v), "invalid argument: cannot project onto anything other than a new.")
 	return (self * v) * v / v:len2()
 end
 
-function Vector:cross(other)
+function vector:cross(other)
 	assert(isvector(other), "cross: wrong argument types (<vector> expected)")
 	return self.x * other.y - self.y * other.x
+end
+
+-- vector() as shortcut to vector.new()
+do
+	local m = {}
+	m.__call = function(_, ...) return new(...) end
+	setmetatable(_M, m)
 end

@@ -24,8 +24,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]--
 
+local setmetatable, getmetatable = setmetatable, getmetatable
+local type, assert, pairs = type, assert, pairs
+local tostring, string_format = tostring, string.format
+module(...)
+
 local function __NULL__() end
-function Class(constructor)
+function new(constructor)
 	-- check name and constructor
 	local name = '<unnamed class>'
 	if type(constructor) == "table" then
@@ -33,16 +38,16 @@ function Class(constructor)
 		constructor = constructor[1]
 	end
 	assert(not constructor or type(constructor) == "function",
-		string.format('%s: constructor has to be nil or a function', name))
+		string_format('%s: constructor has to be nil or a function', name))
 
 	-- build class
 	local c = {}
 	c.__index = c
-	c.__tostring = function() return string.format("<instance of %s>", name) end
+	c.__tostring = function() return string_format("<instance of %s>", name) end
 	c.construct = constructor or __NULL__
 	c.Construct = constructor or __NULL__
-	c.inherit = Inherit
-	c.Inherit = Inherit
+	c.inherit = inherit
+	c.Inherit = inherit
 
 	local meta = {
 		__call = function(self, ...)
@@ -56,7 +61,7 @@ function Class(constructor)
 	return setmetatable(c, meta)
 end
 
-function Inherit(class, interface, ...)
+function inherit(class, interface, ...)
 	if not interface then return end
 
 	-- __index and construct are not overwritten as for them class[name] is defined
@@ -66,5 +71,12 @@ function Inherit(class, interface, ...)
 		end
 	end
 
-	Inherit(class, ...)
+	inherit(class, ...)
+end
+
+-- class() as shortcut to class.new()
+do
+	local m = {}
+	m.__call = function(_, ...) return new(...) end
+	setmetatable(_M, m)
 end
