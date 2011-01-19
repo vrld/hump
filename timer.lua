@@ -54,10 +54,9 @@ end
 function addPeriodic(delay, func, count)
 	assert(type(func) == "function", "second argument needs to be a function")
 	if count then
-		add(delay, function(f) func(func) count = count - 1 if count > 0 then add(delay, f) end end)
-	else
-		add(delay, function(f) func(func) add(delay, f) end)
+		return add(delay, function(f) func(func) count = count - 1 if count > 0 then add(delay, f) end end)
 	end
+	return add(delay, function(f) func(func) add(delay, f) end)
 end
 
 function clear()

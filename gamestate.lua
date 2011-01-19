@@ -63,55 +63,55 @@ function switch(to, ...)
 	current:leave()
 	local pre = current
 	current = to
-	current:enter(pre, ...)
+	return current:enter(pre, ...)
 end
 
 local _update
 function update(...)
 	if _update then _update(...) end
-	current:update(...)
+	return current:update(...)
 end
 
 local _draw
 function draw(...)
 	if _draw then _draw(...) end
-	current:draw(...)
+	return current:draw(...)
 end
 
 local _keypressed
 function keypressed(...)
 	if _keypressed then _keypressed(...) end
-	current:keypressed(...)
+	return current:keypressed(...)
 end
 
 local _keyreleased
 function keyreleased(...)
 	if _keyreleased then _keyreleased(...) end
-	current:keyreleased(...)
+	return current:keyreleased(...)
 end
 
 local _mousepressed
 function mousepressed(...)
 	if _mousereleased then _mousepressed(...) end
-	current:mousepressed(...)
+	return current:mousepressed(...)
 end
 
 local _mousereleased
 function mousereleased(...)
 	if _mousereleased then _mousereleased(...) end
-	current:mousereleased(...)
+	return current:mousereleased(...)
 end
 
 local _joystickpressed
 function joystickpressed(...)
 	if _joystickpressed then _joystickpressed(...) end
-	current:joystickpressed(...)
+	return current:joystickpressed(...)
 end
 
 local _joystickreleased
 function joystickreleased(...)
 	if _joystickreleased then _joystickreleased(...) end
-	current:joystickreleased(...)
+	return current:joystickreleased(...)
 end
 
 function registerEvents()
