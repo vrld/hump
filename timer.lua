@@ -68,7 +68,7 @@ function Interpolator(length, func)
 	local t = 0
 	return function(dt, ...)
 		t = t + dt
-		return t <= length or nil, func(min(1, (t-dt)/length), ...)
+		return t <= length and func((t-dt)/length, ...) or nil
 	end
 end
 
