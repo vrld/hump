@@ -74,7 +74,7 @@ end
 
 function camera:toWorldCoords(p)
 	local w,h = love.graphics.getWidth(), love.graphics.getHeight()
-	p = vector((p.x-w/2) / self.zoom, (p.y-h/2) / self.zoom):rotate_inplace(-self.rot)
+	local p = vector((p.x-w/2) / self.zoom, (p.y-h/2) / self.zoom):rotate_inplace(-self.rot)
 	return p + self.pos
 end
 
