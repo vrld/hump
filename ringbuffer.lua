@@ -47,7 +47,7 @@ end
 function ringbuffer:append(item, ...)
 	if not item then return end
 	self.items[#self.items+1] = item
-	self:append(...)
+	return self:append(...)
 end
 
 function ringbuffer:removeAt(k)
