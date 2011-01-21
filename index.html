@@ -7,7 +7,7 @@
 <title>hump - L&Ouml;VE Helper Utilities for More Productivity</title>
 <link rel="stylesheet" type="text/css" href="style.css" />
 <link rel="stylesheet" type="text/css" href="highlight.css" />
-<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="highlight.pack.js"></script>
 <script type="text/javascript">
 	window.onload = function() {
 		var examples = document.getElementsByTagName("code");
@@ -878,8 +878,8 @@ end</code></pre>
 			</dl>
 		</div>
 		<div class="example">Example:
-			<pre><code class="lua">spawner.angle = spawner.angle + dt
-spawner.direction:rotate_inplace(spawner.angle)</code></pre>
+			<pre><code class="lua">-- ongoing rotation
+spawner.direction:rotate_inplace(dt)</code></pre>
 		</div>
 	</div>
 
