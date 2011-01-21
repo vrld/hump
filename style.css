@@ -2,7 +2,7 @@ body {
 	font-family: "Bitstream Vera sans",sans-serif;
 	font-size: 12pt;
 	color: #334;
-	background: #f7fcfc url('pattern.png');
+	background: #f7fcfc;
 }
 a { color: #203050; font-weight: bold;}
 a:hover { color: #506080; text-decoration: none; font-weight: bold;}

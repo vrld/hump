@@ -954,7 +954,7 @@ spawner.direction:rotate_inplace(dt)</code></pre>
 			</dl>
 		</div>
 		<div class="example">Example:
-			<pre><code class="lua">parallelogram_are = a:cross(b)</code></pre>
+			<pre><code class="lua">parallelogram_area = a:cross(b)</code></pre>
 		</div>
 	</div>
 
@@ -1160,13 +1160,13 @@ result:foo()    -- error: method does not exist</code></pre>
 	<div class="preamble">
 		<pre><code class="lua">require "hump.camera"</code></pre>
 		<p class="warning">Depends on <a href="#vector">vector</a></p>
-		<p>Camera abstraction for L&Ouml;VE. A camera &quot;looks&quot; at a position, can be moved,
+		<p>Camera abstraction for L&Ouml;VE. A camera &quot;looks&quot; at a position and can be moved,
 		zoomed and rotated.</p>
 		<p>A camera defines it's own coordinate system, meaning that an object shown on
 		the screen likely has different coordinates in the game world than it has on the screen.</p>
-		<p>For example, the mouse position could be <code>400,400</code>, but since the camera
-		looks at the point <code>100,100</code> and is rotated by 90&deg;, the world coordinates are
-		<code>200,100</code>.</p>
+		<p>For example, the mouse position could be at pixel <code>400,400</code> on the screen
+		(= camera coordinates), but the camera looks at the point <code>100,100</code> and
+		is rotated by <code>90&deg;</code>. The world coordinates of the mouse cursor are <code>200,100</code>.</p>
 		<p>The camera class defines methods to convert between both coordinate systems.</p>
 	</div>
 
@@ -1359,8 +1359,8 @@ end</code></pre>
 			</dl>
 		</div>
 		<div class="example">Example:
-			<pre><code class="lua">screen_coords = cam:toCameraCoords( player.pos )
-love.graphics.line(love.mouse.getX(), love.mouse.getY(), screen_coords:unpack()</code></pre>
+			<pre><code class="lua">screen_pos = cam:toCameraCoords( player.pos )
+love.graphics.line(love.mouse.getX(), love.mouse.getY(), screen_pos:unpack()</code></pre>
 		</div>
 	</div>
 
@@ -1415,7 +1415,7 @@ unit:plotPathTo(target)</code></pre>
 	<div class="preamble">
 		<pre><code class="lua">require "hump.ringbuffer"</code></pre>
 		<p>A ring-buffer is a circular array. That means it does not have a first nor a
-		last element.</p>
+		last, but only a <em>selected/current</em> element.</p>
 		<p>You can use this to implement <em>Tomb Raider</em> style inventories, looping
 		playlists, recurring dialogs (like a unit's answers when selecting it multiple times in <em>Warcraft</em>)
 		and generally everything that has a circular or looping structure.</p>
