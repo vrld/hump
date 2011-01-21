@@ -469,7 +469,7 @@ end</code></pre>
 			</dl>
 		</div>
 		<div class="example">Example:
-			<pre><code class="lua">fader = Interpolator(5, function(frac, r,g,b)
+			<pre><code class="lua">fader = Timer.Interpolator(5, function(frac, r,g,b)
     love.graphics.setBackgroundColor(frac*r,frac*g,frac*b)
 end)
 
@@ -502,7 +502,7 @@ end</code></pre>
 			</dl>
 		</div>
 		<div class="example">Example:
-			<pre><code class="lua">mover = Oscillator(10, function(frac)
+			<pre><code class="lua">mover = Timer.Oscillator(10, function(frac)
    return 400 + 300 * math.sin(2*math.pi*frac)
 end)
 
