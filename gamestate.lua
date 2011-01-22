@@ -1,5 +1,5 @@
 --[[
-Copyright (c) 2010 Matthias Richter
+Copyright (c) 2010-2011 Matthias Richter
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -35,12 +35,14 @@ current = {
 	leave            = __NULL__,
 	update           = __ERROR__,
 	draw             = __ERROR__,
+	focus            = __ERROR__,
 	keyreleased      = __ERROR__,
 	keypressed       = __ERROR__,
 	mousepressed     = __ERROR__,
 	mousereleased    = __ERROR__,
 	joystickpressed  = __ERROR__,
 	joystickreleased = __ERROR__,
+	quit             = __ERROR__,
 }
 
 function new()
@@ -49,12 +51,14 @@ function new()
 		leave            = __NULL__,
 		update           = __NULL__,
 		draw             = __NULL__,
+		focus            = __NULL__,
 		keyreleased      = __NULL__,
 		keypressed       = __NULL__,
 		mousepressed     = __NULL__,
 		mousereleased    = __NULL__,
 		joystickpressed  = __NULL__,
 		joystickreleased = __NULL__,
+		quit             = __NULL__,
 	}
 end
 
@@ -76,6 +80,12 @@ local _draw
 function draw(...)
 	if _draw then _draw(...) end
 	return current:draw(...)
+end
+
+local _focus
+function focus(...)
+	if _focus then _focus(...) end
+	return current:focus(...)
 end
 
 local _keypressed
@@ -114,11 +124,19 @@ function joystickreleased(...)
 	return current:joystickreleased(...)
 end
 
+local _quit
+function quit(...)
+	if _quit then _quit(...) end
+	return current:quit(...)
+end
+
 function registerEvents()
 	_update               = love.update
 	love.update           = update
 	_draw                 = love.draw
 	love.draw             = draw
+	_focus                = love.focus
+	love.focus            = focus
 	_keypressed           = love.keypressed
 	love.keypressed       = keypressed
 	_keyreleased          = love.keyreleased
@@ -131,4 +149,6 @@ function registerEvents()
 	love.joystickpressed  = joystickpressed
 	_joystickreleased     = love.joystickreleased
 	love.joystickreleased = joystickreleased
+	_quit                 = love.quit
+	love.quit             = quit
 end
