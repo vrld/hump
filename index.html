@@ -107,18 +107,22 @@
 			<dd>Manually update current gamestate.</dd>
 			<dt><a href="#gamestate-draw">draw()</a></dt>
 			<dd>Manually draw the current gamestate.</dd>
+			<dt><a href="#gamestate-focus">focus()</a></dt>
+			<dd>Inform current gamestate of a focus event.</dd>
 			<dt><a href="#gamestate-keypressed">keypressed()</a></dt>
-			<dd>Inform current gamestate of keypressed event.</dd>
+			<dd>Inform current gamestate of a keypressed event.</dd>
 			<dt><a href="#gamestate-keyreleased">keyreleased()</a></dt>
-			<dd>Inform current gamestate of keyreleased event.</dd>
+			<dd>Inform current gamestate of a keyreleased event.</dd>
 			<dt><a href="#gamestate-mousepressed">mousepressed()</a></dt>
-			<dd>Inform current gamestate of mousepressed event.</dd>
+			<dd>Inform current gamestate of a mousepressed event.</dd>
 			<dt><a href="#gamestate-mousereleased">mousereleased()</a></dt>
-			<dd>Inform current gamestate of mousereleased event.</dd>
+			<dd>Inform current gamestate of a mousereleased event.</dd>
 			<dt><a href="#gamestate-joystickpressed">joystickpressed()</a></dt>
-			<dd>Inform current gamestate of joystickpressed event.</dd>
+			<dd>Inform current gamestate of a joystickpressed event.</dd>
 			<dt><a href="#gamestate-joystickreleased">joystickreleased()</a></dt>
 			<dd>Inform current gamestate of a joystickreleased event.</dd>
+			<dt><a href="#gamestate-quit">quit()</a></dt>
+			<dd>Inform current gamestate of a quit event.</dd>
 			<dt><a href="#gamestate-registerEvents">registerEvents()</a></dt>
 			<dd>Automatically do all of the above when needed.</dd>
 		</dl>
@@ -137,6 +141,8 @@
 			<dd>Update the game state. Called every frame.</dd>
 			<dt>draw()</dt>
 			<dd>Draw on the screen. Called every frame.</dd>
+			<dt>focus()</dt>
+			<dd>Called if the window gets or looses focus.</dd>
 			<dt>keypressed()</dt>
 			<dd>Triggered when a key is pressed.</dd>
 			<dt>keyreleased()</dt>
@@ -149,6 +155,8 @@
 			<dd>Triggered when a joystick button is pressed.</dd>
 			<dt>joystickreleased()</dt>
 			<dd>Triggered when a joystick button is released.</dd>
+			<dt>quit()</dt>
+			<dd>Called on quitting the game. Only called on the active gamestate.</dd>
 		</dl>
 		<p>When using <a href="#gamestate-registerEvents">registerEvents()</a>, all these
 		callbacks will receive the same arguments as the <a href="http://love2d.org/wiki/love">L&Ouml;VE callbacks</a> do.</p>
@@ -243,21 +251,25 @@ end</code></pre>
 
 	<a name="gamestate-update"></a>
 	<a name="gamestate-draw"></a>
+	<a name="gamestate-focus"></a>
 	<a name="gamestate-keypressed"></a>
 	<a name="gamestate-keyreleased"></a>
 	<a name="gamestate-mousepressed"></a>
 	<a name="gamestate-mousereleased"></a>
 	<a name="gamestate-joystickpressed"></a>
 	<a name="gamestate-joystickreleased"></a>
+	<a name="gamestate-quit"></a>
 	<div id="gamestate-events" class="function">
 		<div class="definition">function <span class="name">update</span><span class="arglist">(...)</span><a class="top" href="#gamestate">^ top</a></div>
 		<div class="definition">function <span class="name">draw</span><span class="arglist">(...)</span></div>
+		<div class="definition">function <span class="name">focus</span><span class="arglist">(...)</span></div>
 		<div class="definition">function <span class="name">keypressed</span><span class="arglist">(...)</span></div>
 		<div class="definition">function <span class="name">keyreleased</span><span class="arglist">(...)</span></div>
 		<div class="definition">function <span class="name">mousepressed</span><span class="arglist">(...)</span></div>
 		<div class="definition">function <span class="name">mousereleased</span><span class="arglist">(...)</span></div>
 		<div class="definition">function <span class="name">joystickpressed</span><span class="arglist">(...)</span></div>
 		<div class="definition">function <span class="name">joystickreleased</span><span class="arglist">(...)</span></div>
+		<div class="definition">function <span class="name">quit</span><span class="arglist">(...)</span></div>
 		<p>Calls the corresponding function on the current gamestate (see <a href="#gamestate-callbacks">callbacks</a>).</p>
 		<p>Only needed when not using <a href="#gamestate-registerEvents"><code>registerEvents()</code></a>.</p>
 		<div class="arguments">Parameters:
