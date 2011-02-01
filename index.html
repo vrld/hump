@@ -304,6 +304,13 @@ end</code></pre>
 	<div id="gamestate-registerEvents" class="function">
 		<div class="definition">function <span class="name">registerEvents</span><span class="arglist">()</span><a class="top" href="#gamestate">^ top</a></div>
 		<p>Register all love callbacks to call <code>Gamestate.update()</code>, <code>Gamestate.draw()</code>, etc. automatically.</p>
+		<p>This is achieved by overwriting the love callbacks, e.g.:</p>
+		<pre><code class="lua">local _update = love.update
+function love.update(dt)
+    _update(dt)
+    Gamestate.current:update(dt)
+end</code></pre>
+
 		<div class="arguments">Parameters:
 			<dl>
 				<dt>None</dt>
