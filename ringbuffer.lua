@@ -88,6 +88,7 @@ function ringbuffer:prev()
 	if self.current < 1 then
 		self.current = #self.items
 	end
+	return self:get()
 end
 
 -- Ringbuffer() as a shortcut to Ringbuffer.new()
