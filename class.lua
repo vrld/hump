@@ -25,17 +25,27 @@ THE SOFTWARE.
 ]]--
 
 local setmetatable, getmetatable = setmetatable, getmetatable
-local type, assert, pairs = type, assert, pairs
+local type, assert, pairs, unpack = type, assert, pairs, unpack
 local tostring, string_format = tostring, string.format
 module(...)
 
 local function __NULL__() end
 function new(constructor)
-	-- check name and constructor
 	local name = '<unnamed class>'
+	local super = {}
 	if type(constructor) == "table" then
-		if constructor.name then name = constructor.name end
-		constructor = constructor[1]
+		local args = constructor
+		name = args.name or name
+		if args.inherits then
+			-- trick: if arg.inherits has a metatable, it is a class
+			-- instead of a table (because of the function interface)
+			if getmetatable(args.inherits) then
+				super = {args.inherits}
+			else
+				super = args.inherits
+			end
+		end
+		constructor = args[1]
 	end
 	assert(not constructor or type(constructor) == "function",
 		string_format('%s: constructor has to be nil or a function', name))
@@ -58,11 +68,12 @@ function new(constructor)
 		__tostring = function() return tostring(name) end
 	}
 
+	inherit(c, unpack(super))
 	return setmetatable(c, meta)
 end
 
 function inherit(class, interface, ...)
-	if not interface then return end
+	if not interface or type(interface) ~= "table" then return end
 
 	-- __index and construct are not overwritten as for them class[name] is defined
 	for name, func in pairs(interface) do
