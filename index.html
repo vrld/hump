@@ -91,7 +91,7 @@
 <div id="gamestate" class="module">
 	<div class="name">hump.gamestate<a class="top" href="#top">^ top</a></div>
 	<div class="preamble">
-		<pre><code class="lua">require "hump.gamestate"</code></pre>
+		<pre><code class="lua">Gamestate = require "hump.gamestate"</code></pre>
 		<p>A gamestate encapsulates independant data an behaviour into a single entity.</p>
 		<p>A typical game could consist of a <em>menu</em>-state, 	a <em>level</em>-state and a <em>game-over</em>-state.</p>
 	</div>
@@ -335,7 +335,7 @@ end</code></pre>
 <div id="timer" class="module">
 	<div class="name">hump.timer<a class="top" href="#top">^ top</a></div>
 	<div class="preamble">
-		<pre><code class="lua">require "hump.timer"</code></pre>
+		<pre><code class="lua">Timer = require "hump.timer"</code></pre>
 		<p>hump.timer provides a simple interface to use delayed functions, i.e.
 		functions that will only be executed after some amount time.</p>
 		<p>In addition, the module offers facilities to create functions that
@@ -542,7 +542,7 @@ end</code></pre>
 <div id="vector" class="module">
 	<div class="name">hump.vector<a class="top" href="#top">^ top</a></div>
 	<div class="preamble">
-		<pre><code class="lua">require "hump.vector"</code></pre>
+		<pre><code class="lua">vector = require "hump.vector"</code></pre>
 		<p>A handy 2D vector class defining the most common things you do with vectors.</p>
 		<p>You can access the individual coordinates by using <code>vec.x</code> and <code>vec.y</code>.</p>
 	</div>
@@ -983,7 +983,7 @@ spawner.direction:rotate_inplace(dt)</code></pre>
 <div id="class" class="module">
 	<div class="name">hump.class<a class="top" href="#top">^ top</a></div>
 	<div class="preamble">
-		<pre><code class="lua">require "hump.class"</code></pre>
+		<pre><code class="lua">Class = require "hump.class"</code></pre>
 		A small, handy class implementation with multiple inheritance.
 	</div>
 
@@ -1003,6 +1003,8 @@ spawner.direction:rotate_inplace(dt)</code></pre>
 	<div id="class-new" class="function">
 		<div class="definition">function <span class="name">new</span><span class="arglist">(constructor)</span><a class="top" href="#class">^ top</a></div>
 		<div class="definition">function <span class="name">new</span><span class="arglist">{name = the_name, constructor}</span></div>
+		<div class="definition">function <span class="name">new</span><span class="arglist">{name = the_name, inherits = super, constructor}</span></div>
+		<div class="definition">function <span class="name">new</span><span class="arglist">{name = the_name, inherits = {super1, super2, ...}, constructor}</span></div>
 		<p>Define a new class.</p>
 		<p>The constructor will receive the newly created object as first argument.</p>
 		<p>If you <code>require</code>d the module to a variable, you can use the variable
@@ -1013,6 +1015,8 @@ spawner.direction:rotate_inplace(dt)</code></pre>
 				<dd>Class constructor.</dd>
 				<dt>string <code>the_name</code></dt>
 				<dd>Class name to be returned when calling <code>tostring()</code> on the class.</dd>
+				<dt>class <code>super</code></dt>
+				<dd>Super class to inherit from. Can also be an array of classes to inherit from.</dd>
 			</dl>
 		</div>
 		<div class="returns">Returns:
@@ -1050,6 +1054,27 @@ end}
 
 garfield = Feline(.7, 45)
 print(Feline, garfield) -- prints 'Feline	&lt;instance of Feline&gt;'</code></pre>
+			<pre><code class="lua">Class = require 'hump.class'
+A = Class{name = 'A'}
+function A:foo()
+    print('foo')
+end
+
+B = Class{name = 'B'}
+function C:bar()
+    print('bar')
+end
+
+-- single inheritance
+C = Class{name = 'C', inherits = A}
+instance = C()
+instance:foo() -- prints 'foo'
+
+-- multiple inheritance
+D = Class{name = 'D', inherits = {A,B}}
+instance = D()
+instance:foo() -- prints 'foo'
+instance:bar() -- prints 'bar'</code></pre>
 		</div>
 	</div>
 
@@ -1177,7 +1202,7 @@ result:foo()    -- error: method does not exist</code></pre>
 <div id="camera" class="module">
 	<div class="name">hump.camera<a class="top" href="#top">^ top</a></div>
 	<div class="preamble">
-		<pre><code class="lua">require "hump.camera"</code></pre>
+		<pre><code class="lua">camera = require "hump.camera"</code></pre>
 		<p class="warning">Depends on <a href="#vector">vector</a></p>
 		<p>Camera abstraction for L&Ouml;VE. A camera &quot;looks&quot; at a position and can be moved,
 		zoomed and rotated.</p>
@@ -1432,7 +1457,7 @@ unit:plotPathTo(target)</code></pre>
 <div id="ringbuffer" class="module">
 	<div class="name">hump.ringbuffer<a class="top" href="#top">^ top</a></div>
 	<div class="preamble">
-		<pre><code class="lua">require "hump.ringbuffer"</code></pre>
+		<pre><code class="lua">ringbuffer = require "hump.ringbuffer"</code></pre>
 		<p>A ring-buffer is a circular array. That means it does not have a first nor a
 		last, but only a <em>selected/current</em> element.</p>
 		<p>You can use this to implement <em>Tomb Raider</em> style inventories, looping
