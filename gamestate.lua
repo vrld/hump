@@ -31,6 +31,7 @@ local function __NULL__() end
 -- default gamestate produces error on every callback
 local function __ERROR__() error("Gamestate not initialized. Use Gamestate.switch()") end
 current = {
+	init             = __ERROR__,
 	enter            = __ERROR__,
 	leave            = __NULL__,
 	update           = __ERROR__,
@@ -47,6 +48,7 @@ current = {
 
 function new()
 	return {
+		init             = __NULL__,
 		enter            = __NULL__,
 		leave            = __NULL__,
 		update           = __NULL__,
@@ -66,6 +68,8 @@ function switch(to, ...)
 	assert(to, "Missing argument: Gamestate to switch to")
 	current:leave()
 	local pre = current
+	to:init()
+	to.init = __NULL__
 	current = to
 	return current:enter(pre, ...)
 end
