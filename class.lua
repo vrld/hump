@@ -1,5 +1,5 @@
 --[[
-Copyright (c) 2010 Matthias Richter
+Copyright (c) 2010-2011 Matthias Richter
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,54 +24,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]--
 
-local setmetatable, getmetatable = setmetatable, getmetatable
+local getfenv, setmetatable, getmetatable = getfenv, setmetatable, getmetatable
 local type, assert, pairs, unpack = type, assert, pairs, unpack
 local tostring, string_format = tostring, string.format
+local print = print
 module(...)
 
 local function __NULL__() end
-function new(constructor)
-	local name = '<unnamed class>'
-	local super = {}
-	if type(constructor) == "table" then
-		local args = constructor
-		name = args.name or name
-		if args.inherits then
-			-- trick: if arg.inherits has a metatable, it is a class
-			-- instead of a table (because of the function interface)
-			if getmetatable(args.inherits) then
-				super = {args.inherits}
-			else
-				super = args.inherits
-			end
-		end
-		constructor = args[1]
-	end
-	assert(not constructor or type(constructor) == "function",
-		string_format('%s: constructor has to be nil or a function', name))
 
-	-- build class
-	local c = {}
-	c.__index = c
-	c.__tostring = function() return string_format("<instance of %s>", name) end
-	c.construct = constructor or __NULL__
-	c.Construct = constructor or __NULL__
-	c.inherit = inherit
-	c.Inherit = inherit
-
-	local meta = {
-		__call = function(self, ...)
-			local obj = {}
-			self.construct(obj, ...)
-			return setmetatable(obj, self)
-		end,
-		__tostring = function() return tostring(name) end
-	}
-
-	inherit(c, unpack(super))
-	return setmetatable(c, meta)
-end
-
+-- class "inheritance" by copying functions
 function inherit(class, interface, ...)
 	if not interface or type(interface) ~= "table" then return end
 
@@ -81,8 +42,66 @@ function inherit(class, interface, ...)
 			class[name] = func
 		end
 	end
+	for super in pairs(interface.__is_a) do
+		class.__is_a[super] = true
+	end
 
 	inherit(class, ...)
+end
+
+-- class builder
+function new(args)
+	local super = {}
+	local name = '<unnamed class>'
+	local constructor = args or __NULL__
+	if type(args) == "table" then
+		-- nasty hack to check if args.inherits is a table of classes or a class or nil
+		super = (args.inherits or {}).__is_a and {args.inherits} or args.inherits or {}
+		name = args.name or name
+		constructor = args[1] or __NULL__
+	end
+	assert(type(constructor) == "function",
+		string_format('constructor has to be nil or a function'))
+
+	-- build class
+	local class = {}
+	class.__index = class
+	class.__tostring = function() return string_format("<instance of %s>", tostring(class)) end
+	class.construct, class.Construct = constructor or __NULL__, constructor or __NULL__
+	class.Construct = class.construct
+	class.inherit, class.Inherit = inherit, inherit
+	class.__is_a = {[class] = true}
+	class.is_a = function(self, other) return not not self.__is_a[other] end
+
+	-- intercept assignment in global environment to infer the class name
+	if not name then
+		local env, env_meta, interceptor = getfenv(0), getmetatable(getfenv(0)), {}
+		function interceptor:__newindex(key, value)
+			if value == class then
+				local name = tostring(key)
+				getmetatable(class).__tostring = function() return name end
+			end
+			-- restore old metatable and insert value
+			setmetatable(env, env_meta)
+			if env.global then env.global(key) end -- handle 'strict' module
+			env[key] = value
+		end
+		setmetatable(env, interceptor)
+	end
+
+	-- inherit superclasses (see above)
+	inherit(class, unpack(super))
+
+	-- syntactic sugar
+	local meta = {
+		__call = function(self, ...)
+			local obj = {}
+			self.construct(obj, ...)
+			return setmetatable(obj, self)
+		end,
+		__tostring = function() return name end
+	}
+	return setmetatable(class, meta)
 end
 
 -- class() as shortcut to class.new()
