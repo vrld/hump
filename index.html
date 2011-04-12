@@ -999,6 +999,8 @@ spawner.direction:rotate_inplace(dt)</code></pre>
 			<dd>Call class constructor.</dd>
 			<dt><a href="#class-inherit">inherit()</a></dt>
 			<dd>Class inheritance.</dd>
+			<dt><a href="#class-is_a">object:is_a()</a></dt>
+			<dd>Run-time type information.</dd>
 		</dl>
 	</div>
 
@@ -1010,6 +1012,9 @@ spawner.direction:rotate_inplace(dt)</code></pre>
 		<div class="definition">function <span class="name">new</span><span class="arglist">{name = the_name, inherits = {super1, super2, ...}, constructor}</span></div>
 		<p>Define a new class.</p>
 		<p>The constructor will receive the newly created object as first argument.</p>
+		<p>If no name is given, the module tries to guess the name. However, this will only
+		work if the class is assigned to a global variable.</p>
+		<p>You can check if an object is an instance of a class using <a href="#class-is_a"><code>object:is_a(class)</code></a>.</p>
 		<p>If you <code>require</code>d the module to a variable, you can use the variable
 		as a shortcut to <code>new()</code>.</p>
 		<div class="arguments">Parameters:
@@ -1031,11 +1036,12 @@ spawner.direction:rotate_inplace(dt)</code></pre>
 		<div class="example">Example:
 			<pre><code class="lua">Class = require 'hump.class'
 
--- define unnamed class
+-- define class with implicit name  'Feline'
 Feline = Class(function(self, size, weight)
     self.size = size
     self.weight = weight
 end)
+print(Feline) -- prints 'Feline'
 
 -- define class method
 function Feline:stats()
@@ -1049,7 +1055,7 @@ felix = Feline(.8, 12)
 print("Garfield: " .. garfield:stats(), "Felix: " .. felix:stats())</code></pre>
 			<pre><code class="lua">Class = require 'hump.class'
 
--- define named class
+-- define class with explicit name 'Feline'
 Feline = Class{name = "Feline", function(self, size, weight)
     self.size = size
     self.weight = weight
@@ -1058,23 +1064,23 @@ end}
 garfield = Feline(.7, 45)
 print(Feline, garfield) -- prints 'Feline	&lt;instance of Feline&gt;'</code></pre>
 			<pre><code class="lua">Class = require 'hump.class'
-A = Class{name = 'A'}
+A = Class{}
 function A:foo()
     print('foo')
 end
 
-B = Class{name = 'B'}
-function C:bar()
+B = Class{}
+function B:bar()
     print('bar')
 end
 
 -- single inheritance
-C = Class{name = 'C', inherits = A}
+C = Class{inherits = A}
 instance = C()
 instance:foo() -- prints 'foo'
 
 -- multiple inheritance
-D = Class{name = 'D', inherits = {A,B}}
+D = Class{inherits = {A,B}}
 instance = D()
 instance:foo() -- prints 'foo'
 instance:bar() -- prints 'bar'</code></pre>
@@ -1103,12 +1109,12 @@ instance:bar() -- prints 'bar'</code></pre>
 		<div class="example">Example:
 			<pre><code class="lua">Class = require 'hump.class'
 
-Feline = Class{name = "Feline", function(self, size, weight)
+Feline = Class{function(self, size, weight)
     self.size = size
     self.weight = weight
 end}
 
-Cat = Class{name = "Cat", function(self, name, size, weight)
+Cat = Class{function(self, name, size, weight)
     Feline.construct(self, size, weight)
     self.name = name
 end}
@@ -1120,7 +1126,9 @@ Cat:inherit(Feline)</code></pre></div>
 		<div class="definition">function <span class="name">inherit</span><span class="arglist">(class, super, ...)</span><a class="top" href="#class">^ top</a></div>
 		<div class="definition">function <span class="name">class:inherit</span><span class="arglist">(super, ...)</span></div>
 		<div class="definition">function <span class="name">class:Inherit</span><span class="arglist">(super, ...)</span></div>
-		<p>Inherit functions (but not class variables).</p>
+		<p>Inherit functions (but not class variables). This is done by simply <em>copying</em>
+		the function-references over to the subclass. If you change the function of a superclass
+		at runtime, these changes will not affect the subclasses.</p>
 		<p>If multiple super-classes are defined inherit from all of these. If two super-classes define
 		a method of the same name, inherit it from the one mentioned first.</p>
 		<div class="arguments">Parameters:
@@ -1139,7 +1147,7 @@ Cat:inherit(Feline)</code></pre></div>
 		<div class="example">Example:
 			<pre><code class="lua">Class = require 'hump.class'
 
-Feline = Class{name = "Feline", function(self, size, weight)
+Feline = Class{function(self, size, weight)
     self.size = size
     self.weight = weight
 end}
@@ -1150,7 +1158,7 @@ end
 
 function Feline:speak() print("meow") end
 
-Cat = Class{name = "Cat", function(self, name, size, weight)
+Cat = Class{function(self, name, size, weight)
     Feline.construct(self, size, weight)
     self.name = name
 end}
@@ -1160,7 +1168,7 @@ function Cat:stats()
     return string.format("name: %s, %s", self.name, Feline.stats(self))
 end
 
-Tiger = Class{name = "Tiger", function(self, size, weight)
+Tiger = Class{function(self, size, weight)
     Feline.construct(self, size, weight)
 end}
 Tiger:Inherit(Feline)
@@ -1176,6 +1184,41 @@ felix:speak()          -- "meow"
 hobbes:speak()         -- "ROAR!"</code></pre>
 		</div>
 	</div>
+
+	<a name="class-is_a"></a>
+	<div id="class-is_a" class="function">
+		<div class="definition">function <span class="name">object:is_a</span><span class="arglist">(class)</span><a class="top" href="#class">^ top</a></div>
+		<p>Tests whether an object is an instance of a class.</p>
+		<div class="arguments">Parameters:
+			<dl>
+				<dt>Class <code>class</code></dt>
+				<dd>Class to test. This is the class itself, not the name of the class.</dd>
+			</dl>
+		</div>
+		<div class="returns">Returns:
+			<dl>
+				<dt><code>true</code>, if object is an instance of class, <code>false</code> otherwise</dt>
+			</dl>
+		</div>
+		<div class="example">Example:
+			<pre><code class="lua">Class = require 'hump.class'
+
+A = Class{}
+B = Class{inherits=A}
+C = Class{inherits=B}
+a, b, c = A(), B(), C()
+print(a:is_a(A), a:is_a(B), a:is_a(C)) --&gt; true   false  false
+print(b:is_a(A), b:is_a(B), b:is_a(C)) --&gt; true   true   false
+print(c:is_a(A), c:is_a(B), c:is_a(C)) --&gt; true   true   true
+
+D = Class{}
+E = Class{inherits={B,D}}
+d, e = D(), E()
+print(d:is_a(A), d:is_a(B), d:is_a(D)) --&gt; false  false  true
+print(e:is_a(A), e:is_a(B), e:is_a(D)) --&gt; true   true   true</code></pre>
+		</div>
+	</div>
+
 
 	<div class="caveats">
 		<h3>Caveats</h3>
@@ -1197,6 +1240,27 @@ one, two = B(1,2), B(3,4)
 result = one + two
 result:show()   -- prints "A:    4"
 result:foo()    -- error: method does not exist</code></pre>
+		<p>Note that while you <em>can</em> define the <code>__index</code> metamethod
+		of the class, this is not a good idea, as it will break the class. To add a
+		custom <code>__index</code> metamethod without breaking the class system,
+		you have to use <code>rawget()</code>. But beware that this method won't
+		affect subclasses.</p>
+		<pre><code class="lua">Class = require 'hump.class'
+
+A = Class{}
+function A:foo() print('bar') end
+
+function A:__index(key)
+    print(key)
+    return rawget(A, key)
+end
+
+instance = A()
+instance:foo() -- prints foo &lt;newline&gt; bar
+
+B = Class{inherits = A}
+instance = B()
+instance:foo() -- prints only foo</pre></code>
 	</div>
 
 </div>
