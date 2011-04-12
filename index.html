@@ -133,6 +133,8 @@
 		<p>A gamestate can define (nearly) all callbacks that L&Ouml;VE defines. In addition, there are callbacks
 		for entering and leaving a state.:</p>
 		<dl>
+			<dt>init()</dt>
+			<dd>Called once before entering the state. See <a href="#gamestate-switch">switch()</a>.</dd>
 			<dt>enter(previous, ...)</dt>
 			<dd>Called when entering the state. See <a href="#gamestate-switch">switch()</a>.</dd>
 			<dt>leave()</dt>
@@ -163,13 +165,13 @@
 
 		<div class="example">Example:
 			<pre><code class="lua">menu = Gamestate.new()
-function menu:enter(previous, background_image)
-    self.background = background_image
+function menu:init() -- run only once
+    self.background = love.graphics.newImage('bg.jpg')
     Buttons.initialize()
 end
 
-function menu:leave()
-    Buttons.cleanup()
+function menu:enter(previous) -- run every time the state is entered
+    Buttons.setActive(Buttons.start)
 end
 
 function menu:update(dt)
@@ -228,8 +230,9 @@ end</code></pre>
 		<div class="definition">function <span class="name">switch</span><span class="arglist">(to, ...)</span><a class="top" href="#gamestate">^ top</a></div>
 		<p>Switch to a gamestate, with any additional arguments passed to the new state.</p>
 		<p>Switching a gamestate will call the <a href="#gamestate-callbacks"><code>leave()</code></a> callback on
-		the current gamestate, replace the current gamestate with <code>to</code> and finally call
-		<a href="#gamestate-callbacks"><code>enter(old_state, ...)</code></a> on the new gamestate.</p>
+		the current gamestate, replace the current gamestate with <code>to</code>, call the
+		<a href="#gamestate-callbacks"><code>init()</code></a> function if the state was not yet inialized and
+		finally call <a href="#gamestate-callbacks"><code>enter(old_state, ...)</code></a> on the new gamestate.</p>
 		<div class="arguments">Parameters:
 			<dl>
 				<dt>Gamestate <code>to</code></dt>
