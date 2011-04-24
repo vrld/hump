@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 local assert, type = assert, type
 local pairs, ipairs = pairs, ipairs
-local min = math.min
+local min, math_huge = math.min, math.huge
 module(...)
 
 functions = {}
@@ -36,9 +36,8 @@ function update(dt)
 		delay = delay - dt
 		if delay <= 0 then
 			to_remove[#to_remove+1] = func
-		else
-			functions[func] = delay
 		end
+		functions[func] = delay
 	end
 	for _,func in ipairs(to_remove) do
 		functions[func] = nil
@@ -53,10 +52,15 @@ end
 
 function addPeriodic(delay, func, count)
 	assert(type(func) == "function", "second argument needs to be a function")
-	if count then
-		return add(delay, function(f) func(func) count = count - 1 if count > 0 then add(delay, f) end end)
-	end
-	return add(delay, function(f) func(func) add(delay, f) end)
+	local count = count or math_huge -- exploit below: math.huge - 1 = math.huge
+
+	add(delay, function(f)
+		func(func)
+		count = count - 1
+		if count > 0 then
+			add(delay, f)
+		end
+	end)
 end
 
 function clear()
@@ -76,8 +80,7 @@ function Oscillator(length, func)
 	assert(type(func) == "function", "second argument needs to be a function")
 	local t = 0
 	return function(dt, ...)
-		t = t + dt
-		while t > length do t = t - length end
+		t = (t + dt) % length
 		return func(t/length, ...)
 	end
 end
