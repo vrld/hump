@@ -55,7 +55,7 @@ function addPeriodic(delay, func, count)
 	local count = count or math_huge -- exploit below: math.huge - 1 = math.huge
 
 	add(delay, function(f)
-		func(func)
+		if func(func) == false then return end
 		count = count - 1
 		if count > 0 then
 			add(delay, f)
