@@ -370,7 +370,7 @@ end</code></pre>
 		<p>Note that there is no guarantee that the delay will be exceeded. It is, however, guaranteed that the
 		function will <em>not be executed before</em> the delay has passed.</p>
 
-		<p>If the function is called, it will receive itself as only parameter. This may be useful to implement
+		<p>The function <code>func</code> will receive itself as only parameter. This may be useful to implement
 		the periodic behavior of <code>Timer.addPeriodic</code>.</p>
 		<div class="arguments">Parameters:
 			<dl>
@@ -387,8 +387,8 @@ end</code></pre>
 		</div>
 		<div class="example">Example:
 			<pre><code class="lua">-- grant the player 5 seconds of immortality
-player:setInvincible(true)
-Timer.add(5, function() player:setInvincible(false) end)</code></pre>
+player.isInvincible = true
+Timer.add(5, function() player.isInvincible = false end)</code></pre>
 			<pre><code class="lua">-- print "foo" every second
 Timer.add(1, function(func) print("foo") Timer.add(1, func) end)</code></pre>
 		</div>
@@ -399,7 +399,8 @@ Timer.add(1, function(func) print("foo") Timer.add(1, func) end)</code></pre>
 		<div class="definition">function <span class="name">addPeriodic</span><span class="arglist">(delay, func, count)</span><a class="top" href="#timer">^ top</a></div>
 		<div class="definition">function <span class="name">addPeriodic</span><span class="arglist">(delay, func)</div>
 		<p>Add a periodic timed function, i.e. a function that will be called <code>count</code> times every <code>delay</code> seconds.</p>
-		<p>If <code>count</code> is omitted, the function loops until <a href="#timer-clear"><code>clear()</code></a> is called.</p>
+		<p>Returning <code>false</code> will immediately stop the timer, regardless if it was called <code>count</code> times or not.</p>
+		<p>If <code>count</code> is omitted, the function loops until the function returns <code>false</code> or <a href="#timer-clear"><code>clear()</code></a> is called.</p>
 		<div class="arguments">Parameters:
 			<dl>
 				<dt>number <code>delay</code></dt>
@@ -418,6 +419,11 @@ Timer.add(1, function(func) print("foo") Timer.add(1, func) end)</code></pre>
 		<div class="example">Example:
 			<pre><code class="lua">Timer.addPeriodic(1, function() lamp:toggleLight() end)</code></pre>
 			<pre><code class="lua">Timer.addPeriodic(0.3, function() mothership:spawnFighter() end, 5)</code></pre>
+			<pre><code class="lua">-- flicker player's image as long as he is invincible
+Timer.addPeriodic(0.1, function()
+    player:flipImage()
+    return player.isInvincible
+end)</code></pre>
 		</div>
 	</div>
 
