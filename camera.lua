@@ -24,14 +24,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]--
 
-local setmetatable, require, love = setmetatable, require, love
-module(...)
-local vector = require(_PACKAGE..'vector')
+local _PATH = (...):match('^(.*[%./])[^%.%/]+$') or ''
+local vector = vector or Vector or require(_PATH..'vector')
 
 local camera = {}
 camera.__index = camera
 
-function new(pos, zoom, rot)
+local function new(pos, zoom, rot)
 	local pos  = pos or vector(love.graphics.getWidth(), love.graphics.getHeight()) / 2
 	local zoom = zoom or 1
 	local rot  = rot or 0
@@ -82,9 +81,6 @@ function camera:mousepos()
 	return self:toWorldCoords(vector(love.mouse.getPosition()))
 end
 
--- camera() as a shortcut to new()
-do
-	local m = {}
-	m.__call = function(_, ...) return new(...) end
-	setmetatable(_M, m)
-end
+-- the module
+return setmetatable({new = new},
+	{__call = function(_, ...) return new(...) end})

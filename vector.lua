@@ -24,21 +24,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]--
 
-local setmetatable, getmetatable = setmetatable, getmetatable
-local assert, type, tonumber = assert, type, tonumber
+local assert = assert
 local sqrt, cos, sin = math.sqrt, math.cos, math.sin
-module(...)
 
 local vector = {}
 vector.__index = vector
 
-function new(x,y)
+local function new(x,y)
 	local v = {x = x or 0, y = y or 0}
 	setmetatable(v, vector)
 	return v
 end
 
-function isvector(v)
+local function isvector(v)
 	return getmetatable(v) == vector
 end
 
@@ -102,11 +100,11 @@ function vector.permul(a,b)
 end
 
 function vector:len2()
-	return self * self
+	return self.x * self.x + self.y * self.y
 end
 
 function vector:len()
-	return sqrt(self*self)
+	return sqrt(self:len2())
 end
 
 function vector.dist(a, b)
@@ -139,8 +137,13 @@ function vector:perpendicular()
 end
 
 function vector:projectOn(v)
-	assert(isvector(v), "invalid argument: cannot project onto anything other than a new.")
+	assert(isvector(v), "invalid argument: cannot project onto anything other than a vector")
 	return (self * v) * v / v:len2()
+end
+
+function vector:mirrorOn(other)
+	assert(isvector(other), "invalid argument: cannot mirror on anything other than a vector")
+	return 2 * self:projectOn(other) - self
 end
 
 function vector:cross(other)
@@ -148,9 +151,7 @@ function vector:cross(other)
 	return self.x * other.y - self.y * other.x
 end
 
--- vector() as shortcut to vector.new()
-do
-	local m = {}
-	m.__call = function(_, ...) return new(...) end
-	setmetatable(_M, m)
-end
+
+-- the module
+return setmetatable({new = new, isvector = isvector},
+	{__call = function(_, ...) return new(...) end})

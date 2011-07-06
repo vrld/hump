@@ -24,12 +24,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]--
 
-local setmetatable, getmetatable, table = setmetatable, getmetatable, table
-module(...)
 local ringbuffer = {}
 ringbuffer.__index = ringbuffer
 
-function new(...)
+local function new(...)
 	local rb = {}
 	rb.items = {...}
 	rb.current = 1
@@ -91,9 +89,6 @@ function ringbuffer:prev()
 	return self:get()
 end
 
--- Ringbuffer() as a shortcut to Ringbuffer.new()
-do
-	local m = {}
-	m.__call = function(_, ...) return new(...) end
-	setmetatable(_M, m)
-end
+-- the module
+return setmetatable({new = new},
+	{__call = function(_, ...) return new(...) end})

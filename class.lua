@@ -24,16 +24,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]--
 
-local getfenv, setmetatable, getmetatable = getfenv, setmetatable, getmetatable
-local type, assert, pairs, unpack = type, assert, pairs, unpack
-local tostring, string_format = tostring, string.format
-local print = print
-module(...)
-
 local function __NULL__() end
 
 -- class "inheritance" by copying functions
-function inherit(class, interface, ...)
+local function inherit(class, interface, ...)
 	if not interface or type(interface) ~= "table" then return end
 
 	-- __index and construct are not overwritten as for them class[name] is defined
@@ -50,7 +44,7 @@ function inherit(class, interface, ...)
 end
 
 -- class builder
-function new(args)
+local function new(args)
 	local super = {}
 	local name = '<unnamed class>'
 	local constructor = args or __NULL__
@@ -60,13 +54,12 @@ function new(args)
 		name = args.name or name
 		constructor = args[1] or __NULL__
 	end
-	assert(type(constructor) == "function",
-		string_format('constructor has to be nil or a function'))
+	assert(type(constructor) == "function", 'constructor has to be nil or a function')
 
 	-- build class
 	local class = {}
 	class.__index = class
-	class.__tostring = function() return string_format("<instance of %s>", tostring(class)) end
+	class.__tostring = function() return ("<instance of %s>"):format(tostring(class)) end
 	class.construct, class.Construct = constructor or __NULL__, constructor or __NULL__
 	class.Construct = class.construct
 	class.inherit, class.Inherit = inherit, inherit
@@ -74,7 +67,7 @@ function new(args)
 	class.is_a = function(self, other) return not not self.__is_a[other] end
 
 	-- intercept assignment in global environment to infer the class name
-	if not name then
+	if not (args and args.name) then
 		local env, env_meta, interceptor = getfenv(0), getmetatable(getfenv(0)), {}
 		function interceptor:__newindex(key, value)
 			if value == class then
@@ -104,9 +97,6 @@ function new(args)
 	return setmetatable(class, meta)
 end
 
--- class() as shortcut to class.new()
-do
-	local m = {}
-	m.__call = function(_, ...) return new(...) end
-	setmetatable(_M, m)
-end
+-- the module
+return setmetatable({new = new, inherit = inherit},
+	{__call = function(_,...) return new(...) end})

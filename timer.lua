@@ -24,13 +24,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]--
 
-local assert, type = assert, type
-local pairs, ipairs = pairs, ipairs
-local min, math_huge = math.min, math.huge
-module(...)
-
-functions = {}
-function update(dt)
+local functions = {}
+local function update(dt)
 	local to_remove = {}
 	for func, delay in pairs(functions) do
 		delay = delay - dt
@@ -45,14 +40,14 @@ function update(dt)
 	end
 end
 
-function add(delay, func)
+local function add(delay, func)
 	assert(type(func) == "function", "second argument needs to be a function")
 	functions[func] = delay
 end
 
-function addPeriodic(delay, func, count)
+local function addPeriodic(delay, func, count)
 	assert(type(func) == "function", "second argument needs to be a function")
-	local count = count or math_huge -- exploit below: math.huge - 1 = math.huge
+	local count = count or math.huge -- exploit below: math.huge - 1 = math.huge
 
 	add(delay, function(f)
 		if func(func) == false then return end
@@ -63,11 +58,11 @@ function addPeriodic(delay, func, count)
 	end)
 end
 
-function clear()
+local function clear()
 	functions = {}
 end
 
-function Interpolator(length, func)
+local function Interpolator(length, func)
 	assert(type(func) == "function", "second argument needs to be a function")
 	local t = 0
 	return function(dt, ...)
@@ -76,7 +71,7 @@ function Interpolator(length, func)
 	end
 end
 
-function Oscillator(length, func)
+local function Oscillator(length, func)
 	assert(type(func) == "function", "second argument needs to be a function")
 	local t = 0
 	return function(dt, ...)
@@ -84,3 +79,13 @@ function Oscillator(length, func)
 		return func(t/length, ...)
 	end
 end
+
+-- the module
+return {
+	update       = update,
+	add          = add,
+	addPeriodic  = addPeriodic,
+	clear        = clear,
+	Interpolator = Interpolator,
+	Oscillator   = Oscillator
+}

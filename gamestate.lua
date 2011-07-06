@@ -24,9 +24,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]--
 
-local error, assert, love = error, assert, love
-module(...)
-
 local function __NULL__() end
 -- default gamestate produces error on every callback
 local function __ERROR__() error("Gamestate not initialized. Use Gamestate.switch()") end
@@ -46,7 +43,7 @@ current = {
 	quit             = __ERROR__,
 }
 
-function new()
+local function new()
 	return {
 		init             = __NULL__,
 		enter            = __NULL__,
@@ -64,7 +61,7 @@ function new()
 	}
 end
 
-function switch(to, ...)
+local function switch(to, ...)
 	assert(to, "Missing argument: Gamestate to switch to")
 	current:leave()
 	local pre = current
@@ -75,66 +72,66 @@ function switch(to, ...)
 end
 
 local _update
-function update(...)
+local function update(...)
 	if _update then _update(...) end
 	return current:update(...)
 end
 
 local _draw
-function draw(...)
+local function draw(...)
 	if _draw then _draw(...) end
 	return current:draw(...)
 end
 
 local _focus
-function focus(...)
+local function focus(...)
 	if _focus then _focus(...) end
 	return current:focus(...)
 end
 
 local _keypressed
-function keypressed(...)
+local function keypressed(...)
 	if _keypressed then _keypressed(...) end
 	return current:keypressed(...)
 end
 
 local _keyreleased
-function keyreleased(...)
+local function keyreleased(...)
 	if _keyreleased then _keyreleased(...) end
 	return current:keyreleased(...)
 end
 
 local _mousepressed
-function mousepressed(...)
+local function mousepressed(...)
 	if _mousereleased then _mousepressed(...) end
 	return current:mousepressed(...)
 end
 
 local _mousereleased
-function mousereleased(...)
+local function mousereleased(...)
 	if _mousereleased then _mousereleased(...) end
 	return current:mousereleased(...)
 end
 
 local _joystickpressed
-function joystickpressed(...)
+local function joystickpressed(...)
 	if _joystickpressed then _joystickpressed(...) end
 	return current:joystickpressed(...)
 end
 
 local _joystickreleased
-function joystickreleased(...)
+local function joystickreleased(...)
 	if _joystickreleased then _joystickreleased(...) end
 	return current:joystickreleased(...)
 end
 
 local _quit
-function quit(...)
+local function quit(...)
 	if _quit then _quit(...) end
 	return current:quit(...)
 end
 
-function registerEvents()
+local function registerEvents()
 	_update               = love.update
 	love.update           = update
 	_draw                 = love.draw
@@ -156,3 +153,20 @@ function registerEvents()
 	_quit                 = love.quit
 	love.quit             = quit
 end
+
+-- the module
+return {
+	new              = new,
+	switch           = switch,
+	update           = update,
+	draw             = draw,
+	focus            = focus,
+	keypressed       = keypressed,
+	keyreleased      = keyreleased,
+	mousepressed     = mousepressed,
+	mousereleased    = mousereleased,
+	joystickpressed  = joystickpressed,
+	joystickreleased = joystickreleased,
+	quit             = quit,
+	registerEvents   = registerEvents
+}
