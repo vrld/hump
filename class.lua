@@ -67,7 +67,7 @@ local function new(args)
 	class.is_a = function(self, other) return not not self.__is_a[other] end
 
 	-- intercept assignment in global environment to infer the class name
-	if not (args and args.name) then
+	if not (type(args) == "table" and args.name) then
 		local env, env_meta, interceptor = getfenv(0), getmetatable(getfenv(0)), {}
 		function interceptor:__newindex(key, value)
 			if value == class then
