@@ -32,11 +32,11 @@ local function inherit(class, interface, ...)
 
 	-- __index and construct are not overwritten as for them class[name] is defined
 	for name, func in pairs(interface) do
-		if not class[name] and type(func) == "function" then
+		if not class[name] then
 			class[name] = func
 		end
 	end
-	for super in pairs(interface.__is_a) do
+	for super in pairs(interface.__is_a or {}) do
 		class.__is_a[super] = true
 	end
 
@@ -96,6 +96,17 @@ local function new(args)
 	}
 	return setmetatable(class, meta)
 end
+
+-- interface for cross class-system compatibility (see https://github.com/bartbes/Class-Commons).
+if class_commons ~= false then
+	common = common or {}
+
+	function common.class(name, prototype, parent)
+		local init = prototype.init or (parent or {}).init
+		return new{name = name, inherits = {prototype, parent}, init}
+	end
+end
+
 
 -- the module
 return setmetatable({new = new, inherit = inherit},
