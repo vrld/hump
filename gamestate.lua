@@ -103,7 +103,7 @@ end
 
 local _mousepressed
 local function mousepressed(...)
-	if _mousereleased then _mousepressed(...) end
+	if _mousepressed then _mousepressed(...) end
 	return current:mousepressed(...)
 end
 
