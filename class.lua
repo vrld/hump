@@ -28,7 +28,8 @@ local function __NULL__() end
 
 -- class "inheritance" by copying functions
 local function inherit(class, interface, ...)
-	if not interface or type(interface) ~= "table" then return end
+	if not interface then return end
+	assert(type(interface) == "table", "Can only inherit from other classes.")
 
 	-- __index and construct are not overwritten as for them class[name] is defined
 	for name, func in pairs(interface) do
@@ -40,7 +41,7 @@ local function inherit(class, interface, ...)
 		class.__is_a[super] = true
 	end
 
-	inherit(class, ...)
+	return inherit(class, ...)
 end
 
 -- class builder
@@ -60,7 +61,7 @@ local function new(args)
 	local class = {}
 	class.__index = class
 	class.__tostring = function() return ("<instance of %s>"):format(tostring(class)) end
-	class.construct, class.Construct = constructor or __NULL__, constructor or __NULL__
+	class.construct = constructor or __NULL__
 	class.Construct = class.construct
 	class.inherit, class.Inherit = inherit, inherit
 	class.__is_a = {[class] = true}
@@ -89,8 +90,9 @@ local function new(args)
 	local meta = {
 		__call = function(self, ...)
 			local obj = {}
+			setmetatable(obj, self)
 			self.construct(obj, ...)
-			return setmetatable(obj, self)
+			return obj
 		end,
 		__tostring = function() return name end
 	}
