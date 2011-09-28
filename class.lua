@@ -102,9 +102,14 @@ end
 -- interface for cross class-system compatibility (see https://github.com/bartbes/Class-Commons).
 if class_commons ~= false then
 	common = common or {}
+	function default_init(self, ...)
+		if self.init and self.init ~= default_init then
+			self.init(...)
+		end
+	end
 
 	function common.class(name, prototype, parent)
-		local init = prototype.init or (parent or {}).init
+		local init = prototype.init or (parent or {}).init or default_init
 		return new{name = name, inherits = {prototype, parent}, init}
 	end
 end
