@@ -39,14 +39,16 @@ end
 
 function camera:rotate(phi)
 	self.rot = self.rot + phi
+	return self
 end
 
-function camera:translate(t)
-	self.pos = self.pos + t
+function camera:move(p,q)
+	p = type(p) == "number" and vector(p,q) or p
+	self.pos = self.pos + p
+	return self
 end
-camera.move = camera.translate
 
-function camera:predraw()
+function camera:attach()
 	local center = vector(love.graphics.getWidth(), love.graphics.getHeight()) / (self.zoom * 2)
 	love.graphics.push()
 	love.graphics.scale(self.zoom)
@@ -55,30 +57,33 @@ function camera:predraw()
 	love.graphics.translate((-self.pos):unpack())
 end
 
-function camera:postdraw()
+function camera:detach()
 	love.graphics.pop()
 end
 
 function camera:draw(func)
-	self:predraw()
+	self:attach()
 	func()
-	self:postdraw()
+	self:detach()
 end
 
-function camera:toCameraCoords(p)
+function camera:cameraCoords(p, q)
+	p = type(p) == "number" and vector(p,q) or p
 	local w,h = love.graphics.getWidth(), love.graphics.getHeight()
-	local p = (p - self.pos):rotate_inplace(self.rot)
+	p = (p - self.pos):rotate_inplace(self.rot)
 	return vector(p.x * self.zoom + w/2, p.y * self.zoom + h/2)
 end
 
-function camera:toWorldCoords(p)
+function camera:worldCoords(p, q)
+	p = type(p) == "number" and vector(p,q) or p
+
 	local w,h = love.graphics.getWidth(), love.graphics.getHeight()
-	local p = vector((p.x-w/2) / self.zoom, (p.y-h/2) / self.zoom):rotate_inplace(-self.rot)
+	p = vector((p.x-w/2) / self.zoom, (p.y-h/2) / self.zoom):rotate_inplace(-self.rot)
 	return p + self.pos
 end
 
 function camera:mousepos()
-	return self:toWorldCoords(vector(love.mouse.getPosition()))
+	return self:worldCoords(vector(love.mouse.getPosition()))
 end
 
 -- the module
