@@ -62,8 +62,7 @@ local function new(args)
 	class.__index = class
 	class.__tostring = function() return ("<instance of %s>"):format(tostring(class)) end
 	class.construct = constructor or __NULL__
-	class.Construct = class.construct
-	class.inherit, class.Inherit = inherit, inherit
+	class.inherit = inherit
 	class.__is_a = {[class] = true}
 	class.is_a = function(self, other) return not not self.__is_a[other] end
 
@@ -100,17 +99,14 @@ local function new(args)
 end
 
 -- interface for cross class-system compatibility (see https://github.com/bartbes/Class-Commons).
-if class_commons ~= false then
-	common = common or {}
-	function default_init(self, ...)
-		if self.init and self.init ~= default_init then
-			self.init(...)
-		end
-	end
-
+if class_commons ~= false and not common then
+	common = {}
 	function common.class(name, prototype, parent)
-		local init = prototype.init or (parent or {}).init or default_init
+		local init = prototype.init or (parent or {}).init
 		return new{name = name, inherits = {prototype, parent}, init}
+	end
+	function common.instance(class, ...)
+		return class(...)
 	end
 end
 
