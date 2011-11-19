@@ -25,25 +25,13 @@ THE SOFTWARE.
 ]]--
 
 local function __NULL__() end
+
 -- default gamestate produces error on every callback
 local function __ERROR__() error("Gamestate not initialized. Use Gamestate.switch()") end
-current = {
-	init             = __ERROR__,
-	enter            = __ERROR__,
-	leave            = __NULL__,
-	update           = __ERROR__,
-	draw             = __ERROR__,
-	focus            = __ERROR__,
-	keyreleased      = __ERROR__,
-	keypressed       = __ERROR__,
-	mousepressed     = __ERROR__,
-	mousereleased    = __ERROR__,
-	joystickpressed  = __ERROR__,
-	joystickreleased = __ERROR__,
-	quit             = __ERROR__,
-}
+local current = setmetatable({leave = __NULL__}, {__index = __ERROR__})
 
-local function new()
+local GS = {}
+function GS.new()
 	return {
 		init             = __NULL__,
 		enter            = __NULL__,
@@ -61,7 +49,7 @@ local function new()
 	}
 end
 
-local function switch(to, ...)
+function GS.switch(to, ...)
 	assert(to, "Missing argument: Gamestate to switch to")
 	current:leave()
 	local pre = current
@@ -71,102 +59,30 @@ local function switch(to, ...)
 	return current:enter(pre, ...)
 end
 
-local _update
-local function update(...)
-	if _update then _update(...) end
-	return current:update(...)
-end
+-- holds all defined love callbacks after GS.registerEvents is called
+-- returns empty function on undefined callback
+local registry = setmetatable({}, {__index = function() return __NULL__ end})
 
-local _draw
-local function draw(...)
-	if _draw then _draw(...) end
-	return current:draw(...)
-end
-
-local _focus
-local function focus(...)
-	if _focus then _focus(...) end
-	return current:focus(...)
-end
-
-local _keypressed
-local function keypressed(...)
-	if _keypressed then _keypressed(...) end
-	return current:keypressed(...)
-end
-
-local _keyreleased
-local function keyreleased(...)
-	if _keyreleased then _keyreleased(...) end
-	return current:keyreleased(...)
-end
-
-local _mousepressed
-local function mousepressed(...)
-	if _mousepressed then _mousepressed(...) end
-	return current:mousepressed(...)
-end
-
-local _mousereleased
-local function mousereleased(...)
-	if _mousereleased then _mousereleased(...) end
-	return current:mousereleased(...)
-end
-
-local _joystickpressed
-local function joystickpressed(...)
-	if _joystickpressed then _joystickpressed(...) end
-	return current:joystickpressed(...)
-end
-
-local _joystickreleased
-local function joystickreleased(...)
-	if _joystickreleased then _joystickreleased(...) end
-	return current:joystickreleased(...)
-end
-
-local _quit
-local function quit(...)
-	if _quit then _quit(...) end
-	return current:quit(...)
-end
-
-local function registerEvents()
-	_update               = love.update
-	love.update           = update
-	_draw                 = love.draw
-	love.draw             = draw
-	_focus                = love.focus
-	love.focus            = focus
-	_keypressed           = love.keypressed
-	love.keypressed       = keypressed
-	_keyreleased          = love.keyreleased
-	love.keyreleased      = keyreleased
-	_mousepressed         = love.mousepressed
-	love.mousepressed     = mousepressed
-	_mousereleased        = love.mousereleased
-	love.mousereleased    = mousereleased
-	_joystickpressed      = love.joystickpressed
-	love.joystickpressed  = joystickpressed
-	_joystickreleased     = love.joystickreleased
-	love.joystickreleased = joystickreleased
-	_quit                 = love.quit
-	love.quit             = quit
-end
-
--- the module
-return {
-	new              = new,
-	switch           = switch,
-	update           = update,
-	draw             = draw,
-	focus            = focus,
-	keypressed       = keypressed,
-	keyreleased      = keyreleased,
-	mousepressed     = mousepressed,
-	mousereleased    = mousereleased,
-	joystickpressed  = joystickpressed,
-	joystickreleased = joystickreleased,
-	quit             = quit,
-	registerEvents   = registerEvents
+local all_callbacks = {
+	'update', 'draw', 'focus', 'keypressed', 'keyreleased',
+	'mousepressed', 'mousereleased', 'joystickpressed',
+	'joystickreleased', 'quit'
 }
+
+function GS.registerEvents(callbacks)
+	callbacks = callbacks or all_callbacks
+	for _, f in ipairs(callbacks) do
+		registry[f] = love[f]
+		love[f] = function(...) GS[f](...) end
+	end
+end
+
+-- forward any undefined functions
+setmetatable(GS, {__index = function(_, func)
+	return function(...)
+		registry[func](...)
+		current[func](current, ...)
+	end
+end})
+
+return GS
