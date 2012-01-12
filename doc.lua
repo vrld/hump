@@ -153,12 +153,15 @@ end]===],
 		long = [===[
 		Register all love callbacks to call Gamestate.update(), Gamestate.draw(), etc. automatically.
 
-		This is by done the love callbacks, e.g.:
-		\[local _update = love.update
+		This is by done by overwriting the love callbacks, e.g.:
+		{## local old_update = love.update
 function love.update(dt)
-    _update(dt)
+    old_update(dt)
     Gamestate.current:update(dt)
-end\]]===],
+end}
+
+{!! Note:} Only works when called in {# love.load()} or any other function that is executed
+after the whole file is loaded.]===],
 		params = {},
 		returns = {},
 		example = [===[

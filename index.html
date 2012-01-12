@@ -136,12 +136,13 @@ end
 
 function love.keypressed(key, code)
     Gamestate.keypressed(key, code)
-end</code></pre></div></div><a name="Gamestate-registerEvents"></a><div class="ref-block"><h4>function <span class="name">registerEvents</span><span class="arglist">()</span><a class="top" href="#Gamestate">^ top</a></h4><p>		Register all love callbacks to call Gamestate.update(), Gamestate.draw(), etc. automatically.</p><p>		This is by done the love callbacks, e.g.:
-		\[local _update = love.update
+end</code></pre></div></div><a name="Gamestate-registerEvents"></a><div class="ref-block"><h4>function <span class="name">registerEvents</span><span class="arglist">()</span><a class="top" href="#Gamestate">^ top</a></h4><p>		Register all love callbacks to call Gamestate.update(), Gamestate.draw(), etc. automatically.</p><p>		This is by done by overwriting the love callbacks, e.g.:
+		<pre><code class="lua">local old_update = love.update
 function love.update(dt)
-    _update(dt)
+    old_update(dt)
     Gamestate.current:update(dt)
-end\]</p><div class="arguments">Parameters:<dl><dt>None.</dt></dl></div><div class="returns">Returns:<dl><dt>Nothing.</dt></dl></div><div class="example">Example:<pre><code class="lua">function love.load()
+end</code></pre></p><p><span class="warning">Note:</span> Only works when called in <code>love.load()</code> or any other function that is executed
+after the whole file is loaded.</p><div class="arguments">Parameters:<dl><dt>None.</dt></dl></div><div class="returns">Returns:<dl><dt>Nothing.</dt></dl></div><div class="example">Example:<pre><code class="lua">function love.load()
     Gamestate.registerEvents()
     Gamestate.switch(menu)
 end</code></pre></div></div></div>
