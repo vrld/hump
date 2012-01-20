@@ -420,7 +420,7 @@ print(a,b,c)    -- prints '(1,0), (1,0), (1,1)'}]===],
 			{"numbers", "The coordinates"}
 		},
 		example = {
-			"x,y = pos:unpack",
+			"x,y = pos:unpack()",
 			"love.graphics.draw(self.image, self.pos:unpack())"
 		},
 	},
@@ -590,7 +590,7 @@ spawner.direction:rotate_inplace(dt)]===],
 
 	Function { name = "vector:mirrorOn",
 		short = "Mirrors vector on other vector",
-		long = "Mirrors vector on the axis defined by the other axis.",
+		long = "Mirrors vector on the axis defined by the other vector.",
 		params = {
 			{"vector", "v", "The vector to mirror on."}
 		},
@@ -598,27 +598,26 @@ spawner.direction:rotate_inplace(dt)]===],
 			{"vector", "The mirrored vector."}
 		},
 		example = "deflected_velocity = ball.velocity:mirrorOn(surface)",
+		sketch = {
+			"vector-mirrorOn.png", "sketch of vector mirroring on axis", width = 334, height = 201
+		},
 	},
 
 	Function { name = "vector:cross",
 		short = "Cross product of two vectors.",
 		long = [===[
-		Get cross product of both vectors.
-
-		For the math geeks:
-
-		The cross product is usually not defined for 2D vectors. To still get a
-		meaningful result, we treat the vectors as being 3D vectors {** (x,y,0)}. The
-		cross product of both vectors has just a z-component, and this is what this
-		function returns. It's also the determinant of both vectors {** d = det(a,b)}
-		which is the area of the parallelogram spanned by both vectors.]===],
+		Get cross product of both vectors. Equals the area of the parallelogram
+		spanned by both vectors.]===],
 		params = {
 			{"vector", "other", "Vector to compute the cross product with."}
 		},
 		returns = {
 			{"number", "Cross product of both vectors."}
 		},
-		example = "parallelogram_area = a:cross(b)"
+		example = "parallelogram_area = a:cross(b)",
+		sketch = {
+			"vector-cross.png", "sketch of vector cross product", width = 271, height = 137
+		},
 	},
 }
 
