@@ -597,7 +597,7 @@ spawner.direction:rotate_inplace(dt)]===],
 		returns = {
 			{"vector", "The mirrored vector."}
 		},
-		example = "deflected_velocity = ball.velocity:mirrorOn(surface)",
+		example = "deflected_velocity = ball.velocity:mirrorOn(surface_normal)",
 		sketch = {
 			"vector-mirrorOn.png", "sketch of vector mirroring on axis", width = 334, height = 201
 		},
