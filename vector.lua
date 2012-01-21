@@ -104,12 +104,14 @@ function vector:len2()
 end
 
 function vector:len()
-	return sqrt(self:len2())
+	return sqrt(self.x * self.x + self.y * self.y)
 end
 
 function vector.dist(a, b)
 	assert(isvector(a) and isvector(b), "dist: wrong argument types (<vector> expected)")
-	return (b-a):len()
+	local dx = a.x - b.x
+	local dy = a.y - b.y
+	return sqrt(dx * dx + dy * dy)
 end
 
 function vector:normalize_inplace()
@@ -129,7 +131,8 @@ function vector:rotate_inplace(phi)
 end
 
 function vector:rotated(phi)
-	return self:clone():rotate_inplace(phi)
+	local c, s = cos(phi), sin(phi)
+	return new(c * self.x - s * self.y, s * self.x + c * self.y)
 end
 
 function vector:perpendicular()
@@ -138,12 +141,16 @@ end
 
 function vector:projectOn(v)
 	assert(isvector(v), "invalid argument: cannot project onto anything other than a vector")
-	return (self * v) * v / v:len2()
+	-- (self * v) * v / v:len2()
+	local s = (self.x * v.x + self.y * v.y) / (v.x * v.x + v.y * v.y)
+	return new(s * v.x, s * v.y)
 end
 
 function vector:mirrorOn(other)
 	assert(isvector(other), "invalid argument: cannot mirror on anything other than a vector")
-	return 2 * self:projectOn(other) - self
+	-- 2 * self:projectOn(other) - self
+	local s = 2 * (self.x * v.x + self.y * v.y) / (v.x * v.x + v.y * v.y)
+	return new(s * v.x - self.x, s * v.y - self.y)
 end
 
 function vector:cross(other)
