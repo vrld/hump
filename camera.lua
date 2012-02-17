@@ -25,7 +25,7 @@ THE SOFTWARE.
 ]]--
 
 local _PATH = (...):match('^(.*[%./])[^%.%/]+$') or ''
-local vector = vector or Vector or require(_PATH..'vector')
+local vector = require(_PATH..'vector')
 
 local camera = {}
 camera.__index = camera
