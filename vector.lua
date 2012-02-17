@@ -140,22 +140,22 @@ function vector:perpendicular()
 end
 
 function vector:projectOn(v)
-	assert(isvector(v), "invalid argument: cannot project onto anything other than a vector")
+	assert(isvector(v), "invalid argument: cannot project vector on " .. type(v))
 	-- (self * v) * v / v:len2()
 	local s = (self.x * v.x + self.y * v.y) / (v.x * v.x + v.y * v.y)
 	return new(s * v.x, s * v.y)
 end
 
-function vector:mirrorOn(other)
-	assert(isvector(other), "invalid argument: cannot mirror on anything other than a vector")
-	-- 2 * self:projectOn(other) - self
+function vector:mirrorOn(v)
+	assert(isvector(v), "invalid argument: cannot mirror vector on " .. type(v))
+	-- 2 * self:projectOn(v) - self
 	local s = 2 * (self.x * v.x + self.y * v.y) / (v.x * v.x + v.y * v.y)
 	return new(s * v.x - self.x, s * v.y - self.y)
 end
 
-function vector:cross(other)
-	assert(isvector(other), "cross: wrong argument types (<vector> expected)")
-	return self.x * other.y - self.y * other.x
+function vector:cross(v)
+	assert(isvector(v), "cross: wrong argument types (<vector> expected)")
+	return self.x * v.y - self.y * v.x
 end
 
 
