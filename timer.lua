@@ -41,12 +41,15 @@ local function update(dt)
 end
 
 local function add(delay, func)
-	assert(type(func) == "function", "second argument needs to be a function")
+	assert(not functions[func], ("Function already scheduled to run in %.2fs"):format(functions[func]))
 	functions[func] = delay
 end
 
+local function cancel(func)
+	functions[func] = nil
+end
+
 local function addPeriodic(delay, func, count)
-	assert(type(func) == "function", "second argument needs to be a function")
 	local count = count or math.huge -- exploit below: math.huge - 1 = math.huge
 
 	add(delay, function(f)
@@ -63,7 +66,6 @@ local function clear()
 end
 
 local function Interpolator(length, func)
-	assert(type(func) == "function", "second argument needs to be a function")
 	local t = 0
 	return function(dt, ...)
 		t = t + dt
@@ -72,7 +74,6 @@ local function Interpolator(length, func)
 end
 
 local function Oscillator(length, func)
-	assert(type(func) == "function", "second argument needs to be a function")
 	local t = 0
 	return function(dt, ...)
 		t = (t + dt) % length
