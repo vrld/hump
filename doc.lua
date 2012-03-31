@@ -194,13 +194,17 @@ Module { name = "hump.timer",
 		only guaranteed that the function will not be executed {** before} the delay
 		has passed.
 
+		It is an error to schedule a function again if it is not yet finished or canceled.
+
 		{# func} will receive itself as only parameter. This is useful to implement
 		periodic behavior (see the example).]===],
 		params = {
 			{"number", "delay", "Number of seconds the function will be delayed."},
 			{"function", "func", "The function to be delayed."},
 		},
-		returns = {},
+		returns = {
+			{"function", "The timer handle."}
+		},
 		example = {
 			[===[
 -- grant the player 5 seconds of immortality
@@ -224,7 +228,9 @@ Timer.add(1, function(func) print("foo") Timer.add(1, func) end)]===]
 			{"function", "func", "The function to be called periodically."},
 			{"number", "count", "Number of times the function is to be called.", optional = true},
 		},
-		returns = {},
+		returns = {
+			{"function", "The timer handle."}
+		},
 		example = {
 			"Timer.addPeriodic(1, function() lamp:toggleLight() end)",
 			"Timer.addPeriodic(0.3, function() mothership:spawnFighter() end, 5)",
@@ -236,12 +242,33 @@ end)]===],
 		},
 	},
 
+	Function { name = "cancel",
+		short = "Cancel a scheduled function.",
+		long = [===[Prevent a timer from being executed in the future.
+
+		{** Always} use the function handle returned by add()/addPeriodic() to cancel a timer.
+
+		{** Never} use this in another timer.]===],
+		params = {
+			{"function", "func", "The function to be canceled."},
+		},
+		returns = {},
+		example = {
+			[===[function tick()
+    print('tick... tock...')
+end
+handle = Timer.addPeriodic(1, tick)
+-- later
+Timer.cancel(handle) -- NOT: Timer.cancel(tick)]===]
+		},
+	},
+
 	Function { name = "clear",
 		short = "Remove all timed and periodic functions.",
 		long = "Remove all timed and periodic functions. Functions that have not yet been executed will discarded.",
 		params = {},
 		returns = {},
-		example = "Timer.clear",
+		example = "Timer.clear()",
 	},
 
 	Function { name = "update",
@@ -633,17 +660,13 @@ Module { name = "hump.class",
 
 		The constructor will receive the newly create object as first argument.
 
-		If no name is given, the module will try to guess the name based on the
-		variable name the class is assigned to. Note that this can only work for
-		global variables.
-
 		You can check if an object is an instance of a class using {# object:is_a()}.
 
 		The name of the variable that holds the module can be used as a shortcut to
 		{# new()} (see example).]===],
 		params = { table_argument = true,
 			{"function", "constructor", "Class constructor. Can be accessed with {# theclass.construct(object, ...)}", optional = true},
-			{"string", "the_name", "Class name (used only to make the class compliant to {# tostring()).", name = "name", optional = true},
+			{"string", "the_name", "Class name (used only to make the class compliant to {# tostring()}.", name = "name", optional = true},
 			{"class or table of classes", "super", "Classes to inherit from. Can either be a single class or a table of classes", name = "inherits", optional = true},
 		},
 		returns = {
