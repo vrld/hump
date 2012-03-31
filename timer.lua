@@ -41,24 +41,25 @@ local function update(dt)
 end
 
 local function add(delay, func)
-	assert(not functions[func], ("Function already scheduled to run in %.2fs"):format(functions[func]))
+	assert(not functions[func], "Function already scheduled to run.")
 	functions[func] = delay
-end
-
-local function cancel(func)
-	functions[func] = nil
+	return func
 end
 
 local function addPeriodic(delay, func, count)
 	local count = count or math.huge -- exploit below: math.huge - 1 = math.huge
 
-	add(delay, function(f)
+	return add(delay, function(f)
 		if func(func) == false then return end
 		count = count - 1
 		if count > 0 then
 			add(delay, f)
 		end
 	end)
+end
+
+local function cancel(func)
+	functions[func] = nil
 end
 
 local function clear()
@@ -86,6 +87,7 @@ return {
 	update       = update,
 	add          = add,
 	addPeriodic  = addPeriodic,
+	cancel       = cancel,
 	clear        = clear,
 	Interpolator = Interpolator,
 	Oscillator   = Oscillator
