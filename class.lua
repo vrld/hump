@@ -1,5 +1,5 @@
 --[[
-Copyright (c) 2010-2011 Matthias Richter
+Copyright (c) 2010-2012 Matthias Richter
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
