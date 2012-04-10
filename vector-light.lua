@@ -30,24 +30,11 @@ local function str(x,y)
 	return "("..tonumber(x)..","..tonumber(y)..")"
 end
 
-local function neg(x,y)
-	return -x, -y
-end
-
-local function add(x1,y1, x2,y2)
-	return x1+x2, y1+y2
-end
-
-local function sub(x1,y1, x2,y2)
-	return x1-x2, y1-y2
-end
-
-
-local function mul(x,y, s)
+local function mul(s, x,y)
 	return s*x, s*y
 end
 
-local function div(x,y, s)
+local function div(s, x,y)
 	return x/s, y/s
 end
 
@@ -60,7 +47,7 @@ local function dot(x1,y1, x2,y2)
 end
 
 local function det(x1,y1, x2,y2)
-	return x1 * y2 - y1 * x2
+	return x1*y2 - y1*x2
 end
 
 local function eq(x1,y1, x2,y2)
@@ -92,7 +79,7 @@ local function normalize(x,y)
 	return x/l, y/l
 end
 
-local function rotate(x,y, phi)
+local function rotate(phi, x,y)
 	local c, s = cos(phi), sin(phi)
 	return c*x - s*y, s*x + c*y
 end
@@ -117,9 +104,6 @@ return {
 	str = str,
 
 	-- arithmetic
-	neg    = neg,
-	add    = add,
-	sub    = sub,
 	mul    = mul,
 	div    = div,
 	permul = permul,
