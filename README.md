@@ -6,12 +6,13 @@ __HUMP__ is a small collection of tools for developing games with L&Ouml;VE.
 Contents:
 ------------
 
-*   *gamestate.lua*: class to handle gamestates
-*   *timer.lua*: timed function calls and interpolation function wrappers
-*   *vector.lua*: powerful vector class (pure lua)
-*   *class.lua*: "class" system supporting function inheritance (pure lua)
-*   *camera.lua*: move-, zoom- and rotatable camera
-*   *ringbuffer.lua*: a circular container
+*   *gamestate.lua*: class to handle gamestates.
+*   *timer.lua*: timed function calls and interpolation function wrappers.
+*   *vector.lua*: powerful vector class.
+*   *vector-light.lua*: lightweight implementation of the above (for optimisation purposes - potentially leads to ugly code).
+*   *class.lua*: "class" system supporting function inheritance.
+*   *camera.lua*: move-, zoom- and rotatable camera.
+*   *ringbuffer.lua*: a circular container.
 
 Documentation
 =============
