@@ -38,6 +38,14 @@ local function div(s, x,y)
 	return x/s, y/s
 end
 
+local function add(x1,y1, x2,y2)
+	return x1+x2, y1+y2
+end
+
+local function sub(x1,y1, x2,y2)
+	return x1-x2, y1-y2
+end
+
 local function permul(x1,y1, x2,y2)
 	return x1*x2, y1*y2
 end
@@ -106,6 +114,8 @@ return {
 	-- arithmetic
 	mul    = mul,
 	div    = div,
+	add    = add,
+	sub    = sub,
 	permul = permul,
 	dot    = dot,
 	det    = det,
