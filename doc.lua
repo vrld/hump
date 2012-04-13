@@ -4,32 +4,32 @@ Module { name  = "hump.gamestate",
 	long  = [===[
 	A gamestate encapsulates independent data an behaviour into a single entity.
 
-	A typical game could consist of a {** menu-state}, a {** level-state} and a {** game-over-state}.]===],
+	A typical game could consist of a {*menu-state}, a {*level-state} and a {*game-over-state}.]===],
 
 	Section { name    = "callbacks",
 		title   = "Gamestate Callbacks",
 		content = [===[
-		A gamestate can define (nearly) all callbacks that LÖVE defines. In addition,
+		A gamestate can define (nearly) all callbacks that L&Ouml;VE defines. In addition,
 		there are callbacks for entering and leaving a state.:
 
 		[|
-		{# init()}               | Called once before entering the state. See {# switch()}.
-		{# enter(previous, ...)} | Called when entering the state. See {# switch()}.
-		{# leave()}              | Called when leaving a state. See {# switch()}.
-		{# update()}             | Update the game state. Called every frame.
-		{# draw()}               | Draw on the screen. Called every frame.
-		{# focus()}              | Called if the window gets or looses focus.
-		{# keypressed()}         | Triggered when a key is pressed.
-		{# keyreleased()}        | Triggered when a key is released.
-		{# mousepressed()}       | Triggered when a mouse button is pressed.
-		{# mousereleased()}      | Triggered when a mouse button is released.
-		{# joystickpressed()}    | Triggered when a joystick button is pressed.
-		{# joystickreleased()}   | Triggered when a joystick button is released.
-		{# quit()}               | Called on quitting the game. Only called on the active gamestate.
-		|]
+		{#init()}               :Called once before entering the state. See {#switch()}.
+		{#enter(previous, ...)} :Called when entering the state. See {#switch()}.
+		{#leave()}              :Called when leaving a state. See {#switch()}.
+		{#update()}             :Update the game state. Called every frame.
+		{#draw()}               :Draw on the screen. Called every frame.
+		{#focus()}              :Called if the window gets or looses focus.
+		{#keypressed()}         :Triggered when a key is pressed.
+		{#keyreleased()}        :Triggered when a key is released.
+		{#mousepressed()}       :Triggered when a mouse button is pressed.
+		{#mousereleased()}      :Triggered when a mouse button is released.
+		{#joystickpressed()}    :Triggered when a joystick button is pressed.
+		{#joystickreleased()}   :Triggered when a joystick button is released.
+		{#quit()}               :Called on quitting the game. Only called on the active gamestate.
+		]
 
-		When using {# registerEvents()}, all these callbacks will receive the same
-		arguments as the [[http://love2d.org/wiki/love|LÖVE callbacks]] do.]===],
+		When using {#registerEvents()}, all these callbacks will receive the same
+		arguments as the [^http://love2d.org/wiki/love L&Ouml;VE callbacks] do.]===],
 		example = [===[
 menu = Gamestate.new()
 function menu:init() -- run only once
@@ -73,7 +73,7 @@ end]===]
 
 	Function { name    = "new",
 		short   = "Create a new gamestate.",
-		long    = "Declare a new gamestate. A gamestate can define several [[callbacks]]",
+		long    = "Declare a new gamestate. A gamestate can define several [^#{{MODULE}}-callbacks callbacks].",
 		params  = {},
 		returns = {
 			{"Gamestate", "The new gamestate."}
@@ -86,9 +86,9 @@ end]===]
 		long    = [===[
 		Switch to a gamestate, with any additional arguments passed to the new state.
 
-		Switching a gamestate will call the leave() callback on the current gamestate,
-		replace the current gamestate with to, call the init() function if the state
-		was not yet inialized and finally call enter(old_state, ...) on the new gamestate.]===],
+		Switching a gamestate will call the {#leave()} callback on the current gamestate,
+		replace the current gamestate with to, call the {#init()} function if the state
+		was not yet inialized and finally call {#enter(old_state, ...)} on the new gamestate.]===],
 		params = {
 			{"Gamestate", "to", "Target gamestate."},
 			{"mixed", "...", "Additional arguments to pass to to:enter()."}
@@ -124,11 +124,11 @@ end]===]
 			"Inform current gamestate of a quit event.",
 		},
 		long = [===[
-		Calls the corresponding function on the current gamestate (see [[callbacks]]).
+		Calls the corresponding function on the current gamestate (see [^#{{MODULE}}-callbacks callbacks]).
 
 		Only needed when not using registerEvents().]===],
 		params = {
-			{"mixed", "...", "Arguments to pass to the corresponding [[callbacks|callback]]."},
+			{"mixed", "...", "Arguments to pass to the corresponding [^#{{MODULE}}-callbacks callback]."},
 		},
 		returns = {
 			{"mixed", "The results of the callback function."},
@@ -154,13 +154,13 @@ end]===],
 		Register all love callbacks to call Gamestate.update(), Gamestate.draw(), etc. automatically.
 
 		This is by done by overwriting the love callbacks, e.g.:
-		{## local old_update = love.update
+		{%local old_update = love.update
 function love.update(dt)
     old_update(dt)
     Gamestate.current:update(dt)
 end}
 
-{!! Note:} Only works when called in {# love.load()} or any other function that is executed
+		{!Note:} Only works when called in {#love.load()} or any other function that is executed
 after the whole file is loaded.]===],
 		params = {},
 		returns = {},
@@ -187,16 +187,16 @@ Module { name = "hump.timer",
 	Function { name = "add",
 		short = "Add a timed function.",
 		long = [===[
-		Add a timed function. The function will be executed after {# delay} seconds
+		Add a timed function. The function will be executed after {#delay} seconds
 		have elapsed, given that update() is called every frame.
 
 		Note that there is no guarantee that the delay will not be exceeded, it is
-		only guaranteed that the function will not be executed {** before} the delay
+		only guaranteed that the function will not be executed {*before} the delay
 		has passed.
 
 		It is an error to schedule a function again if it is not yet finished or canceled.
 
-		{# func} will receive itself as only parameter. This is useful to implement
+		{#func} will receive itself as only parameter. This is useful to implement
 		periodic behavior (see the example).]===],
 		params = {
 			{"number", "delay", "Number of seconds the function will be delayed."},
@@ -219,9 +219,9 @@ Timer.add(1, function(func) print("foo") Timer.add(1, func) end)]===]
 	Function { name = "addPeriodic",
 		short = "Add a periodic function.",
 		long = [===[
-		Add a function that will be called {# count} times every {# delay} seconds.
+		Add a function that will be called {#count} times every {#delay} seconds.
 
-		If {# count} is omitted, the function will be called until it returns {# false}
+		If {#count} is omitted, the function will be called until it returns {#false}
 		or clear() is called.]===],
 		params = {
 			{"number", "delay", "Number of seconds between two consecutive function calls."},
@@ -246,9 +246,9 @@ end)]===],
 		short = "Cancel a scheduled function.",
 		long = [===[Prevent a timer from being executed in the future.
 
-		{** Always} use the function handle returned by add()/addPeriodic() to cancel a timer.
+		{*Always} use the function handle returned by add()/addPeriodic() to cancel a timer.
 
-		{** Never} use this in another timer.]===],
+		{*Never} use this in another timer.]===],
 		params = {
 			{"function", "func", "The function to be canceled."},
 		},
@@ -292,16 +292,16 @@ end]===],
 		depending on how much time has passed.
 
 		The wrapper will have the prototype:
-		{## function wrapper(dt, ...) }
-		where {# dt} is the time that has passed since the last call of the wrapper
-		and {# ...} are arguments passed to the interpolating function. It will return
+		{%function wrapper(dt, ...) }
+		where {#dt} is the time that has passed since the last call of the wrapper
+		and {#...} are arguments passed to the interpolating function. It will return
 		whatever the interpolating functions returns if the interpolation is not yet
 		finished or nil if the interpolation is done.
 
 		The prototype of the interpolating function is:
-		{## function interpolator(fraction, ...) }
-		where {# fraction} is a number between 0 and 1 depending on how much time has
-		passed and {# ...} are additional arguments supplied to the wrapper.]===],
+		{%function interpolator(fraction, ...) }
+		where {#fraction} is a number between 0 and 1 depending on how much time has
+		passed and {#...} are additional arguments supplied to the wrapper.]===],
 		params = {
 			{"number", "length", "Interpolation length in seconds."},
 			{"function", "func", "Interpolating function."},
@@ -326,10 +326,10 @@ end]===],
 		interpolating function.
 
 		The function prototypes are the same as with Interpolator():
-		{## function wrapper(dt, ...) }
-		{## function oscillator(fraction, ...) }
+		{%function wrapper(dt, ...) }
+		{%function oscillator(fraction, ...) }
 
-		As with Interpolator, the wrapper will return whatever {# oscillator()} returns.]===],
+		As with Interpolator, the wrapper will return whatever {#oscillator()} returns.]===],
 		params = {
 			{"number", "length", "Length of one interpolation period."},
 			{"function", "func", "Oscillating function."},
@@ -355,33 +355,33 @@ end]===],
 
 Module { name = "hump.vector",
 	title = "vector",
-	short = "2D vector math",
+	short = "2D vector math.",
 	long = [===[
 	A handy 2D vector class providing most of the things you do with vectors.
 
-	You can access the individual coordinates by using {# vec.x} and {# vec.y}.]===],
+	You can access the individual coordinates by using {#vec.x} and {#vec.y}.]===],
 
 	Section { name = "operators",
 		title = "Arithmetics and relations",
 		content = [===[
-		Vector arithmetic is implemented by using {# __add}, {# __mul} and other metamethods:
+		Vector arithmetic is implemented by using {#__add}, {#__mul} and other metamethods:
 
 		[|
-		{# vector + vector = vector}  | Component wise sum.
-		{# vector - vector = vector}  | Component wise difference.
-		{# vector * vector = number}  | [[http://en.wikipedia.org/wiki/Dot_product|Dot product]].
-		{# number * vector = vector}  | Vector scaling ([[http://en.wikipedia.org/wiki/Scalar_multiplication|scalar multiplication]]).
-		{# vector * number = vector}  | Vector scaling.
-		{# vector / number = vector}  | Vector scaling.
-		|]
+		{#vector + vector = vector} :Component wise sum.
+		{#vector - vector = vector} :Component wise difference.
+		{#vector * vector = number} :[^http://en.wikipedia.org/wiki/Dot_product Dot product].
+		{#number * vector = vector} :Vector scaling ([^http://en.wikipedia.org/wiki/Scalar_multiplication scalar multiplication]).
+		{#vector * number = vector} :Vector scaling.
+		{#vector / number = vector} :Vector scaling.
+		]
 
 		Relational operators are defined, too:
 
 		[|
-		a == b | {# true}, if {# a.x == b.x} and {# a.y == b.y}.
-		a <= b | {# true}, if {# a.x <= b.x} and {# a.y <= b.y}.
-		a < b  | Lexical sort: {# true}, if {# a.x < b.x} or {# a.x == b.x} and {# a.y < b.y}.
-		|]]===],
+		a == b :{#true}, if {#a.x == b.x} and {#a.y == b.y}.
+		a <= b :{#true}, if {#a.x <= b.x} and {#a.y <= b.y}.
+		a < b  :Lexical sort: {#true}, if {#a.x < b.x} or {#a.x == b.x} and {#a.y < b.y}.
+		]]===],
 		example = [===[
 -- acceleration, player.velocity and player.position are vectors
 acceleration = vector(0,-9)
@@ -413,7 +413,7 @@ a = vector(10,10)]===],
 			{"mixed", "v", "The variable to test."}
 		},
 		returns = {
-			{"boolean", "{# true} if {# v} is a vector, {# false} otherwise"}
+			{"boolean", "{#true} if {#v} is a vector, {#false} otherwise"}
 		},
 		example = [===[
 if not vector.isvector(v) then
@@ -427,7 +427,7 @@ end]===],
 		Copy a vector. Simply assigning a vector a vector to a variable will create
 		a reference, so when modifying the vector referenced by the new variable
 		would also change the old one:
-		{## a = vector(1,1) -- create vector
+		{%a = vector(1,1) -- create vector
 b = a           -- b references a
 c = a:clone()   -- c is a copy of a
 b.x = 0         -- changes a,b and c
@@ -455,7 +455,7 @@ print(a,b,c)    -- prints '(1,0), (1,0), (1,1)'}]===],
 	Function { name = "vector:permul",
 		short = "Per element multiplication.",
 		long = [===[
-		Multiplies vectors coordinate wise, i.e. {# result = vector(a.x * b.x, a.y * b.y)}.
+		Multiplies vectors coordinate wise, i.e. {#result = vector(a.x * b.x, a.y * b.y)}.
 
 		This does not change either argument vectors, but creates a new one.]===],
 		params = {
@@ -469,7 +469,7 @@ print(a,b,c)    -- prints '(1,0), (1,0), (1,1)'}]===],
 
 	Function { name = "vector:len",
 		short = "Get length.",
-		long = "Get length of a vector, i.e. {# math.sqrt(vec.x * vec.x + vec.y * vec.y)}.",
+		long = "Get length of a vector, i.e. {#math.sqrt(vec.x * vec.x + vec.y * vec.y)}.",
 		params = {},
 		returns = {
 			{"number", "Length of the vector."}
@@ -479,7 +479,7 @@ print(a,b,c)    -- prints '(1,0), (1,0), (1,1)'}]===],
 
 	Function { name = "vector:len2",
 		short = "Get squared length.",
-		long = "Get squared length of a vector, i.e. {# vec.x * vec.x + vec.y * vec.y}.",
+		long = "Get squared length of a vector, i.e. {#vec.x * vec.x + vec.y * vec.y}.",
 		params = {},
 		returns = {
 			{"number", "Squared length of the vector."}
@@ -497,7 +497,7 @@ end]===],
 
 	Function { name = "vector:dist",
 		short = "Distance to other vector.",
-		long = "Get distance of two vectors. The same as {# (a - b):len()}.",
+		long = "Get distance of two vectors. The same as {#(a - b):len()}.",
 		params = {
 			{"vector", "other", "Other vector to measure the distance to."},
 		},
@@ -536,7 +536,7 @@ end]===],
 		Normalize a vector, i.e. make the vector unit length. Great to use on
 		intermediate results.
 
-		{!! This modifies the vector. If in doubt, use {# vector:normalized()}.}]===],
+		{!This modifies the vector. If in doubt, use {#vector:normalized()}.}]===],
 		params = {},
 		returns = {
 			{"vector", "Itself - the normalized vector"}
@@ -551,7 +551,7 @@ end]===],
 
 		This does not change the input vector, but creates a new vector.]===],
 		params = {
-			{"number", "phi", "Rotation angle in [[http://en.wikipedia.org/wiki/Radians|radians]]."}
+			{"number", "phi", "Rotation angle in [^http://en.wikipedia.org/wiki/Radians radians]."}
 		},
 		returns = {
 			{"vector", "The rotated vector"}
@@ -573,9 +573,9 @@ end]===],
 		long = [===[
 		Rotate a vector in-place. Great to use on intermediate results.
 
-		{!! This modifies the vector. If in doubt, use {# vector:rotate()}}]===],
+		{!This modifies the vector. If in doubt, use {#vector:rotate()}}]===],
 		params = {
-			{"number", "phi", "Rotation angle in [[http://en.wikipedia.org/wiki/Radians|radians]]."}
+			{"number", "phi", "Rotation angle in [^http://en.wikipedia.org/wiki/Radians radians]."}
 		},
 		returns = {
 			{"vector", "Itself - the rotated vector"}
@@ -589,7 +589,7 @@ spawner.direction:rotate_inplace(dt)]===],
 		short = "Get perpendicular vector.",
 		long = [===[
 		Quick rotation by 90°. Creates a new vector. The same as (but faster):
-		{## vec:rotate(math.pi/2)}]===],
+		{%vec:rotate(math.pi/2)}]===],
 		params = {},
 		returns = {
 			{"vector", "A vector perpendicular to the input vector"}
@@ -648,6 +648,252 @@ spawner.direction:rotate_inplace(dt)]===],
 	},
 }
 
+
+Module { name = "hump.vector-light",
+	title = "vector-light",
+	short = "Lightweight 2D vector math.",
+	long = [===[
+	An table-free version of {#hump.vector}. Instead of a vector class, {#hump.vector-light} provides functions that operate on numbers.
+
+	Using this module instead of {#vector} might result in faster code, but does so at the expense of readability. Unless you are sure that it causes a significant performance penalty, I recommend to use {#hump.vector}.]===],
+
+
+	Function { name = "str",
+		short = "String representation.",
+		long = "Transforms a vector to a string of the form {#(x,y)}.",
+		params = {
+			{"numbers", "x,y", "The vector"}
+		},
+		returns = {
+			{"string", "The string representation"}
+		},
+		example = {
+			"print(vector.str(love.mouse.getPosition()))",
+		}
+	},
+
+	Function { name = { "mul", "div" },
+		short = {
+			"Product of a vector and a scalar.",
+			"Product of a vector and the inverse of a scalar.",
+		},
+		long = "Computes {#x*s, y*s} and {#x/s, y/s}. The order of arguments is chosen so that you can chain multiple operations (see example).",
+		params = {
+			{"number", "s", "The scalar."},
+			{"numbers", "x,y", "The vector."},
+		},
+		returns = {
+			{"numbers", "The result of the operation."}
+		},
+		example = {
+			"velx,vely = vec.mul(dt, vec.add(velx,vely, accx,accy))",
+			"x,y = vec.div(self.zoom, x-w/2, y-h/2)",
+		},
+	},
+
+	Function { name = { "add", "sub" },
+		short = {
+			"Sum of two vectors.",
+			"Difference of two vectors.",
+		},
+		long = "Computes the sum/difference of vectors. Same as {#x1+x2, y1+y2} or {#x1-x2, y1-y2} respectively. Meant to be used in conjunction with other functions.",
+		params = {
+			{"numbers", "x1,y1", "First vector."},
+			{"numbers", "x2,y2", "Second vector."},
+		},
+		returns = {
+			{"numbers", "The result of the operation."}
+		},
+		example = {
+			"player.x,player.y = vector.add(player.x,player.y, vector.mul(dt, dx,dy))",
+			"dx,dy = vector.sub(400,300, love.mouse.getPosition())",
+		},
+	},
+
+	Function { name = "permul",
+		short = "Per element multiplication.",
+		long = [===[
+		Multiplies vectors coordinate wise, i.e. {#x1*x2, y1*y2)}.]===],
+		params = {
+			{"numbers", "x1,y1", "First vector."},
+			{"numbers", "x2,y2", "Second vector."},
+		},
+		returns = {
+			{"numbers", "The result of the operation."}
+		},
+		example = "x,y = vector.permul(x,y, 1,1.5)",
+	},
+
+	Function { name = "dot",
+		short = "[^http://en.wikipedia.org/wiki/Dot_product Dot product]",
+		long = "Computes the [^http://en.wikipedia.org/wiki/Dot_product dot product] of two vectors, {#x1*x2 + y1*y2}.",
+		params = {
+			{"numbers", "x1,y1", "First vector."},
+			{"numbers", "x2,y2", "Second vector."},
+		},
+		returns = {
+			{"number", "The dot product."}
+		},
+		example = "cosphi = vector.dot(rx,ry, vx,vy)"
+	},
+
+	Function { name = {"det", "cross"},
+		short = { "Cross product", "Cross product", },
+		long = "Computes the cross product/determinant of two vectors, {#x1*y2 - y1*x2}.",
+		params = {
+			{"numbers", "x1,y1", "First vector."},
+			{"numbers", "x2,y2", "Second vector."},
+		},
+		returns = {
+			{"number", "The cross product."}
+		},
+		example = "parallelogram_area = vector.det(ax,ay, bx,by)"
+	},
+
+	Function { name = {"eq", "le", "lt"},
+		short = { "Equality.", "Partial lexical order.", "Strict lexical order." },
+		long = [===[Compares two vectors according to [|
+		{#vector.eq(x1,y1, x2,y2)} :{#x1 == x2 and y1 == y2}
+		{#vector.le(x1,y1, x2,y2)} :{#x1 <= x2 and y1 <= y2}
+		{#vector.lt(x1,y1, x2,y2)} :{#x1 < x2 or (x1 == x2) and y1 <= y2}
+		]
+		]===],
+		params = {
+			{"numbers", "x1,y1", "First vector."},
+			{"numbers", "x2,y2", "Second vector."},
+		},
+		returns = {
+			{"boolean", "The result of the operation."}
+		},
+		example = "..."
+	},
+
+	Function { name = "len",
+		short = "Get length.",
+		long = "Get length of a vector, i.e. {#math.sqrt(x*x + y*y)}.",
+		params = {
+			{"numbers", "x,y", "The vector."}
+		},
+		returns = {
+			{"number", "Length of the vector."}
+		},
+		example = "distance = vector.len(love.mouse.getPosition())",
+	},
+
+	Function { name = "len2",
+		short = "Get squared length.",
+		long = "Get squared length of a vector, i.e. {#x*x + y*y}.",
+		params = {
+			{"numbers", "x,y", "The vector."}
+		},
+		returns = {
+			{"number", "Squared length of the vector."}
+		},
+		example = [===[
+-- get closest vertex to a given vector
+closest, dsq = vertices[1], vector.len2(px-vertices[1].x, py-vertices[1].y)
+for i = 2,#vertices do
+    local temp = vector.len2(px-vertices[i].x, py-vertices[i].y)
+    if temp < dsq then
+        closest, dsq = vertices[i], temp
+    end
+end]===],
+	},
+
+	Function { name = "dist",
+		short = "Distance of two points.",
+		long = "Get distance of two points. The same as {#vector.len(x1-x2, y1-y2)}.",
+		params = {
+			{"numbers", "x1,y1", "First vector."},
+			{"numbers", "x2,y2", "Second vector."},
+		},
+		returns = {
+			{"number", "The distance of the points."}
+		},
+		example = [===[
+-- get closest vertex to a given vector
+-- slightly slower than the example using len2()
+closest, dist = vertices[1], vector.dist(px,py, vertices[1].x,vertices[1].y)
+for i = 2,#vertices do
+    local temp = vector.dist(px,py, vertices[i].x,vertices[i].y)
+    if temp < dist then
+        closest, dist = vertices[i], temp
+    end
+end]===],
+	},
+
+	Function { name = "normalize",
+		short = "Normalize vector.",
+		long = [===[
+		Get normalized vector, i.e. a vector with the same direction as the input
+		vector, but with length 1.]===],
+		params = {
+			{"numbers", "x,y", "The vector."},
+		},
+		returns = {
+			{"numbers", "Vector with same direction as the input vector, but length 1."}
+		},
+		example = "dx,dy = vector.normalize(vx,vy)"
+	},
+
+	Function { name = "rotate",
+		short = "Rotate vector.",
+		long = "Get a rotated vector.",
+		params = {
+			{"number", "phi", "Rotation angle in [^http://en.wikipedia.org/wiki/Radians radians]."},
+			{"numbers", "x,y", "The vector."},
+		},
+		returns = {
+			{"numbers", "The rotated vector"}
+		},
+		example = [===[
+-- approximate a circle
+circle = {}
+for i = 1,30 do
+    local phi = 2 * math.pi * i / 30
+    circle[i*2-1], circle[i*2] = vector.rotate(phi, 0,1)
+end]===],
+	},
+
+	Function { name = "perpendicular",
+		short = "Get perpendicular vector.",
+		long = "Quick rotation by 90°. The same as (but faster) {%vector.rotate(math.pi/2, x,y)}",
+		params = {
+			{"numbers", "x,y", "The vector."},
+		},
+		returns = {
+			{"numbers", "A vector perpendicular to the input vector"}
+		},
+		example = "nx,ny = vector.normalize(vector.perpendicular(bx-ax, by-ay))",
+	},
+
+	Function { name = "project",
+		short = "Project projection onto another vector.",
+		long = "Project vector onto another vector.",
+		params = {
+			{"numbers", "x,y", "The vector to project."},
+			{"numbers", "u,v", "The vector to project onto."},
+		},
+		returns = {
+			{"numbers", "The projected vector."}
+		},
+		example = "vx_p,vy_p = vector.project(vx,vy, ax,ay)",
+	},
+
+	Function { name = "mirror",
+		short = "Mirrors vector on other vector.",
+		long = "Mirrors vector on the axis defined by the other vector.",
+		params = {
+			{"numbers", "x,y", "The vector to mirror."},
+			{"numbers", "u,v", "The vector defining the axis."},
+		},
+		returns = {
+			{"numbers", "The mirrored vector."}
+		},
+		example = "vx,vy = vector.mirror(vx,vy, surface.x,surface.y)",
+	},
+}
+
 Module { name = "hump.class",
 	title = "Class",
 	short = "Class-based object orientated programming for Lua",
@@ -660,13 +906,13 @@ Module { name = "hump.class",
 
 		The constructor will receive the newly create object as first argument.
 
-		You can check if an object is an instance of a class using {# object:is_a()}.
+		You can check if an object is an instance of a class using {#object:is_a()}.
 
 		The name of the variable that holds the module can be used as a shortcut to
-		{# new()} (see example).]===],
+		{#new()} (see example).]===],
 		params = { table_argument = true,
-			{"function", "constructor", "Class constructor. Can be accessed with {# theclass.construct(object, ...)}", optional = true},
-			{"string", "the_name", "Class name (used only to make the class compliant to {# tostring()}.", name = "name", optional = true},
+			{"function", "constructor", "Class constructor. Can be accessed with {#theclass.construct(object, ...)}", optional = true},
+			{"string", "the_name", "Class name (used only to make the class compliant to {#tostring()}.", name = "name", optional = true},
 			{"class or table of classes", "super", "Classes to inherit from. Can either be a single class or a table of classes", name = "inherits", optional = true},
 		},
 		returns = {
@@ -740,7 +986,7 @@ instance:bar() -- prints 'bar'
 		Derived classes use this function their constructors to initialize the
 		parent class(es) portions of the object.]===],
 		params = {
-			{"Object", "object", "The object. Usually {# self}."},
+			{"Object", "object", "The object. Usually {#self}."},
 			{"mixed", "...", "Arguments to pass to the constructor"},
 		},
 		returns = {
@@ -810,14 +1056,14 @@ end}
 		variables over to the subclass. The Lua rules for copying apply
 		(i.e. tables are referenced, functions and primitive types are copied by value).
 
-		{!! Be careful with changing table values in a subclass: This will change the
+		{!Be careful with changing table values in a subclass: This will change the
 		value in the parent class too.}
 
 		If more than one parent class is specified, inherit from all of these, in
 		order of occurrence. That means that when two parent classes define the same
 		method, the one from the first class will be inherited.
 
-		Note: {# class:inherit()} doesn't actually care if the arguments supplied are
+		Note: {#class:inherit()} doesn't actually care if the arguments supplied are
 		hump classes. Just any table will work.]===],
 		params = {
 			{"tables", "...", "Parent classes to inherit from"}
@@ -859,10 +1105,10 @@ end
 		short = "Test object's type.",
 		long = "Tests whether an object is an instance of a class.",
 		params = {
-			{"class", "cls", "Class to test. Note: this is the class itself, {** not} the name of the class."}
+			{"class", "cls", "Class to test. Note: this is the class itself, {*not} the name of the class."}
 		},
 		returns = {
-			{"Boolean", "{# true} if the object is an instance of the class, {# false} otherwise"}
+			{"Boolean", "{#true} if the object is an instance of the class, {#false} otherwise"}
 		},
 		example = [===[
 Class = require 'hump.class'
@@ -886,10 +1132,10 @@ print(e:is_a(A), e:is_a(B), e:is_a(D)) --> true   true   true
 	Section { name = "caveats",
 		title = "Caveats",
 		content = [===[
-		Be careful when using metamethods like {# __add} or {# __mul}: If subclass
+		Be careful when using metamethods like {#__add} or {#__mul}: If subclass
 		inherits those methods from a superclass, but does not overwrite them, the
 		result of the operation may be of the type superclass. Consider the following:
-		{## Class = require 'hump.class'
+		{%Class = require 'hump.class'
 
 A = Class{function(self, x) self.x = x end}
 function A:__add(other) return A(self.x + other.x) end
@@ -904,11 +1150,11 @@ result = one + two
 result:show()   -- prints "A:    4"
 result:foo()    -- error: method does not exist}
 
-		Note that while you can define the {# __index} metamethod of the class, this
+		Note that while you can define the {#__index} metamethod of the class, this
 		is not a good idea: It will break the class. To add a custom __index
 		metamethod without breaking the class system, you have to use rawget().
 		But beware that this won't affect subclasses:
-		{## Class = require 'hump.class'
+		{%Class = require 'hump.class'
 
 A = Class{}
 function A:foo() print('bar') end
@@ -929,11 +1175,11 @@ instance:foo() -- prints only foo}]===],
 
 Module { name = "hump.camera",
 	title = "Camera",
-	short = "A camera for LÖVE",
+	short = "A camera for L&Ouml;VE",
 	long = [===[
-	{!! Depends on hump.vector}
+	{!Depends on hump.vector-light}
 
-	A camera utility for LÖVE. A camera can "look" at a position. It can zoom in and
+	A camera utility for L&Ouml;VE. A camera can "look" at a position. It can zoom in and
 	out and it can rotate it's view. In the background, this is done by actually
 	moving, scaling and rotating everything in the game world. But don't worry about
 	that.]===],
@@ -942,13 +1188,13 @@ Module { name = "hump.camera",
 		short = "Create a new camera object.",
 		long = [===[
 		Creates a new camera object. You can access the camera position using
-		{# camera.pos}, the zoom using {# camera.zoom} and the rotation using
-		{# camera.rot}.
+		{#camera.x, camera.y}, the zoom using {#camera.zoom} and the rotation using
+		{#camera.rot}.
 
-		The module variable name can be used at a shortcut to {# new()}.]===],
+		The module variable name can be used at a shortcut to {#new()}.]===],
 
 		params = {
-			{"vector", "pos", "Point for the camera to look at.", default = "screen center"},
+			{"numbers", "x,y", "Point for the camera to look at.", default = "screen center"},
 			{"number", "zoom", "Camera zoom.", default = "1"},
 			{"number", "rot", "Camera rotation in radians.", default = "0"},
 		},
@@ -959,20 +1205,19 @@ Module { name = "hump.camera",
 
 		example = [===[
 camera = require 'hump.camera'
-vector = require 'hump.vector'
 
 -- camera looking at (100,100) with zoom 2 and rotated by 45 degrees
-cam = camera(vector(100,100), 2, math.pi/2)
+cam = camera(100,100, 2, math.pi/2)
 ]===]
 	},
 
 	Function { name = "camera:rotate",
 		short = "Rotate camera object.",
 		long = [===[
-		Rotate the camera {** by} some angle. To {** set} the angle use
-		{# camera.rot = new_angle}.
+		Rotate the camera {*by} some angle. To {*set} the angle use
+		{#camera.rot = new_angle}.
 
-		This function is shortcut to {# camera.rot = camera.rot + angle}.]===],
+		This function is shortcut to {#camera.rot = camera.rot + angle}.]===],
 
 		params = {
 			{"number", "angle", "Rotation angle in radians"}
@@ -984,21 +1229,19 @@ cam = camera(vector(100,100), 2, math.pi/2)
 
 		example = {
 			"function love.update(dt)\n    camera:rotate(dt)\nend",
-			"function love.update(dt)\n    camera:rotate(dt):move(dt)\nend"
+			"function love.update(dt)\n    camera:rotate(dt):move(dt,dt)\nend"
 		},
 	},
 
 	Function { name = "camera:move",
 		short = "Move camera object.",
 		long = [===[
-		{** Move} the camera {** by} some vector. To {** set} the position, use
-		{# camera.pos = some_vector} or {# camera.pos.x, camera.pos.y = new_x, new_y}.
+		{*Move} the camera {*by} some vector. To {*set} the position, use {#camera.x,camera.y = new_x,new_y}.
 
-		This function is shortcut to {# camera.pos = camera.pos + v}.]===],
+		This function is shortcut to {#camera.x,camera.y = camera.x+dx, camera.y+dy}.]===],
 
 		params = {
-			{ {"vector", "v", "Direction to move the camera."} },
-			{ {"numbers", "x, y", "Direction to move the camera."} },
+			{"numbers", "dx,dy", "Direction to move the camera."},
 		},
 
 		returns = {
@@ -1006,7 +1249,6 @@ cam = camera(vector(100,100), 2, math.pi/2)
 		},
 
 		example = {
-			"function love.update(dt)\n    camera:move(dt * velocity)\nend",
 			"function love.update(dt)\n    camera:move(dt * 5, dt * 6):rotate(dt)\nend"
 		},
 	},
@@ -1017,7 +1259,7 @@ cam = camera(vector(100,100), 2, math.pi/2)
 		Start looking through the camera.
 
 		Apply camera transformations, i.e. move, scale and rotate everything until
-		{# camera:detach()} as if looking through the camera.]===],
+		{#camera:detach()} as if looking through the camera.]===],
 
 		params = {},
 		returns = {},
@@ -1052,8 +1294,8 @@ end]===]
 	Function { name = "camera:draw",
 		short = "Attach, draw and detach.",
 		long = [===[
-		Wrap a function between a {# camera:attach()}/{# camera:detach()} pair:
-		{## cam:attach()
+		Wrap a function between a {#camera:attach()}/{#camera:detach()} pair:
+		{%cam:attach()
 func()
 cam:detach()}]===],
 
@@ -1083,7 +1325,7 @@ end]===]
 		defines a coordinate system. A point now has two sets of coordinates: One
 		defines where the point is to be found in the game world, and the other
 		describes the position on the computer screen. The first set of coordinates
-		is called {** world coordinates}, the second one {** camera coordinates}.
+		is called {*world coordinates}, the second one {*camera coordinates}.
 		
 		Sometimes it is needed to convert between the two coordinate systems, for
 		example to get the position of a mouse click in the game world in a strategy
@@ -1092,35 +1334,34 @@ end]===]
 		These two functions convert a point between these two coordinate systems.]===],
 
 		params = {
-			{ {"vector", "v", "Point to transform."} },
-			{ {"numbers", "x, y", "Point to transform."} },
+			{"numbers", "x, y", "Point to transform."},
 		},
 
 		returns = {
-			{"vector", "Transformed point."},
+			{"numbers", "Transformed point."},
 		},
 
 		example = {
 			[===[
-target = camera:worldCoords( vector(love.mouse.getPosition()) )
-selectedUnit:plotPath(target)
+x,y = camera:worldCoords(love.mouse.getPosition())
+selectedUnit:plotPath(x,y)
 ]===], [===[
-pos = cam:toCameraCoords(player.pos)
-love.graphics.line(pos.x, pos.y, love.mouse.getPosition())
+x,y = cam:toCameraCoords(player.pos)
+love.graphics.line(x, y, love.mouse.getPosition())
 ]===]
 		},
 	},
 
 	Function { name = "camera:mousepos",
 		short = "Get mouse position in world coordinates.",
-		long = "Shortcut to {# camera:worldCoords(vector(love.mouse.getPosition()))}.",
+		long = "Shortcut to {#camera:worldCoords(vector(love.mouse.getPosition()))}.",
 		params = {},
 		returns = {
-			{"vector", "Mouse position in world coordinates."},
+			{"numbers", "Mouse position in world coordinates."},
 		},
 		example = [===[
-target = camera:mousepos()
-selectedUnit:plotPath(target)
+x,y = camera:mousepos()
+selectedUnit:plotPath(x,y)
 ]===],
 	},
 }
@@ -1130,11 +1371,11 @@ Module { name = "hump.ringbuffer",
 	short = "A data structure that wraps around itself.",
 	long = [===[
 	A ring-buffer is a circular array: It does not have a first nor a last item,
-	but it has a {** selected} or {** current} element.
+	but it has a {*selected} or {*current} element.
 
-	A ring-buffer can be used to implement {** Tomb Raider} style inventories, looping
+	A ring-buffer can be used to implement {*Tomb Raider} style inventories, looping
 	play-lists, recurring dialogs (like a unit's answers when selecting it multiple
-	times in {** Warcraft}) and generally everything that has a circular or looping
+	times in {*Warcraft}) and generally everything that has a circular or looping
 	structure.]===],
 
 	Function { name = "new",
