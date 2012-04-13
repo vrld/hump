@@ -126,7 +126,7 @@ end]===]
 		long = [===[
 		Calls the corresponding function on the current gamestate (see [^#{{MODULE}}-callbacks callbacks]).
 
-		Only needed when not using registerEvents().]===],
+		Only needed when not using {#registerEvents()}.]===],
 		params = {
 			{"mixed", "...", "Arguments to pass to the corresponding [^#{{MODULE}}-callbacks callback]."},
 		},
@@ -151,7 +151,7 @@ end]===],
 	Function { name = "registerEvents",
 		short = "Automatically do all of the above when needed.",
 		long = [===[
-		Register all love callbacks to call Gamestate.update(), Gamestate.draw(), etc. automatically.
+		Register love callbacks to call {#Gamestate.update()}, {#Gamestate.draw()}, etc. automatically.
 
 		This is by done by overwriting the love callbacks, e.g.:
 		[%local old_update = love.update
@@ -162,12 +162,19 @@ end]
 
 		{!Note:} Only works when called in {#love.load()} or any other function that is executed
 after the whole file is loaded.]===],
-		params = {},
+		params = {
+			{'table', 'callbacks', 'Names of the callbacks to register. If omitted, register all callbacks.', optional = true},
+		},
 		returns = {},
-		example = [===[function love.load()
+		example = {
+			[===[function love.load()
     Gamestate.registerEvents()
     Gamestate.switch(menu)
-end]===],
+end]===], [===[function love.load()
+    Gamestate.registerEvents{'draw', 'update', 'quit'}
+    Gamestate.switch(menu)
+end]===]
+		}
 	},
 }
 
@@ -187,7 +194,7 @@ Module { name = "hump.timer",
 		short = "Add a timed function.",
 		long = [===[
 		Add a timed function. The function will be executed after {#delay} seconds
-		have elapsed, given that update() is called every frame.
+		have elapsed, given that {#update(dt)} is called every frame.
 
 		Note that there is no guarantee that the delay will not be exceeded, it is
 		only guaranteed that the function will not be executed {*before} the delay
@@ -221,7 +228,7 @@ Timer.add(1, function(func) print("foo") Timer.add(1, func) end)]===]
 		Add a function that will be called {#count} times every {#delay} seconds.
 
 		If {#count} is omitted, the function will be called until it returns {#false}
-		or clear() is called.]===],
+		or {#clear()} is called.]===],
 		params = {
 			{"number", "delay", "Number of seconds between two consecutive function calls."},
 			{"function", "func", "The function to be called periodically."},
@@ -245,9 +252,9 @@ end)]===],
 		short = "Cancel a scheduled function.",
 		long = [===[Prevent a timer from being executed in the future.
 
-		{*Always} use the function handle returned by add()/addPeriodic() to cancel a timer.
+		{*Always} use the function handle returned by {#add()}/{#addPeriodic()} to cancel a timer.
 
-		{*Never} use this in another timer.]===],
+		{*Never} use this inside another timer.]===],
 		params = {
 			{"function", "func", "The function to be canceled."},
 		},
@@ -272,7 +279,7 @@ Timer.cancel(handle) -- NOT: Timer.cancel(tick)]===]
 
 	Function { name = "update",
 		short = "Update timed functions.",
-		long = "Update timers and execute functions if the deadline is reached. Use this in love.update(dt).",
+		long = "Update timers and execute functions if the deadline is reached. Use this in {#love.update(dt)}.",
 		params = {
 			{"number", "dt", "Time that has passed since the last update()."},
 		},
@@ -324,11 +331,11 @@ end]===],
 		Create a wrapper for an oscillating function, which is basically a looping
 		interpolating function.
 
-		The function prototypes are the same as with Interpolator():
+		The function prototypes are the same as with {#Interpolator()}:
 		[%function wrapper(dt, ...)]
 		[%function oscillator(fraction, ...)]
 
-		As with Interpolator, the wrapper will return whatever {#oscillator()} returns.]===],
+		As with {#Interpolator}, the wrapper will return whatever {#oscillator()} returns.]===],
 		params = {
 			{"number", "length", "Length of one interpolation period."},
 			{"function", "func", "Oscillating function."},
@@ -587,8 +594,8 @@ spawner.direction:rotate_inplace(dt)]===],
 	Function { name = "vector:perpendicular",
 		short = "Get perpendicular vector.",
 		long = [===[
-		Quick rotation by 90°. Creates a new vector. The same as (but faster):
-		[%vec:rotate(math.pi/2)]]===],
+		Quick rotation by 90&deg;. Creates a new vector. The same (but faster) as
+		{#vec:rotate(math.pi/2)}]===],
 		params = {},
 		returns = {
 			{"vector", "A vector perpendicular to the input vector"}
@@ -676,7 +683,7 @@ Module { name = "hump.vector-light",
 			"Product of a vector and a scalar.",
 			"Product of a vector and the inverse of a scalar.",
 		},
-		long = "Computes {#x*s, y*s} and {#x/s, y/s}. The order of arguments is chosen so that you can chain multiple operations (see example).",
+		long = "Computes {#x*s,y*s} and {#x/s,y/s} respectively. The order of arguments is chosen so that it's possible to chain multiple operations (see example).",
 		params = {
 			{"number", "s", "The scalar."},
 			{"numbers", "x,y", "The vector."},
@@ -695,7 +702,7 @@ Module { name = "hump.vector-light",
 			"Sum of two vectors.",
 			"Difference of two vectors.",
 		},
-		long = "Computes the sum/difference of vectors. Same as {#x1+x2, y1+y2} or {#x1-x2, y1-y2} respectively. Meant to be used in conjunction with other functions.",
+		long = "Computes the sum/difference of vectors. Same as {#x1+x2,y1+y2} and {#x1-x2,y1-y2} respectively. Meant to be used in conjunction with other functions.",
 		params = {
 			{"numbers", "x1,y1", "First vector."},
 			{"numbers", "x2,y2", "Second vector."},
@@ -712,7 +719,7 @@ Module { name = "hump.vector-light",
 	Function { name = "permul",
 		short = "Per element multiplication.",
 		long = [===[
-		Multiplies vectors coordinate wise, i.e. {#x1*x2, y1*y2)}.]===],
+		Multiplies vectors coordinate wise, i.e. {#x1*x2,y1*y2}.]===],
 		params = {
 			{"numbers", "x1,y1", "First vector."},
 			{"numbers", "x2,y2", "Second vector."},
@@ -725,7 +732,7 @@ Module { name = "hump.vector-light",
 
 	Function { name = "dot",
 		short = "[^http://en.wikipedia.org/wiki/Dot_product Dot product]",
-		long = "Computes the [^http://en.wikipedia.org/wiki/Dot_product dot product] of two vectors, {#x1*x2 + y1*y2}.",
+		long = "Computes the [^http://en.wikipedia.org/wiki/Dot_product dot product] of two vectors, {#x1*x2+y1*y2}.",
 		params = {
 			{"numbers", "x1,y1", "First vector."},
 			{"numbers", "x2,y2", "Second vector."},
@@ -738,7 +745,7 @@ Module { name = "hump.vector-light",
 
 	Function { name = {"det", "cross"},
 		short = { "Cross product", "Cross product", },
-		long = "Computes the cross product/determinant of two vectors, {#x1*y2 - y1*x2}.",
+		long = "Computes the cross product/determinant of two vectors, {#x1*y2-y1*x2}.",
 		params = {
 			{"numbers", "x1,y1", "First vector."},
 			{"numbers", "x2,y2", "Second vector."},
@@ -856,7 +863,7 @@ end]===],
 
 	Function { name = "perpendicular",
 		short = "Get perpendicular vector.",
-		long = "Quick rotation by 90°. The same as (but faster) [%vector.rotate(math.pi/2, x,y)]",
+		long = "Quick rotation by 90&deg;. The same (but faster) as {#vector.rotate(math.pi/2, x,y)}",
 		params = {
 			{"numbers", "x,y", "The vector."},
 		},
@@ -921,12 +928,12 @@ Module { name = "hump.class",
 [===[
 Class = require 'hump.class' -- `Class' is now a shortcut to new()
 
--- define class with implicit name  'Feline'
+-- define unnamed class
 Feline = Class{function(self, size, weight)
     self.size = size
     self.weight = weight
 end}
-print(Feline) -- prints 'Feline'
+print(Feline) -- prints '<unnamed class>
 
 -- define class method
 function Feline:stats()
@@ -949,7 +956,7 @@ Feline = Class{name = "Feline", function(self, size, weight)
 end}
 
 garfield = Feline(.7, 45)
-print(Feline, garfield) -- prints 'Feline	<instance of Feline>'
+print(Feline, garfield) -- prints '<unnamed class>	<instance of <unnamed class>>'
 ]===],
 [===[
 Class = require 'hump.class'
@@ -1150,8 +1157,8 @@ result:show()   -- prints "A:    4"
 result:foo()    -- error: method does not exist]
 
 		Note that while you can define the {#__index} metamethod of the class, this
-		is not a good idea: It will break the class. To add a custom __index
-		metamethod without breaking the class system, you have to use rawget().
+		is not a good idea: It will break the class. To add a custom {#__index}
+		metamethod without breaking the class system, you have to use {#rawget()}.
 		But beware that this won't affect subclasses:
 		[%Class = require 'hump.class'
 
@@ -1353,7 +1360,7 @@ love.graphics.line(x, y, love.mouse.getPosition())
 
 	Function { name = "camera:mousepos",
 		short = "Get mouse position in world coordinates.",
-		long = "Shortcut to {#camera:worldCoords(vector(love.mouse.getPosition()))}.",
+		long = "Shortcut to {#camera:worldCoords(love.mouse.getPosition())}.",
 		params = {},
 		returns = {
 			{"numbers", "Mouse position in world coordinates."},
