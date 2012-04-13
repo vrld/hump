@@ -154,18 +154,17 @@ end]===],
 		Register all love callbacks to call Gamestate.update(), Gamestate.draw(), etc. automatically.
 
 		This is by done by overwriting the love callbacks, e.g.:
-		{%local old_update = love.update
+		[%local old_update = love.update
 function love.update(dt)
     old_update(dt)
     Gamestate.current:update(dt)
-end}
+end]
 
 		{!Note:} Only works when called in {#love.load()} or any other function that is executed
 after the whole file is loaded.]===],
 		params = {},
 		returns = {},
-		example = [===[
-function love.load()
+		example = [===[function love.load()
     Gamestate.registerEvents()
     Gamestate.switch(menu)
 end]===],
@@ -292,14 +291,14 @@ end]===],
 		depending on how much time has passed.
 
 		The wrapper will have the prototype:
-		{%function wrapper(dt, ...) }
+		[%function wrapper(dt, ...)]
 		where {#dt} is the time that has passed since the last call of the wrapper
 		and {#...} are arguments passed to the interpolating function. It will return
 		whatever the interpolating functions returns if the interpolation is not yet
 		finished or nil if the interpolation is done.
 
 		The prototype of the interpolating function is:
-		{%function interpolator(fraction, ...) }
+		[%function interpolator(fraction, ...)]
 		where {#fraction} is a number between 0 and 1 depending on how much time has
 		passed and {#...} are additional arguments supplied to the wrapper.]===],
 		params = {
@@ -326,8 +325,8 @@ end]===],
 		interpolating function.
 
 		The function prototypes are the same as with Interpolator():
-		{%function wrapper(dt, ...) }
-		{%function oscillator(fraction, ...) }
+		[%function wrapper(dt, ...)]
+		[%function oscillator(fraction, ...)]
 
 		As with Interpolator, the wrapper will return whatever {#oscillator()} returns.]===],
 		params = {
@@ -369,10 +368,10 @@ Module { name = "hump.vector",
 		[|
 		{#vector + vector = vector} :Component wise sum.
 		{#vector - vector = vector} :Component wise difference.
-		{#vector * vector = number} :[^http://en.wikipedia.org/wiki/Dot_product Dot product].
-		{#number * vector = vector} :Vector scaling ([^http://en.wikipedia.org/wiki/Scalar_multiplication scalar multiplication]).
-		{#vector * number = vector} :Vector scaling.
-		{#vector / number = vector} :Vector scaling.
+		{#vector * vector = number} :Dot product.
+		{#number * vector = vector} :Scalar multiplication (scaling).
+		{#vector * number = vector} :Scalar multiplication.
+		{#vector / number = vector} :Scalar multiplication.
 		]
 
 		Relational operators are defined, too:
@@ -427,11 +426,11 @@ end]===],
 		Copy a vector. Simply assigning a vector a vector to a variable will create
 		a reference, so when modifying the vector referenced by the new variable
 		would also change the old one:
-		{%a = vector(1,1) -- create vector
+		[%a = vector(1,1) -- create vector
 b = a           -- b references a
 c = a:clone()   -- c is a copy of a
 b.x = 0         -- changes a,b and c
-print(a,b,c)    -- prints '(1,0), (1,0), (1,1)'}]===],
+print(a,b,c)    -- prints '(1,0), (1,0), (1,1)']]===],
 		params = {},
 		returns = {
 			{"vector", "Copy of the vector"}
@@ -589,7 +588,7 @@ spawner.direction:rotate_inplace(dt)]===],
 		short = "Get perpendicular vector.",
 		long = [===[
 		Quick rotation by 90°. Creates a new vector. The same as (but faster):
-		{%vec:rotate(math.pi/2)}]===],
+		[%vec:rotate(math.pi/2)]]===],
 		params = {},
 		returns = {
 			{"vector", "A vector perpendicular to the input vector"}
@@ -857,7 +856,7 @@ end]===],
 
 	Function { name = "perpendicular",
 		short = "Get perpendicular vector.",
-		long = "Quick rotation by 90°. The same as (but faster) {%vector.rotate(math.pi/2, x,y)}",
+		long = "Quick rotation by 90°. The same as (but faster) [%vector.rotate(math.pi/2, x,y)]",
 		params = {
 			{"numbers", "x,y", "The vector."},
 		},
@@ -1135,7 +1134,7 @@ print(e:is_a(A), e:is_a(B), e:is_a(D)) --> true   true   true
 		Be careful when using metamethods like {#__add} or {#__mul}: If subclass
 		inherits those methods from a superclass, but does not overwrite them, the
 		result of the operation may be of the type superclass. Consider the following:
-		{%Class = require 'hump.class'
+		[%Class = require 'hump.class'
 
 A = Class{function(self, x) self.x = x end}
 function A:__add(other) return A(self.x + other.x) end
@@ -1148,13 +1147,13 @@ function B:foo() print("foo") end
 one, two = B(1,2), B(3,4)
 result = one + two
 result:show()   -- prints "A:    4"
-result:foo()    -- error: method does not exist}
+result:foo()    -- error: method does not exist]
 
 		Note that while you can define the {#__index} metamethod of the class, this
 		is not a good idea: It will break the class. To add a custom __index
 		metamethod without breaking the class system, you have to use rawget().
 		But beware that this won't affect subclasses:
-		{%Class = require 'hump.class'
+		[%Class = require 'hump.class'
 
 A = Class{}
 function A:foo() print('bar') end
@@ -1169,7 +1168,7 @@ instance:foo() -- prints foo <newline> bar
 
 B = Class{inherits = A}
 instance = B()
-instance:foo() -- prints only foo}]===],
+instance:foo() -- prints only foo]]===],
 	},
 }
 
@@ -1295,9 +1294,9 @@ end]===]
 		short = "Attach, draw and detach.",
 		long = [===[
 		Wrap a function between a {#camera:attach()}/{#camera:detach()} pair:
-		{%cam:attach()
+		[%cam:attach()
 func()
-cam:detach()}]===],
+cam:detach()]]===],
 
 		params = {
 			{"function", "func", "Drawing function to be wrapped."},

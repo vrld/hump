@@ -9,7 +9,7 @@ function markup(str)
 		end
 	end
 
-	local parse, block, block2, element, url, title, def, dt, dd
+	local parse, block, block2, element, code, url, title, def, dt, dd
 	function parse(out, next)
 		local c = next()
 		if not c then return out end
@@ -43,6 +43,7 @@ function markup(str)
 		local c = assert(next(), 'markup error')
 		if c == '^' then out[#out+1] = '<a href="' return url(out, next) end
 		if c == '|' then out[#out+1] = '<dl>'      return def(out, next) end
+		if c == '%' then out[#out+1] = '<pre><code class="lua">' return code(out, next) end
 		out[#out+1] = '['..c
 		return block(out, next)
 	end
@@ -84,14 +85,22 @@ function markup(str)
 		return dd(out, next)
 	end
 
-	return table.concat(parse({}, str:gmatch('.'))):gsub('%b{}', function(m)
+	function code(out, next)
+		local c = assert(next(), 'markup error')
+		if c == ']' then out[#out+1] = '</code></pre>' return block(out, next) end
+		out[#out+1] = c
+		return code(out, next)
+	end
+
+	local function spans(m)
 		local cmd,rest = m:match('^{(.)(.+)}$')
 		if cmd == '#' then return '<code class="lua">'..rest..'</code>' end
-		if cmd == '%' then return '<pre><code class="lua">'..rest..'</code></pre>' end
 		if cmd == '*' then return '<em>'..rest..'</em>' end
 		if cmd == '!' then return '<span class="warning">'..rest..'</span>' end
 		return m
-	end)
+	end
+
+	return table.concat(parse({}, str:gmatch('.'))):gsub('%b{}', spans):gsub('%b{}', spans)
 end
 
 
