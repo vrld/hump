@@ -189,7 +189,7 @@ function Function(M)
 	F('<div class="arguments">Parameters:<dl>')
 	if #M.params == 0 then F('<dt>None</dt>') end
 	for _,p in ipairs(M.params) do
-		F('<dt>%s <code>%s</code></dt><dd>%s</dd>', p[1], p[2], markup(p[3]))
+		F('<dt>%s <code>%s</code></dt><dd>%s</dd>', p[1], p[2], markup(p[3]):sub(4,-5))
 	end
 	F('</dl></div>')
 
@@ -197,7 +197,7 @@ function Function(M)
 	F('<div class="returns">Returns:<dl>')
 	if #M.returns == 0 then F('<dt>Nothing</dt>') end
 	for _,r in ipairs(M.returns) do
-		F('<dt>%s</dt><dd>%s</dd>', r[1], markup(r[2]))
+		F('<dt>%s</dt><dd>%s</dd>', r[1], markup(r[2]):sub(4,-5))
 	end
 	F('</dl></div>')
 
