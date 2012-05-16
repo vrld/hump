@@ -195,12 +195,15 @@ Module { name = "hump.timer",
 	Function { name = "new",
 		short = "Create new timer instance.",
 		long = [===[
+		{!If you don't need multiple independent schedulers, you can use the
+		global/default timer (see examples).}
+
 		Creates a new timer instance that is independent of the global timer:
 		It will manage it's own list of scheduled functions and does not in any
 		way affect the the global timer. Likewise, the global timer does not
 		affect the timer instance.
 
-		{*Note} that timer instances use the colon-notation (e.g.
+		{!Note:} Timer instances use the colon-notation (e.g.
 		{#instance:update(dt)}), while the global timer uses the dot-notation
 		(e.g. {#Timer.update(dt)}).]===],
 		params = {},
@@ -1208,6 +1211,156 @@ B = Class{inherits = A}
 instance = B()
 instance:foo() -- prints only foo]]===],
 	},
+}
+
+Module { name = "hump.signal",
+	title = "Signal",
+	short = "Simple Signal/Slot (aka. Observer) implementation.",
+	long = [===[
+	A simple yet effective implementation of
+	[^http://en.wikipedia.org/wiki/Signals_and_slots Signals and Slots], also
+	known as [^http://en.wikipedia.org/wiki/Observer_pattern Observer pattern]:
+	Functions can be dynamically bound to {*signals}. When a signal is
+	{*emitted}, all registered functions will be invoked. Simple as that.
+
+	{#hump.signal} makes things more interesing by allowing to emit all signals
+	that match a [^http://www.lua.org/manual/5.1/manual.html#5.4.1 Lua string 
+	pattern].]===],
+
+	Function { name = "new",
+		short = "Create new signal registry.",
+		long = [===[
+		{!If you don't need multiple independent registries, you can use the
+		global/default registry (see examples).}
+
+		Creates a new signal registry that is independent of the default
+		registry: It will manage it's own list of signals and does not in any
+		way affect the the global registry. Likewise, the global registry does
+		not affect the instance.
+
+		{!Note:} Independent registries use the colon-notation (e.g.
+		{#instance:emit("foo")}), while the global registry uses the
+		dot-notation (e.g. {#Signal.emit("foo")}).]===],
+		params = {},
+		returns = {
+			{"Registry", "A new signal registry."},
+		},
+		example = "player.signals = Signals.new()"
+	},
+
+	Function { name = {"register", "instance:register"},
+		short = "Register function with a signal.",
+		long = [===[
+		Registers a function {#f} to be called when signal {#s} is emitted.
+		]===],
+		params = {
+			{"string", "s", "The signal identifier."},
+			{"function", "f", "The function to register."}
+		},
+		returns = {
+			{"function", "A function handle to use in {#remove}."}
+		},
+		example = {
+			"Signal.register('level-complete', function() self.fanfare:play() end)",
+			"handle = Signal.register('level-load', function(level) level.show_help() end)",
+			"menu:register('key-left', select_previous_item)"
+		}
+	},
+
+	Function { name = {"emit", "instance:emit"},
+		short = "Call all functions bound to a signal.",
+		long = [===[
+		Calls all functions bound to signal {#s} with the supplied arguments.
+		]===],
+		params = {
+			{"string", "s", "The signal identifier."},
+			{"mixed", "...", "Arguments to pass to the bound functions.", optional = true},
+		},
+		returns = {},
+		example = {
+			[===[function love.keypressed(key)
+    if key == 'left' then menu:emit('key-left') end
+end]===],
+			[===[if level.is_finished() then
+    Signal.emit('level-load', level.next_level)
+end]===],
+			[===[function on_collide(dt, a,b, dx,dy)
+    a.signals:emit('collide', b,  dx, dy)
+    b.signals:emit('collide', a, -dx,-dy)
+end]===]
+		}
+	},
+
+	Function { name = {"remove", "instance:remove"},
+		short = "Remove functions from registry.",
+		long = [===[
+		Unbinds (removes) functions from signal {#s}.
+		]===],
+		params = {
+			{"string", "s", "The signal identifier."},
+			{"functions", "...", "Functions to unbind from the signal."}
+		},
+		returns = {},
+		example = {
+			"Signal.remove('level-load', handle)",
+		}
+	},
+
+	Function { name = {"clear", "instance:clear"},
+		short = "Clears a signal registry.",
+		long = [===[
+		Removes all functions from signal {#s}.
+		]===],
+		params = {
+			{"string", "s", "The signal identifier."},
+		},
+		returns = {},
+		example = "Signal.clear('key-left')",
+	},
+
+	Function { name = {"emit_pattern", "instance:emit_pattern"},
+		short = "Emits signals matching a pattern.",
+		long = [===[
+		Emits all signals matching a
+		[^http://www.lua.org/manual/5.1/manual.html#5.4.1 string pattern].
+		]===],
+		params = {
+			{"string", "p", "The signal identifier pattern."},
+			{"mixed", "...", "Arguments to pass to the bound functions.", optional = true},
+		},
+		returns = {},
+		example = "Signal.emit_pattern('^update%-.*', dt)",
+	},
+
+	Function { name = {"remove_pattern", "instance:remove_pattern"},
+		short = "Remove functions from signals matching a pattern.",
+		long = [===[
+		Removes functions from all signals matching a
+		[^http://www.lua.org/manual/5.1/manual.html#5.4.1 string pattern].
+		]===],
+		params = {
+			{"string", "p", "The signal identifier pattern."},
+			{"functions", "...", "Functions to unbind from the signals."}
+		},
+		returns = {},
+		example = "Signal.remove_pattern('key%-.*', play_click_sound)",
+	},
+
+	Function { name = {"clear_pattern", "instance:clear_pattern"},
+		short = "Clears signal registry matching a pattern.",
+		long = [===[
+		Removes all functions from all signals matching a
+		[^http://www.lua.org/manual/5.1/manual.html#5.4.1 string pattern].
+		]===],
+		params = {
+			{"string", "p", "The signal identifier pattern."},
+		},
+		returns = {},
+		example = {
+			"Signal.clear_pattern('sound%-.*')",
+			"Signal.clear_pattern('.*') -- clear all signals",
+		}
+	}
 }
 
 Module { name = "hump.camera",
