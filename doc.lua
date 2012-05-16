@@ -182,28 +182,49 @@ Module { name = "hump.timer",
 	title = "Timer",
 	short = "Delayed function calls and helpers for interpolating functions.",
 	long = [===[
-	hump.timer provides a simple interface to use delayed functions, i.e. functions
-	that will be executed after some amount time has passed. For example, you can use
-	a timer to set the player invincible for a short amount of time.
+	hump.timer provides a simple interface to use delayed functions, i.e.
+	functions that will be executed after some amount time has passed. For
+	example, you can use a timer to set the player invincible for a short
+	amount of time.
 
-	In addition, the module offers facilities to create functions that interpolate
-	or oscillate over time. An interpolator could fade the color or a text message,
-	whereas an oscillator could be used for the movement of foes in a shmup.]===],
+	In addition, the module offers facilities to create functions that
+	interpolate or oscillate over time. An interpolator could fade the color or
+	a text message, whereas an oscillator could be used for the movement of
+	foes in a shmup.]===],
 
-	Function { name = "add",
-		short = "Add a timed function.",
+	Function { name = "new",
+		short = "Create new timer instance.",
 		long = [===[
-		Add a timed function. The function will be executed after {#delay} seconds
-		have elapsed, given that {#update(dt)} is called every frame.
+		Creates a new timer instance that is independent of the global timer:
+		It will manage it's own list of scheduled functions and does not in any
+		way affect the the global timer. Likewise, the global timer does not
+		affect the timer instance.
 
-		Note that there is no guarantee that the delay will not be exceeded, it is
-		only guaranteed that the function will not be executed {*before} the delay
-		has passed.
+		{*Note} that timer instances use the colon-notation (e.g.
+		{#instance:update(dt)}), while the global timer uses the dot-notation
+		(e.g. {#Timer.update(dt)}).]===],
+		params = {},
+		returns = {
+			{"Timer", "A timer instance"}
+		},
+		example = "menuTimer = Timer.new()",
+	},
 
-		It is an error to schedule a function again if it is not yet finished or canceled.
+	Function { name = {"add", "instance:add"},
+		short = "Schedule a function.",
+		long = [===[
+		Schedule a function. The function will be executed after {#delay}
+		seconds have elapsed, given that {#update(dt)} is called every frame.
 
-		{#func} will receive itself as only parameter. This is useful to implement
-		periodic behavior (see the example).]===],
+		Note that there is no guarantee that the delay will not be exceeded, it
+		is only guaranteed that the function will not be executed {*before} the
+		delay has passed.
+
+		It is an error to schedule a function again if it is not yet finished
+		or canceled.
+
+		{#func} will receive itself as only parameter. This is useful to
+		implement periodic behavior (see the example).]===],
 		params = {
 			{"number", "delay", "Number of seconds the function will be delayed."},
 			{"function", "func", "The function to be delayed."},
@@ -218,17 +239,19 @@ player.isInvincible = true
 Timer.add(5, function() player.isInvincible = false end)]===],
 			[===[
 -- print "foo" every second. See addPeriodic.
-Timer.add(1, function(func) print("foo") Timer.add(1, func) end)]===]
+Timer.add(1, function(func) print("foo") Timer.add(1, func) end)]===],
+			[===[menuTimer:add(1, finishAnimation)]===]
 		},
 	},
 
-	Function { name = "addPeriodic",
+	Function { name = {"addPeriodic", "instance:addPeriodic"},
 		short = "Add a periodic function.",
 		long = [===[
-		Add a function that will be called {#count} times every {#delay} seconds.
+		Add a function that will be called {#count} times every {#delay}
+		seconds.
 
-		If {#count} is omitted, the function will be called until it returns {#false}
-		or {#clear()} is called.]===],
+		If {#count} is omitted, the function will be called until it returns
+		{#false} or {#clear()} is called.]===],
 		params = {
 			{"number", "delay", "Number of seconds between two consecutive function calls."},
 			{"function", "func", "The function to be called periodically."},
@@ -239,7 +262,7 @@ Timer.add(1, function(func) print("foo") Timer.add(1, func) end)]===]
 		},
 		example = {
 			"Timer.addPeriodic(1, function() lamp:toggleLight() end)",
-			"Timer.addPeriodic(0.3, function() mothership:spawnFighter() end, 5)",
+			"mothership_timer:addPeriodic(0.3, function() self:spawnFighter() end, 5)",
 			[===[-- flicker player's image as long as he is invincible
 Timer.addPeriodic(0.1, function()
     player:flipImage()
@@ -248,13 +271,15 @@ end)]===],
 		},
 	},
 
-	Function { name = "cancel",
+	Function { name = {"cancel", "instance:cancel"},
 		short = "Cancel a scheduled function.",
-		long = [===[Prevent a timer from being executed in the future.
+		long = [===[
+		Prevent a timer from being executed in the future.
 
-		{*Always} use the function handle returned by {#add()}/{#addPeriodic()} to cancel a timer.
+		{*Always} use the function handle returned by {#add()}/{#addPeriodic()}
+		to cancel a timer.
 
-		{*Never} use this inside another timer.]===],
+		{*Never} use this inside a scheduled function.]===],
 		params = {
 			{"function", "func", "The function to be canceled."},
 		},
@@ -269,16 +294,20 @@ Timer.cancel(handle) -- NOT: Timer.cancel(tick)]===]
 		},
 	},
 
-	Function { name = "clear",
+	Function { name = {"clear", "instance:clear"},
 		short = "Remove all timed and periodic functions.",
-		long = "Remove all timed and periodic functions. Functions that have not yet been executed will discarded.",
+		long = [===[
+		Remove all timed and periodic functions. Functions that have not yet
+		been executed will discarded.
+		
+		{*Never} use this inside a scheduled function.]===],
 		params = {},
 		returns = {},
 		example = "Timer.clear()",
 	},
 
-	Function { name = "update",
-		short = "Update timed functions.",
+	Function { name = {"update", "instance:update"},
+		short = "Update scheduled functions.",
 		long = "Update timers and execute functions if the deadline is reached. Use this in {#love.update(dt)}.",
 		params = {
 			{"number", "dt", "Time that has passed since the last update()."},
@@ -294,20 +323,21 @@ end]===],
 	Function { name = "Interpolator",
 		short = "Create a new interpolating function.",
 		long = [===[
-		Create a wrapper for an interpolating function, i.e. a function that acts
-		depending on how much time has passed.
+		Create a wrapper for an interpolating function, i.e. a function that
+		acts depending on how much time has passed.
 
 		The wrapper will have the prototype:
 		[%function wrapper(dt, ...)]
-		where {#dt} is the time that has passed since the last call of the wrapper
-		and {#...} are arguments passed to the interpolating function. It will return
-		whatever the interpolating functions returns if the interpolation is not yet
-		finished or nil if the interpolation is done.
+		where {#dt} is the time that has passed since the last call of the
+		wrapper and {#...} are arguments passed to the interpolating function.
+		It will return whatever the interpolating functions returns if the
+		interpolation is not yet finished or nil if the interpolation is done.
 
 		The prototype of the interpolating function is:
 		[%function interpolator(fraction, ...)]
-		where {#fraction} is a number between 0 and 1 depending on how much time has
-		passed and {#...} are additional arguments supplied to the wrapper.]===],
+		where {#fraction} is a number between 0 and 1 depending on how much
+		time has passed and {#...} are additional arguments supplied to the
+		wrapper.]===],
 		params = {
 			{"number", "length", "Interpolation length in seconds."},
 			{"function", "func", "Interpolating function."},
@@ -328,14 +358,15 @@ end]===],
 	Function { name = "Oscillator",
 		short = "Create a new oscillating function.",
 		long = [===[
-		Create a wrapper for an oscillating function, which is basically a looping
-		interpolating function.
+		Create a wrapper for an oscillating function, which is basically a
+		looping interpolating function.
 
 		The function prototypes are the same as with {#Interpolator()}:
 		[%function wrapper(dt, ...)]
 		[%function oscillator(fraction, ...)]
 
-		As with {#Interpolator}, the wrapper will return whatever {#oscillator()} returns.]===],
+		As with {#Interpolator}, the wrapper will return whatever
+		{#oscillator()} returns.]===],
 		params = {
 			{"number", "length", "Length of one interpolation period."},
 			{"function", "func", "Oscillating function."},

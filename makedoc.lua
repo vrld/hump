@@ -167,10 +167,10 @@ function Function(M)
 
 	if type(M.name)  ~= 'table' then M.name = {M.name} end
 	if type(M.short) ~= 'table' then M.short = {M.short} end
-	assert(#M.name == #M.short)
+	assert(#M.name >= #M.short)
 
 	local short = {}
-	for i=1,#M.name do
+	for i=1,#M.short do
 		short[i] = ('<dt><a href="#{{MODULE}}-%s">%s()</a></dt><dd>%s</dd>'):format(M.name[i], M.name[i], M.short[i])
 	end
 	short = table.concat(short)
