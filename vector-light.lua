@@ -84,7 +84,10 @@ end
 
 local function normalize(x,y)
 	local l = len(x,y)
-	return x/l, y/l
+	if l > 0 then
+		return x/l, y/l
+	end
+	return x,y
 end
 
 local function rotate(phi, x,y)
