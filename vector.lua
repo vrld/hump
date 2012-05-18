@@ -31,7 +31,12 @@ local vector = {}
 vector.__index = vector
 
 local function new(x,y)
-	local v = {x = x or 0, y = y or 0}
+	local v
+	if type(x) == "table" then
+		v = {x = x[1] or 0, y = x[2] or 0}    
+	else
+		v = {x = x or 0, y = y or 0}
+	end
 	setmetatable(v, vector)
 	return v
 end
