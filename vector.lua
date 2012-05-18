@@ -116,14 +116,14 @@ end
 
 function vector:normalize_inplace()
 	local l = self:len()
-	if l > 0 then self.x, self.y = self.x / l, self.y / l end
+	if l > 0 then
+		self.x, self.y = self.x / l, self.y / l
+	end
 	return self
 end
 
 function vector:normalized()
-    local l = self:len()
-    if l == 0 then return self end
-	return self / l
+	return self:clone():normalize_inplace()
 end
 
 function vector:rotate_inplace(phi)
