@@ -1536,7 +1536,7 @@ end]===]
 x,y = camera:worldCoords(love.mouse.getPosition())
 selectedUnit:plotPath(x,y)
 ]===], [===[
-x,y = cam:toCameraCoords(player.pos)
+x,y = cam:cameraCoords(player.pos)
 love.graphics.line(x, y, love.mouse.getPosition())
 ]===]
 		},
