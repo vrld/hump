@@ -31,9 +31,7 @@ local vector = {}
 vector.__index = vector
 
 local function new(x,y)
-	local v = {x = x or 0, y = y or 0}
-	setmetatable(v, vector)
-	return v
+	return setmetatable({x = x or 0, y = y or 0}, vector)
 end
 
 local function isvector(v)
