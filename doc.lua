@@ -1367,8 +1367,6 @@ Module { name = "hump.camera",
 	title = "Camera",
 	short = "A camera for L&Ouml;VE",
 	long = [===[
-	{!Depends on hump.vector-light}
-
 	A camera utility for L&Ouml;VE. A camera can "look" at a position. It can zoom in and
 	out and it can rotate it's view. In the background, this is done by actually
 	moving, scaling and rotating everything in the game world. But don't worry about
@@ -1423,6 +1421,19 @@ cam = camera(100,100, 2, math.pi/2)
 		},
 	},
 
+	Function { name = "camera:rotation",
+		short = "Get camera rotation.",
+		long = [===[Returns {#camera.rot}.]===],
+
+		params = {},
+
+		returns = {
+			{"number", "Rotation angle in radians."}
+		},
+
+		example = [===[love.graphics.print(camera:rotation(), 10, 10)]===],
+	},
+
 	Function { name = "camera:move",
 		short = "Move camera object.",
 		long = [===[
@@ -1439,8 +1450,31 @@ cam = camera(100,100, 2, math.pi/2)
 		},
 
 		example = {
+			"function love.update(dt)\n    camera:move(dt * 5, dt * 6)\nend",
 			"function love.update(dt)\n    camera:move(dt * 5, dt * 6):rotate(dt)\nend"
 		},
+	},
+
+	Function { name = "camera:pos",
+		short = "Get camera position..",
+		long = [===[Returns {#camera.x, camera.y}.]===],
+
+		params = {},
+
+		returns = {
+			{"numbers", "Camera position."},
+		},
+
+		example = [===[-- let the camera fly!
+local cam_dx, cam_dy = 0, 0
+function love.mousereleased(x,y)
+	local cx,cy = camera:position()
+	dx, dy = x-cx, y-cy
+end
+
+function love.update(dt)
+	camera:move(dx * dt, dy * dt)
+end]===],
 	},
 
 	Function { name = "camera:attach",
