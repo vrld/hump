@@ -25,7 +25,7 @@ THE SOFTWARE.
 ]]--
 
 local _PATH = (...):match('^(.*[%./])[^%.%/]+$') or ''
-local vec = require(_PATH..'vector-light')
+local cos, sin = math.cos, math.sin
 
 local camera = {}
 camera.__index = camera
@@ -42,13 +42,21 @@ function camera:rotate(phi)
 	return self
 end
 
+function camera:rotation()
+	return self.rot
+end
+
 function camera:move(x,y)
 	self.x, self.y = self.x + x, self.y + y
 	return self
 end
 
+function camera:pos()
+	return self.x, self.y
+end
+
 function camera:attach()
-	local cx,cy = vec.div(self.zoom*2, love.graphics.getWidth(), love.graphics.getHeight())
+	local cx,cy = love.graphics.getWidth()/(2*self.zoom), love.graphics.getHeight()/(2*self.zoom)
 	love.graphics.push()
 	love.graphics.scale(self.zoom)
 	love.graphics.translate(cx, cy)
@@ -67,14 +75,20 @@ function camera:draw(func)
 end
 
 function camera:cameraCoords(x,y)
+	-- x,y = ((x,y) - (self.x, self.y)):rotated(self.rot) * self.zoom + center
 	local w,h = love.graphics.getWidth(), love.graphics.getHeight()
-	x,y = vec.rotate(self.rot, x-self.x, y-self.y)
+	local c,s = cos(self.rot), sin(self.rot)
+	x,y = x - self.x, y - self.y
+	x,y = c*x - s*y, s*x + c*y
 	return x*self.zoom + w/2, y*self.zoom + h/2
 end
 
 function camera:worldCoords(x,y)
+	-- x,y = (((x,y) - center) / self.zoom):rotated(-self.rot) + (self.x,self.y)
 	local w,h = love.graphics.getWidth(), love.graphics.getHeight()
-	x,y = vec.rotate(-self.rot, vec.div(self.zoom, x-w/2, y-h/2))
+	local c,s = cos(-self.rot), sin(-self.rot)
+	x,y = (x - w/2) / self.zoom, (y - h/2) / self.zoom
+	x,y = c*x - s*y, s*x + c*y
 	return x+self.x, y+self.y
 end
 
