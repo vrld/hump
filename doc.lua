@@ -233,7 +233,7 @@ Module { name = "hump.timer",
 			{"function", "func", "The function to be delayed."},
 		},
 		returns = {
-			{"function", "The timer handle."}
+			{"table", "The timer handle."}
 		},
 		example = {
 			[===[
@@ -261,7 +261,7 @@ Timer.add(1, function(func) print("foo") Timer.add(1, func) end)]===],
 			{"number", "count", "Number of times the function is to be called.", optional = true},
 		},
 		returns = {
-			{"function", "The timer handle."}
+			{"table", "The timer handle."}
 		},
 		example = {
 			"Timer.addPeriodic(1, function() lamp:toggleLight() end)",
@@ -271,6 +271,39 @@ Timer.addPeriodic(0.1, function()
     player:flipImage()
     return player.isInvincible
 end)]===],
+		},
+	},
+
+	Function { name = {"do_for", "instance:do_for"},
+		short = "Run a function for the next few seconds.",
+		long = [===[
+		Run a {#func(dt)} for the next {#delta} seconds. The function is called
+		every time {#update(dt)} is called. Optionally run {#after()} once
+		{#delta} seconds have passed.
+
+		{#after} will receive itself as only parameter.
+
+		The same constraints as with {#add()} apply.]===],
+		params = {
+			{"number", "delta", "Number of seconds the {#func} will be called."},
+			{"function", "func", "The function to be called upon {#update(dt)}."},
+			{"function", "after", "A function to be called after {#delta} seconds.", optional=true},
+		},
+		returns = {
+			{"table", "The timer handle."}
+		},
+		example = {
+			[===[Timer.do_for(3, function() screen:shake() end)]===],
+			[===[player.isInvincible = true
+-- flash player for 3 seconds
+local t = 0
+player.timer:do_for(3, function(dt)
+	t = t + dt
+	player.visible = (t % .2) < .1
+end, function()
+	player.visible = true -- make sure the player is visible after three seconds
+	player.isInvincible = false
+end)]===]
 		},
 	},
 
@@ -284,7 +317,7 @@ end)]===],
 
 		{*Never} use this inside a scheduled function.]===],
 		params = {
-			{"function", "func", "The function to be canceled."},
+			{"table", "handle", "The function to be canceled."},
 		},
 		returns = {},
 		example = {
@@ -320,75 +353,6 @@ Timer.cancel(handle) -- NOT: Timer.cancel(tick)]===]
 function love.update(dt)
     do_stuff()
     Timer.update(dt)
-end]===],
-	},
-
-	Function { name = "Interpolator",
-		short = "Create a new interpolating function.",
-		long = [===[
-		Create a wrapper for an interpolating function, i.e. a function that
-		acts depending on how much time has passed.
-
-		The wrapper will have the prototype:
-		[%function wrapper(dt, ...)]
-		where {#dt} is the time that has passed since the last call of the
-		wrapper and {#...} are arguments passed to the interpolating function.
-		It will return whatever the interpolating functions returns if the
-		interpolation is not yet finished or nil if the interpolation is done.
-
-		The prototype of the interpolating function is:
-		[%function interpolator(fraction, ...)]
-		where {#fraction} is a number between 0 and 1 depending on how much
-		time has passed and {#...} are additional arguments supplied to the
-		wrapper.]===],
-		params = {
-			{"number", "length", "Interpolation length in seconds."},
-			{"function", "func", "Interpolating function."},
-		},
-		returns = {
-			{"function", "The wrapper function."}
-		},
-		example = [===[
-fader = Timer.Interpolator(5, function(frac, r,g,b)
-    love.graphics.setBackgroundColor(frac*r,frac*g,frac*b)
-end)
-
-function love.update(dt)
-    fader(dt, 255,255,255)
-end]===],
-	},
-
-	Function { name = "Oscillator",
-		short = "Create a new oscillating function.",
-		long = [===[
-		Create a wrapper for an oscillating function, which is basically a
-		looping interpolating function.
-
-		The function prototypes are the same as with {#Interpolator()}:
-		[%function wrapper(dt, ...)]
-		[%function oscillator(fraction, ...)]
-
-		As with {#Interpolator}, the wrapper will return whatever
-		{#oscillator()} returns.]===],
-		params = {
-			{"number", "length", "Length of one interpolation period."},
-			{"function", "func", "Oscillating function."},
-		},
-		returns = {
-			{"function", "The wrapper function."}
-		},
-		example = [===[
-mover = Timer.Oscillator(10, function(frac)
-   return 400 + 300 * math.sin(2*math.pi*frac)
-end)
-
-local xpos = 100
-function love.update(dt)
-    xpos = mover(dt)
-end
-
-function love.draw()
-    love.graphics.circle('fill', xpos, 300, 80, 36)
 end]===],
 	},
 }
