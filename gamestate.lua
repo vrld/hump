@@ -73,7 +73,7 @@ function GS.registerEvents(callbacks)
 	callbacks = callbacks or all_callbacks
 	for _, f in ipairs(callbacks) do
 		registry[f] = love[f]
-		love[f] = function(...) GS[f](...) end
+		love[f] = function(...) return GS[f](...) end
 	end
 end
 
@@ -81,7 +81,7 @@ end
 setmetatable(GS, {__index = function(_, func)
 	return function(...)
 		registry[func](...)
-		current[func](current, ...)
+		return current[func](current, ...)
 	end
 end})
 
