@@ -293,7 +293,16 @@ end)]===],
 			{"table", "The timer handle."}
 		},
 		example = {
-			[===[Timer.do_for(3, function() screen:shake() end)]===],
+			[===[-- play an animation for 5 seconds
+Timer.do_for(5, function(dt) animation:update(dt) end)]===],
+			[===[-- shake the camera for one second
+local orig_x, orig_y = camera:pos()
+Timer.do_for(1, function()
+	camera:lookAt(orig_x + math.random(-2,2), orig_y + math.random(-2,2))
+end, function()
+	-- reset camera position
+	camera:lookAt(orig_x, orig_y)
+end)]===],
 			[===[player.isInvincible = true
 -- flash player for 3 seconds
 local t = 0
@@ -301,7 +310,8 @@ player.timer:do_for(3, function(dt)
 	t = t + dt
 	player.visible = (t % .2) < .1
 end, function()
-	player.visible = true -- make sure the player is visible after three seconds
+	-- make sure the player is visible after three seconds
+	player.visible = true
 	player.isInvincible = false
 end)]===]
 		},
@@ -1337,9 +1347,9 @@ Module { name = "hump.camera",
 	that.]===],
 
 	Function { name = "new",
-		short = "Create a new camera object.",
+		short = "Create a new camera.",
 		long = [===[
-		Creates a new camera object. You can access the camera position using
+		Creates a new camera. You can access the camera position using
 		{#camera.x, camera.y}, the zoom using {#camera.zoom} and the rotation using
 		{#camera.rot}.
 
@@ -1352,7 +1362,7 @@ Module { name = "hump.camera",
 		},
 
 		returns = {
-			{"camera", "A new camera object."}
+			{"camera", "A new camera."}
 		},
 
 		example = [===[
@@ -1364,7 +1374,7 @@ cam = camera(100,100, 2, math.pi/2)
 	},
 
 	Function { name = "camera:rotate",
-		short = "Rotate camera object.",
+		short = "Rotate camera.",
 		long = [===[
 		Rotate the camera {*by} some angle. To {*set} the angle use
 		{#camera.rot = new_angle}.
@@ -1376,7 +1386,7 @@ cam = camera(100,100, 2, math.pi/2)
 		},
 
 		returns = {
-			{"camera", "The camera object."}
+			{"camera", "The camera."}
 		},
 
 		example = {
@@ -1386,22 +1396,29 @@ cam = camera(100,100, 2, math.pi/2)
 	},
 
 	Function { name = "camera:rotation",
-		short = "Get camera rotation.",
-		long = [===[Returns {#camera.rot}.]===],
+		short = "Get or set camera rotation.",
+		long = [===[Returns {#camera.rot}.
 
-		params = {},
+		If given an angle, set rotation: {#camera.rot = angle}.]===],
+
+		params = {
+			{"number", "angle", "Rotation angle in radians", optional = true}
+		},
 
 		returns = {
 			{"number", "Rotation angle in radians."}
 		},
 
-		example = [===[love.graphics.print(camera:rotation(), 10, 10)]===],
+		example = {
+			[===[love.graphics.print(camera:rotation(), 10, 10)]===],
+			[===[camera:rotation(math.pi/2)]===],
+		}
 	},
 
 	Function { name = "camera:move",
-		short = "Move camera object.",
+		short = "Move camera.",
 		long = [===[
-		{*Move} the camera {*by} some vector. To {*set} the position, use {#camera.x,camera.y = new_x,new_y}.
+		{*Move} the camera {*by} some vector. To {*set} the position, use {#camera:lookAt(x,y)}.
 
 		This function is shortcut to {#camera.x,camera.y = camera.x+dx, camera.y+dy}.]===],
 
@@ -1410,12 +1427,34 @@ cam = camera(100,100, 2, math.pi/2)
 		},
 
 		returns = {
-			{"camera", "The camera object."},
+			{"camera", "The camera."},
 		},
 
 		example = {
 			"function love.update(dt)\n    camera:move(dt * 5, dt * 6)\nend",
 			"function love.update(dt)\n    camera:move(dt * 5, dt * 6):rotate(dt)\nend"
+		},
+	},
+
+	Function { name = "camera:lookAt",
+		short = "Move camera to a position.",
+		long = [===[
+		Let the camera look at a point. In other words, it {*sets} the camera position.
+		To {*move} the camera {*by} some amount, use {#camera:move(x,y)}.
+
+		This function is shortcut to {#camera.x,camera.y = x, y}.]===],
+
+		params = {
+			{"numbers", "x,y", "Position to look at."},
+		},
+
+		returns = {
+			{"camera", "The camera."},
+		},
+
+		example = {
+			"function love.update(dt)\n    camera:lookAt(player.pos:unpack())\nend",
+			"function love.update(dt)\n    camera:lookAt(player.pos:unpack()):rotation(player.rot)\nend",
 		},
 	},
 
@@ -1442,7 +1481,7 @@ end]===],
 	},
 
 	Function { name = "camera:attach",
-		short = "Attach camera object.",
+		short = "Attach camera.",
 		long = [===[
 		Start looking through the camera.
 
@@ -1463,7 +1502,7 @@ end]===]
 	},
 
 	Function { name = "camera:detach",
-		short = "Detach camera object.",
+		short = "Detach camera.",
 		long = "Stop looking through the camera.",
 
 		params = {},
