@@ -42,8 +42,14 @@ function camera:rotate(phi)
 	return self
 end
 
-function camera:rotation()
+function camera:rotation(phi)
+	if phi then self.rot = phi end
 	return self.rot
+end
+
+function camera:lookAt(x,y)
+	self.x, self.y = x,y
+	return self
 end
 
 function camera:move(x,y)
