@@ -1,4 +1,73 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>hump - L&Ouml;VE Helper Utilities for More Productivity</title><link rel="stylesheet" type="text/css" href="style.css" /><link rel="stylesheet" type="text/css" href="highlight.css" /><script type="text/javascript" src="highlight.pack.js"></script><script type="text/javascript">window.onload = function() {var examples = document.getElementsByTagName("code");for (i = 0; i < examples.length; ++i) {if (examples[i].className == "lua")hljs.highlightBlock(examples[i], "    ");}};</script></head><body><a name="top" id="top"></a><div id="header"><h1><a href="http://github.com/vrld/hump">hump</a><span class="small"> Helper Utilities for More Productivity</span></h1><ul id="main-nav"><li><a href="#intro">Introduction</a></li><li><a href="#doc">Documentation</a></li><li><a href="#license">License</a></li><li><a href="#download">Download</a></li></ul><h2>&nbsp;</h2></div><a name="intro" id="intro"></a><div class="outer-block"><h3>Introduction<a class="top" href="#top">^ top</a></h3><div class="preamble"><p><em>Helper Utilities for a Multitude of Problems</em> is a set of lightweight helpers for the <strong>awesome</strong> <a href="http://love2d.org/">L&Ouml;VE</a> Engine.</p><p><em>hump</em> differs from other libraries in that every component is independent of the remaining ones. <em>hump</em>'s footprint is very small and thus should fit nicely into your projects.</p></div></div><a name="doc"></a><div class="outer-block"><h3>Documentation<a class="top" href="#top">^ top</a></h3><div class="preamble"><dl><dt><a href="#Gamestate">hump.gamestate</a></dt><dd>A gamestate system</dd><dt><a href="#Timer">hump.timer</a></dt><dd>Delayed function calls and helpers for interpolating functions.</dd><dt><a href="#vector">hump.vector</a></dt><dd>2D vector math.</dd><dt><a href="#vector-light">hump.vector-light</a></dt><dd>Lightweight 2D vector math.</dd><dt><a href="#Class">hump.class</a></dt><dd>Class-based object orientated programming for Lua</dd><dt><a href="#Signal">hump.signal</a></dt><dd>Simple Signal/Slot (aka. Observer) implementation.</dd><dt><a href="#Camera">hump.camera</a></dt><dd>A camera for L&Ouml;VE</dd><dt><a href="#Ringbuffer">hump.ringbuffer</a></dt><dd>A data structure that wraps around itself.</dd></dl></div></div><a name="Gamestate" id="Gamestate"></a><div class="outer-block"><h3>hump.gamestate<a class="top" href="#top">^ top</a></h3><div class="preamble"><pre><code class="lua">Gamestate = require "hump.gamestate"</code></pre><p>A gamestate encapsulates independent data an behaviour into a single entity.</p><p>A typical game could consist of a <em>menu-state</em>, a <em>level-state</em> and a <em>game-over-state</em>.</p></div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#Gamestate-callbacks">callbacks</a></dt><dd>Gamestate Callbacks</dd><dt><a href="#Gamestate-new">new()</a></dt><dd>Create a new gamestate.</dd><dt><a href="#Gamestate-switch">switch()</a></dt><dd>Switch to gamestate.</dd><dt><a href="#Gamestate-update">update()</a></dt><dd>Update current gamestate.</dd><dt><a href="#Gamestate-draw">draw()</a></dt><dd>Draw the current gamestate.</dd><dt><a href="#Gamestate-focus">focus()</a></dt><dd>Inform current gamestate of a focus event.</dd><dt><a href="#Gamestate-keypressed">keypressed()</a></dt><dd>Inform current gamestate of a keypressed event.</dd><dt><a href="#Gamestate-keyreleased">keyreleased()</a></dt><dd>Inform current gamestate of a keyreleased event.</dd><dt><a href="#Gamestate-mousepressed">mousepressed()</a></dt><dd>Inform current gamestate of a mousepressed event.</dd><dt><a href="#Gamestate-mousereleased">mousereleased()</a></dt><dd>Inform current gamestate of a mousereleased event.</dd><dt><a href="#Gamestate-joystickpressed">joystickpressed()</a></dt><dd>Inform current gamestate of a joystickpressed event.</dd><dt><a href="#Gamestate-joystickreleased">joystickreleased()</a></dt><dd>Inform current gamestate of a joystickreleased event.</dd><dt><a href="#Gamestate-quit">quit()</a></dt><dd>Inform current gamestate of a quit event.</dd><dt><a href="#Gamestate-registerEvents">registerEvents()</a></dt><dd>Automatically do all of the above when needed.</dd></dl></div><a name="Gamestate-callbacks" id="Gamestate-callbacks"></a><div class="section-block"><h4>Gamestate Callbacks<a class="top" href="#Gamestate">^ top</a></h4><p>A gamestate can define (nearly) all callbacks that L&Ouml;VE defines. In addition, 	there are callbacks for entering and leaving a state.:</p><p><dl><dt><code class="lua">init()</code></dt><dd>Called once before entering the state. See <code class="lua">switch()</code>.</dd><dt><code class="lua">enter(previous, ...)</code></dt><dd>Called when entering the state. See <code class="lua">switch()</code>.</dd><dt><code class="lua">leave()</code></dt><dd>Called when leaving a state. See <code class="lua">switch()</code>.</dd><dt><code class="lua">update()</code></dt><dd>Update the game state. Called every frame.</dd><dt><code class="lua">draw()</code></dt><dd>Draw on the screen. Called every frame.</dd><dt><code class="lua">focus()</code></dt><dd>Called if the window gets or looses focus.</dd><dt><code class="lua">keypressed()</code></dt><dd>Triggered when a key is pressed.</dd><dt><code class="lua">keyreleased()</code></dt><dd>Triggered when a key is released.</dd><dt><code class="lua">mousepressed()</code></dt><dd>Triggered when a mouse button is pressed.</dd><dt><code class="lua">mousereleased()</code></dt><dd>Triggered when a mouse button is released.</dd><dt><code class="lua">joystickpressed()</code></dt><dd>Triggered when a joystick button is pressed.</dd><dt><code class="lua">joystickreleased()</code></dt><dd>Triggered when a joystick button is released.</dd><dt><code class="lua">quit()</code></dt><dd>Called on quitting the game. Only called on the active gamestate.</dd></dl></p><p>When using <code class="lua">registerEvents()</code>, all these callbacks will receive the same 	arguments as the <a href="http://love2d.org/wiki/love">L&Ouml;VE callbacks</a> do.</p><div class="example">Example:<pre><code class="lua">menu = Gamestate.new()
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>hump - L&Ouml;VE Helper Utilities for More Productivity</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="stylesheet" type="text/css" href="highlight.css" />
+<script type="text/javascript" src="highlight.pack.js"></script>
+<script type="text/javascript">
+	window.onload = function() {
+		var examples = document.getElementsByTagName("code");
+		for (i = 0; i < examples.length; ++i) {
+			if (examples[i].className == "lua")
+				hljs.highlightBlock(examples[i], "    ");
+		}
+	};
+</script>
+</head>
+
+<body><a name="top"></a>
+<div id="header">
+	<h1><a href="http://github.com/vrld/hump">hump</a>
+		<span class="small"> Helper Utilities for More Productivity</span></h1>
+	<ul id="main-nav">
+		<li><a href="#Introduction">Introduction</a></li>
+		<li><a href="#Modules">Modules</a></li>
+		<li><a href="#License">License</a></li>
+		<li><a href="#Download">Download</a></li>
+	</ul>
+	<h2>&nbsp;</h2>
+</div><div class="outer-block" id="Introduction"><h3>Introduction<a class="top" href="#top">^top</a></h3><div class="preamble"><p>Helper Utilities for a Multitude of Problems is a set of lightweight helpers for the awesome LÖVE Engine.</p>
+
+<p>hump differs from other libraries in that every component is independent of the remaining ones. hump's footprint is very small and thus should fit nicely into your projects.</p>
+</div></div><div class="outer-block" id="Modules"><h3>Modules<a class="top" href="#top">^top</a></h3><div class="preamble"><dl><dt><a href="#hump.gamestate">hump.gamestate</a></dt><dd>A gamestate system.</dd><dt><a href="#hump.timer">hump.timer</a></dt><dd>Delayed and time-limited function calls.</dd><dt><a href="#hump.vector">hump.vector</a></dt><dd>2D vector math.</dd><dt><a href="#hump.vector-light">hump.vector-light</a></dt><dd>Lightweight 2D vector math.</dd><dt><a href="#hump.class">hump.class</a></dt><dd>Class-based object orientated programming for Lua.</dd><dt><a href="#hump.signal">hump.signal</a></dt><dd>Simple Signal/Slot (aka. Observer) implementation.</dd><dt><a href="#hump.camera">hump.camera</a></dt><dd>A camera for LÖVE.</dd><dt><a href="#hump.ringbuffer">hump.ringbuffer</a></dt><dd>A data structure that wraps around itself.</dd></dl>
+
+</div></div><div class="outer-block" id="hump.gamestate"><h3>hump.gamestate<a class="top" href="#top">^top</a></h3><div class="preamble"><pre><code class="lua">Gamestate = require "hump.gamestate"
+</code></pre>
+
+<p>A gamestate encapsulates independent data an behaviour into a single entity.</p>
+
+<p>A typical game could consist of a menu-state, a level-state and a game-over-state.</p>
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.gamestateCallbacks ">Callbacks </a></dt><dd>Gamestate Callbacks.</dd><dt><a href="#hump.gamestatenew">new()</a></dt><dd>Create a new gamestate.</dd><dt><a href="#hump.gamestateswitch">switch()</a></dt><dd>Switch to gamestate.</dd><dt><a href="#hump.gamestate&lt;callback&gt;">&lt;callback&gt;()</a></dt><dd>Call function on active gamestate.</dd><dt><a href="#hump.gamestateregisterEvents">registerEvents()</a></dt><dd>Automatically do all of the above when needed.</dd></dl></div><div class="section-block" id="hump.gamestateCallbacks "><h4>Callbacks <a class="top" href="#hump.gamestate">^top</a></h4><p>A gamestate can define all callbacks that LÖVE defines. In addition, there are
+callbacks for initalizing, entering and leaving a state:</p>
+
+<dl>
+<dt><code class="lua">init()</code></dt>
+<dd>Called once before entering the state. See <a href="#hump.gamestateswitch"><code class="lua">switch()</code></a>.</dd><dt><code class="lua">enter(previous, ...)</code></dt>
+<dd>Called when entering the state. See <a href="#hump.gamestateswitch"><code class="lua">switch()</code></a>.</dd><dt><code class="lua">leave()</code></dt>
+<dd>Called when leaving a state. See <a href="#hump.gamestateswitch"><code class="lua">switch()</code></a>.</dd><dt><code class="lua">update()</code></dt>
+<dd>Update the game state. Called every frame.</dd><dt><code class="lua">draw()</code></dt>
+<dd>Draw on the screen. Called every frame.</dd><dt><code class="lua">focus()</code></dt>
+<dd>Called if the window gets or looses focus.</dd><dt><code class="lua">keypressed()</code></dt>
+<dd>Triggered when a key is pressed.</dd><dt><code class="lua">keyreleased()</code></dt>
+<dd>Triggered when a key is released.</dd><dt><code class="lua">mousepressed()</code></dt>
+<dd>Triggered when a mouse button is pressed.</dd><dt><code class="lua">mousereleased()</code></dt>
+<dd>Triggered when a mouse button is released.</dd><dt><code class="lua">joystickpressed()</code></dt>
+<dd>Triggered when a joystick button is pressed.</dd><dt><code class="lua">joystickreleased()</code></dt>
+<dd>Triggered when a joystick button is released.</dd><dt><code class="lua">quit()</code></dt>
+<dd>Called on quitting the game. Only called on the active gamestate.</dd></dl>
+
+<p>When using <a href="#hump.gamestateregisterEvents"><code class="lua">registerEvents()</code></a>, all these
+callbacks will be called by the corresponding LÖVE callbacks and receive
+receive the same arguments (e.g. <code class="lua">state:update(dt)</code> will be called by
+<code class="lua">love.update(dt)</code>).</p>
+
+<h4>Example:</h4>
+
+<pre><code class="lua">menu = Gamestate.new()
 function menu:init() -- run only once
     self.background = love.graphics.newImage('bg.jpg')
     Buttons.initialize()
@@ -35,120 +104,706 @@ function menu:mousereleased(x,y, mouse_btn)
             button:onClick()
         end
     end
-end</code></pre></div></div><a name="Gamestate-new" id="Gamestate-new"></a><div class="ref-block"><h4>function <span class="name">new</span><span class="arglist">()</span><a class="top" href="#Gamestate">^ top</a></h4><p>Declare a new gamestate. A gamestate can define several <a href="#Gamestate-callbacks">callbacks</a>.</p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>Gamestate</dt><dd>The new gamestate.</dd></dl></div><div class="example">Example:<pre><code class="lua">menu = Gamestate.new()</code></pre></div></div><a name="Gamestate-switch" id="Gamestate-switch"></a><div class="ref-block"><h4>function <span class="name">switch</span><span class="arglist">(to, ...)</span><a class="top" href="#Gamestate">^ top</a></h4><p>Switch to a gamestate, with any additional arguments passed to the new state.</p><p>Switching a gamestate will call the <code class="lua">leave()</code> callback on the current gamestate, 	replace the current gamestate with to, call the <code class="lua">init()</code> function if the state 	was not yet inialized and finally call <code class="lua">enter(old_state, ...)</code> on the new gamestate.</p><div class="arguments">Parameters:<dl><dt>Gamestate <code>to</code></dt><dd>Target gamestate.</dd><dt>mixed <code>...</code></dt><dd>Additional arguments to pass to to:enter().</dd></dl></div><div class="returns">Returns:<dl><dt>mixed</dt><dd>The results of to:enter()</dd></dl></div><div class="example">Example:<pre><code class="lua">Gamestate.switch(game, level_two)</code></pre></div></div><a name="Gamestate-update" id="Gamestate-update"></a><a name="Gamestate-draw" id="Gamestate-draw"></a><a name="Gamestate-focus" id="Gamestate-focus"></a><a name="Gamestate-keypressed" id="Gamestate-keypressed"></a><a name="Gamestate-keyreleased" id="Gamestate-keyreleased"></a><a name="Gamestate-mousepressed" id="Gamestate-mousepressed"></a><a name="Gamestate-mousereleased" id="Gamestate-mousereleased"></a><a name="Gamestate-joystickpressed" id="Gamestate-joystickpressed"></a><a name="Gamestate-joystickreleased" id="Gamestate-joystickreleased"></a><a name="Gamestate-quit" id="Gamestate-quit"></a><div class="ref-block"><h4>function <span class="name">update</span><span class="arglist">(...)</span><a class="top" href="#Gamestate">^ top</a></h4><h4>function <span class="name">draw</span><span class="arglist">(...)</span><a class="top" href="#Gamestate">^ top</a></h4><h4>function <span class="name">focus</span><span class="arglist">(...)</span><a class="top" href="#Gamestate">^ top</a></h4><h4>function <span class="name">keypressed</span><span class="arglist">(...)</span><a class="top" href="#Gamestate">^ top</a></h4><h4>function <span class="name">keyreleased</span><span class="arglist">(...)</span><a class="top" href="#Gamestate">^ top</a></h4><h4>function <span class="name">mousepressed</span><span class="arglist">(...)</span><a class="top" href="#Gamestate">^ top</a></h4><h4>function <span class="name">mousereleased</span><span class="arglist">(...)</span><a class="top" href="#Gamestate">^ top</a></h4><h4>function <span class="name">joystickpressed</span><span class="arglist">(...)</span><a class="top" href="#Gamestate">^ top</a></h4><h4>function <span class="name">joystickreleased</span><span class="arglist">(...)</span><a class="top" href="#Gamestate">^ top</a></h4><h4>function <span class="name">quit</span><span class="arglist">(...)</span><a class="top" href="#Gamestate">^ top</a></h4><p>Calls the corresponding function on the current gamestate (see <a href="#Gamestate-callbacks">callbacks</a>).</p><p>Only needed when not using <code class="lua">registerEvents()</code>.</p><div class="arguments">Parameters:<dl><dt>mixed <code>...</code></dt><dd>Arguments to pass to the corresponding <a href="#Gamestate-callbacks">callback</a>.</dd></dl></div><div class="returns">Returns:<dl><dt>mixed</dt><dd>The results of the callback function.</dd></dl></div><div class="example">Example:<pre><code class="lua">function love.update(dt)
-    Gamestate.update(dt)
+end
+</code></pre>
+</div><div class="ref-block" id="hump.gamestatenew"><h4>function <span class="name">new</span><span class="arglist">()</span><a class="top" href="#hump.gamestate">^top</a></h4><p>Declare a new gamestate. A gamestate can define several callbacks.</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>Gamestate</dt>
+<dd>The new gamestate.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">menu = Gamestate.new()
+</code></pre>
+</div></div><div class="ref-block" id="hump.gamestateswitch"><h4>function <span class="name">switch</span><span class="arglist">(to, ...)</span><a class="top" href="#hump.gamestate">^top</a></h4><p>Switch to a gamestate, with any additional arguments passed to the new state.</p>
+
+<p>Switching a gamestate will call the <code class="lua">leave()</code> callback on the current
+gamestate, replace the current gamestate with <code class="lua">to</code>, call the <code class="lua">init()</code> function
+if the state was not yet inialized and finally call <code class="lua">enter(old_state, ...)</code> on
+the new gamestate.</p>
+<div class="arguments">Parameters:<dl>
+<dt>Gamestate <code class="lua">to</code></dt>
+<dd>Target gamestate.</dd><dt>mixed <code class="lua">...</code></dt>
+<dd>Additional arguments to pass to <code class="lua">to:enter(current, ...)</code>.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>mixed</dt>
+<dd>The results of <code class="lua">to:enter(current, ...)</code></dd></dl>
+</div><div class="example">Example:<pre><code class="lua">Gamestate.switch(game, level_two)
+</code></pre>
+</div></div><div class="ref-block" id="hump.gamestate&lt;callback&gt;"><h4>function <span class="name">&lt;callback&gt;</span><span class="arglist">(...)</span><a class="top" href="#hump.gamestate">^top</a></h4><p>Calls a function on the current gamestate. Can be any function, but is intended to
+be one of the <a href="#hump.gamestateCallbacks">callbacks</a>. Mostly useful when not using
+<a href="#hump.gamestateregisterEvents"><code class="lua">registerEvents()</code></a>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>mixed <code class="lua">...</code></dt>
+<dd>Arguments to pass to the corresponding function.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>mixed</dt>
+<dd>The result of the callback function.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">function love.draw()
+    Gamestate.draw() -- &lt;callback&gt; is `draw'
 end
 
-function love.draw()
-    local mx,my = love.mouse.getPosition()
-    Gamestate.draw(mx, my)
+function love.update(dt)
+    Gamestate.update(dt) -- pass dt to currentState:update(dt)
 end
 
 function love.keypressed(key, code)
-    Gamestate.keypressed(key, code)
-end</code></pre></div></div><a name="Gamestate-registerEvents" id="Gamestate-registerEvents"></a><div class="ref-block"><h4>function <span class="name">registerEvents</span><span class="arglist">(callbacks)</span><a class="top" href="#Gamestate">^ top</a></h4><p>Register love callbacks to call <code class="lua">Gamestate.update()</code>, <code class="lua">Gamestate.draw()</code>, etc. automatically.</p><p>This is by done by overwriting the love callbacks, e.g.: 	<pre><code class="lua">local old_update = love.update
+    Gamestate.keypressed(key, code) -- pass multiple arguments
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.gamestateregisterEvents"><h4>function <span class="name">registerEvents</span><span class="arglist">(callbacks)</span><a class="top" href="#hump.gamestate">^top</a></h4><p>Overwrite love callbacks to call <code class="lua">Gamestate.update()</code>, <code class="lua">Gamestate.draw()</code>, etc.
+automatically. love callbacks (e.g. <code class="lua">love.update()</code>) are still invoked.</p>
+
+<p>This is by done by overwriting the love callbacks, e.g.:</p>
+
+<pre><code class="lua">local old_update = love.update
 function love.update(dt)
     old_update(dt)
-    Gamestate.current:update(dt)
-end</code></pre></p><p><span class="warning">Note:</span> Only works when called in <code class="lua">love.load()</code> or any other function that is executedafter the whole file is loaded.</p><div class="arguments">Parameters:<dl><dt>table <code>callbacks</code> (optional)</dt><dd>Names of the callbacks to register. If omitted, register all callbacks.</dd></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">function love.load()
+    return Gamestate.current:update(dt)
+end
+</code></pre>
+
+<p><strong>Note:</strong> Only works when called in love.load() or any other function that is
+executed <em>after</em> the whole file is loaded.</p>
+<div class="arguments">Parameters:<dl>
+<dt>table <code class="lua">callbacks</code> (optional)</dt>
+<dd>Names of the callbacks to register. If omitted, register all love callbacks.</dd></dl>
+</div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Examples:<pre><code class="lua">function love.load()
     Gamestate.registerEvents()
     Gamestate.switch(menu)
-end</code></pre><pre><code class="lua">function love.load()
+end
+
+-- love callback will still be invoked
+function love.update(dt)
+    Timer.update(dt)
+    -- no need for Gamestate.update(dt)
+end
+</code></pre>
+<pre><code class="lua">function love.load()
+    -- only register draw, update and quit
     Gamestate.registerEvents{'draw', 'update', 'quit'}
     Gamestate.switch(menu)
-end</code></pre></div></div></div><a name="Timer" id="Timer"></a><div class="outer-block"><h3>hump.timer<a class="top" href="#top">^ top</a></h3><div class="preamble"><pre><code class="lua">Timer = require "hump.timer"</code></pre><p>hump.timer provides a simple interface to use delayed functions, i.e. functions that will be executed after some amount time has passed. For example, you can use a timer to set the player invincible for a short amount of time.</p><p>In addition, the module offers facilities to create functions that interpolate or oscillate over time. An interpolator could fade the color or a text message, whereas an oscillator could be used for the movement of foes in a shmup.</p></div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#Timer-new">new()</a></dt><dd>Create new timer instance.</dd><dt><a href="#Timer-add">add()</a></dt><dd>Schedule a function.</dd><dt><a href="#Timer-addPeriodic">addPeriodic()</a></dt><dd>Add a periodic function.</dd><dt><a href="#Timer-do_for">do_for()</a></dt><dd>Run a function for the next few seconds.</dd><dt><a href="#Timer-cancel">cancel()</a></dt><dd>Cancel a scheduled function.</dd><dt><a href="#Timer-clear">clear()</a></dt><dd>Remove all timed and periodic functions.</dd><dt><a href="#Timer-update">update()</a></dt><dd>Update scheduled functions.</dd></dl></div><a name="Timer-new" id="Timer-new"></a><div class="ref-block"><h4>function <span class="name">new</span><span class="arglist">()</span><a class="top" href="#Timer">^ top</a></h4><p><span class="warning">If you don't need multiple independent schedulers, you can use the 	global/default timer (see examples).</span></p><p>Creates a new timer instance that is independent of the global timer: 	It will manage it's own list of scheduled functions and does not in any 	way affect the the global timer. Likewise, the global timer does not 	affect the timer instance.</p><p><span class="warning">Note:</span> Timer instances use the colon-notation (e.g. 	<code class="lua">instance:update(dt)</code>), while the global timer uses the dot-notation 	(e.g. <code class="lua">Timer.update(dt)</code>).</p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>Timer</dt><dd>A timer instance</dd></dl></div><div class="example">Example:<pre><code class="lua">menuTimer = Timer.new()</code></pre></div></div><a name="Timer-add" id="Timer-add"></a><a name="Timer-instance:add" id="Timer-instance:add"></a><div class="ref-block"><h4>function <span class="name">add</span><span class="arglist">(delay, func)</span><a class="top" href="#Timer">^ top</a></h4><h4>function <span class="name">instance:add</span><span class="arglist">(delay, func)</span><a class="top" href="#Timer">^ top</a></h4><p>Schedule a function. The function will be executed after <code class="lua">delay</code> 	seconds have elapsed, given that <code class="lua">update(dt)</code> is called every frame.</p><p>Note that there is no guarantee that the delay will not be exceeded, it 	is only guaranteed that the function will not be executed <em>before</em> the 	delay has passed.</p><p>It is an error to schedule a function again if it is not yet finished 	or canceled.</p><p><code class="lua">func</code> will receive itself as only parameter. This is useful to 	implement periodic behavior (see the example).</p><div class="arguments">Parameters:<dl><dt>number <code>delay</code></dt><dd>Number of seconds the function will be delayed.</dd><dt>function <code>func</code></dt><dd>The function to be delayed.</dd></dl></div><div class="returns">Returns:<dl><dt>table</dt><dd>The timer handle.</dd></dl></div><div class="example">Example:<pre><code class="lua">-- grant the player 5 seconds of immortality
+end
+</code></pre>
+</div></div></div><div class="outer-block" id="hump.timer"><h3>hump.timer<a class="top" href="#top">^top</a></h3><div class="preamble"><pre><code class="lua">Timer = require "hump.timer"
+</code></pre>
+
+<p>hump.timer offers a simple interface to schedule the execution of functions. It
+is possible to run functions <em>after</em> and <em>for</em> some amount of time. For
+example, a timer could be set to move critters every 5 seconds or to make the
+player invincible for a short amount of time.</p>
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.timernew">new()</a></dt><dd>Create new timer instance.</dd><dt><a href="#hump.timeradd">add()</a></dt><dd>Schedule a function.</dd><dt><a href="#hump.timeraddPeriodic">addPeriodic()</a></dt><dd>Add a periodic function.</dd><dt><a href="#hump.timerdo_for">do_for()</a></dt><dd>Run a function for the next few seconds.</dd><dt><a href="#hump.timercancel">cancel()</a></dt><dd>Cancel a scheduled function.</dd><dt><a href="#hump.timerclear">clear()</a></dt><dd>Remove all timed and periodic functions.</dd><dt><a href="#hump.timerupdate">update()</a></dt><dd>Update scheduled functions.</dd></dl></div><div class="ref-block" id="hump.timernew"><h4>function <span class="name">new</span><span class="arglist">()</span><a class="top" href="#hump.timer">^top</a></h4><p><strong>If you don't need multiple independent schedulers, you can use the
+global/default timer (see examples).</strong></p>
+
+<p>Creates a new timer instance that is independent of the global timer: It will
+manage it's own list of scheduled functions and does not in any way affect the
+the global timer. Likewise, the global timer does not affect timer instances.</p>
+
+<p><strong>Note:</strong> Timer instances use the colon-notation (e.g. <code class="lua">instance:update(dt)</code>),
+while the global timer uses the dot-notation (e.g. <code class="lua">Timer.update(dt)</code>).</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>Timer</dt>
+<dd>A timer instance.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">menuTimer = Timer.new()
+</code></pre>
+</div></div><div class="ref-block" id="hump.timeradd"><h4>function <span class="name">add</span><span class="arglist">(delay, func)</span><a class="top" href="#hump.timer">^top</a></h4><p>Schedule a function. The function will be executed after <code class="lua">delay</code> seconds have
+elapsed, given that <code class="lua">update(dt)</code> is called every frame.</p>
+
+<p><strong>Note:</strong> There is no guarantee that the delay will not be exceeded, it is only
+guaranteed that the function will <em>not</em> be executed <em>before</em> the delay has
+passed.</p>
+
+<p><code class="lua">func</code> will receive itself as only parameter. This is useful to implement
+periodic behavior (see the example).</p>
+<div class="arguments">Parameters:<dl>
+<dt>number <code class="lua">delay</code></dt>
+<dd>Number of seconds the function will be delayed.</dd><dt>function <code class="lua">func</code></dt>
+<dd>The function to be delayed.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>table</dt>
+<dd>The timer handle.</dd></dl>
+</div><div class="example">Examples:<pre><code class="lua">-- grant the player 5 seconds of immortality
 player.isInvincible = true
-Timer.add(5, function() player.isInvincible = false end)</code></pre><pre><code class="lua">-- print "foo" every second. See addPeriodic.
-Timer.add(1, function(func) print("foo") Timer.add(1, func) end)</code></pre><pre><code class="lua">menuTimer:add(1, finishAnimation)</code></pre></div></div><a name="Timer-addPeriodic" id="Timer-addPeriodic"></a><a name="Timer-instance:addPeriodic" id="Timer-instance:addPeriodic"></a><div class="ref-block"><h4>function <span class="name">addPeriodic</span><span class="arglist">(delay, func, count)</span><a class="top" href="#Timer">^ top</a></h4><h4>function <span class="name">instance:addPeriodic</span><span class="arglist">(delay, func, count)</span><a class="top" href="#Timer">^ top</a></h4><p>Add a function that will be called <code class="lua">count</code> times every <code class="lua">delay</code> 	seconds.</p><p>If <code class="lua">count</code> is omitted, the function will be called until it returns 	<code class="lua">false</code> or <code class="lua">clear()</code> is called.</p><div class="arguments">Parameters:<dl><dt>number <code>delay</code></dt><dd>Number of seconds between two consecutive function calls.</dd><dt>function <code>func</code></dt><dd>The function to be called periodically.</dd><dt>number <code>count</code> (optional)</dt><dd>Number of times the function is to be called.</dd></dl></div><div class="returns">Returns:<dl><dt>table</dt><dd>The timer handle.</dd></dl></div><div class="example">Example:<pre><code class="lua">Timer.addPeriodic(1, function() lamp:toggleLight() end)</code></pre><pre><code class="lua">mothership_timer:addPeriodic(0.3, function() self:spawnFighter() end, 5)</code></pre><pre><code class="lua">-- flicker player's image as long as he is invincible
+Timer.add(5, function() player.isInvincible = false end)
+</code></pre>
+<pre><code class="lua">-- print "foo" every second. See also addPeriodic()
+Timer.add(1, function(func) print("foo") Timer.add(1, func) end)
+</code></pre>
+<pre><code class="lua">--Using a timer instance:
+menuTimer:add(1, finishAnimation)
+</code></pre>
+</div></div><div class="ref-block" id="hump.timeraddPeriodic"><h4>function <span class="name">addPeriodic</span><span class="arglist">(delay, func)</span><a class="top" href="#hump.timer">^top</a></h4><p>Add a function that will be called <code class="lua">count</code> times every <code class="lua">delay</code> seconds.</p>
+
+<p>If <code class="lua">count</code> is omitted, the function will be called until it returns <code class="lua">false</code> or
+<a href="#hump.timercancel"><code class="lua">cancel(handle)</code></a> or <a href="#hump.timerclear"><code class="lua">clear()</code></a> is
+called.</p>
+<div class="arguments">Parameters:<dl>
+<dt>number <code class="lua">delay</code></dt>
+<dd>Number of seconds between two consecutive function calls.</dd><dt>function <code class="lua">func</code></dt>
+<dd>The function to be called periodically.</dd><dt>number <code class="lua">count</code> (optional)</dt>
+<dd>Number of times the function is to be called.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>table</dt>
+<dd>The timer handle. See also <a href="#hump.timercancel"><code class="lua">cancel()</code></a>.</dd></dl>
+</div><div class="example">Examples:<pre><code class="lua">-- toggle light on and off every second
+Timer.addPeriodic(1, function() lamp:toggleLight() end)
+</code></pre>
+<pre><code class="lua">-- launch 5 fighters in quick succession (using a timer instance)
+mothership_timer:addPeriodic(0.3, function() self:launchFighter() end, 5)
+</code></pre>
+<pre><code class="lua">-- flicker player's image as long as he is invincible
 Timer.addPeriodic(0.1, function()
     player:flipImage()
     return player.isInvincible
-end)</code></pre></div></div><a name="Timer-do_for" id="Timer-do_for"></a><a name="Timer-instance:do_for" id="Timer-instance:do_for"></a><div class="ref-block"><h4>function <span class="name">do_for</span><span class="arglist">(delta, func, after)</span><a class="top" href="#Timer">^ top</a></h4><h4>function <span class="name">instance:do_for</span><span class="arglist">(delta, func, after)</span><a class="top" href="#Timer">^ top</a></h4><p>Run a <code class="lua">func(dt)</code> for the next <code class="lua">delta</code> seconds. The function is called 	every time <code class="lua">update(dt)</code> is called. Optionally run <code class="lua">after()</code> once 	<code class="lua">delta</code> seconds have passed.</p><p><code class="lua">after</code> will receive itself as only parameter.</p><p>The same constraints as with <code class="lua">add()</code> apply.</p><div class="arguments">Parameters:<dl><dt>number <code>delta</code></dt><dd>Number of seconds the <code class="lua">func</code> will be called.</dd><dt>function <code>func</code></dt><dd>The function to be called upon <code class="lua">update(dt)</code>.</dd><dt>function <code>after</code> (optional)</dt><dd>A function to be called after <code class="lua">delta</code> seconds.</dd></dl></div><div class="returns">Returns:<dl><dt>table</dt><dd>The timer handle.</dd></dl></div><div class="example">Example:<pre><code class="lua">-- play an animation for 5 seconds
-Timer.do_for(5, function(dt) animation:update(dt) end)</code></pre><pre><code class="lua">-- shake the camera for one second
+end)
+</code></pre>
+</div></div><div class="ref-block" id="hump.timerdo_for"><h4>function <span class="name">do_for</span><span class="arglist">(delay, func, after)</span><a class="top" href="#hump.timer">^top</a></h4><p>Run <code class="lua">func(dt)</code> for the next <code class="lua">delta</code> seconds. The function is called every time
+<code class="lua">update(dt)</code> is called. Optionally run <code class="lua">after()</code> once <code class="lua">delta</code> seconds have
+passed.</p>
+
+<p><code class="lua">after()</code> will receive itself as only parameter.</p>
+
+<p><strong>Note:</strong> You should not add new timers in <code class="lua">func(dt)</code>, as this can lead to random
+crashes.</p>
+<div class="arguments">Parameters:<dl>
+<dt>number <code class="lua">delta</code></dt>
+<dd>Number of seconds the func will be called.</dd><dt>function <code class="lua">func</code></dt>
+<dd>The function to be called on <code class="lua">update(dt)</code>.</dd><dt>function <code class="lua">after</code> (optional)</dt>
+<dd>A function to be called after delta seconds.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>table</dt>
+<dd>The timer handle.</dd></dl>
+</div><div class="example">Examples:<pre><code class="lua">-- play an animation for 5 seconds
+Timer.do_for(5, function(dt) animation:update(dt) end)
+</code></pre>
+<pre><code class="lua">-- shake the camera for one second
 local orig_x, orig_y = camera:pos()
 Timer.do_for(1, function()
-	camera:lookAt(orig_x + math.random(-2,2), orig_y + math.random(-2,2))
+    camera:lookAt(orig_x + math.random(-2,2), orig_y + math.random(-2,2))
 end, function()
-	-- reset camera position
-	camera:lookAt(orig_x, orig_y)
-end)</code></pre><pre><code class="lua">player.isInvincible = true
+    -- reset camera position
+    camera:lookAt(orig_x, orig_y)
+end)
+</code></pre>
+<pre><code class="lua">player.isInvincible = true
 -- flash player for 3 seconds
 local t = 0
 player.timer:do_for(3, function(dt)
-	t = t + dt
-	player.visible = (t % .2) < .1
+    t = t + dt
+    player.visible = (t % .2) &lt; .1
 end, function()
-	-- make sure the player is visible after three seconds
-	player.visible = true
-	player.isInvincible = false
-end)</code></pre></div></div><a name="Timer-cancel" id="Timer-cancel"></a><a name="Timer-instance:cancel" id="Timer-instance:cancel"></a><div class="ref-block"><h4>function <span class="name">cancel</span><span class="arglist">(handle)</span><a class="top" href="#Timer">^ top</a></h4><h4>function <span class="name">instance:cancel</span><span class="arglist">(handle)</span><a class="top" href="#Timer">^ top</a></h4><p>Prevent a timer from being executed in the future.</p><p><em>Always</em> use the function handle returned by <code class="lua">add()</code>/<code class="lua">addPeriodic()</code> 	to cancel a timer.</p><p><em>Never</em> use this inside a scheduled function.</p><div class="arguments">Parameters:<dl><dt>table <code>handle</code></dt><dd>The function to be canceled.</dd></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">function tick()
+    -- make sure the player is visible after three seconds
+    player.visible = true
+    player.isInvincible = false
+end)
+</code></pre>
+</div></div><div class="ref-block" id="hump.timercancel"><h4>function <span class="name">cancel</span><span class="arglist">(handle)</span><a class="top" href="#hump.timer">^top</a></h4><p>Prevent a timer from being executed in the future.</p>
+<div class="arguments">Parameters:<dl>
+<dt>table <code class="lua">handle</code></dt>
+<dd>The function to be canceled.</dd></dl>
+</div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">function tick()
     print('tick... tock...')
 end
 handle = Timer.addPeriodic(1, tick)
 -- later
-Timer.cancel(handle) -- NOT: Timer.cancel(tick)</code></pre></div></div><a name="Timer-clear" id="Timer-clear"></a><a name="Timer-instance:clear" id="Timer-instance:clear"></a><div class="ref-block"><h4>function <span class="name">clear</span><span class="arglist">()</span><a class="top" href="#Timer">^ top</a></h4><h4>function <span class="name">instance:clear</span><span class="arglist">()</span><a class="top" href="#Timer">^ top</a></h4><p>Remove all timed and periodic functions. Functions that have not yet 	been executed will discarded. 	 	<em>Never</em> use this inside a scheduled function.</p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">Timer.clear()</code></pre></div></div><a name="Timer-update" id="Timer-update"></a><a name="Timer-instance:update" id="Timer-instance:update"></a><div class="ref-block"><h4>function <span class="name">update</span><span class="arglist">(dt)</span><a class="top" href="#Timer">^ top</a></h4><h4>function <span class="name">instance:update</span><span class="arglist">(dt)</span><a class="top" href="#Timer">^ top</a></h4><p>Update timers and execute functions if the deadline is reached. Use this in <code class="lua">love.update(dt)</code>.</p><div class="arguments">Parameters:<dl><dt>number <code>dt</code></dt><dd>Time that has passed since the last update().</dd></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">function love.update(dt)
+Timer.cancel(handle) -- NOT: Timer.cancel(tick)
+</code></pre>
+</div></div><div class="ref-block" id="hump.timerclear"><h4>function <span class="name">clear</span><span class="arglist">()</span><a class="top" href="#hump.timer">^top</a></h4><p>Remove all timed and periodic functions. Functions that have not yet been
+executed will discarded.</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Examples:<pre><code class="lua">Timer.clear()
+</code></pre>
+<pre><code class="lua">menu_timer:clear()
+</code></pre>
+</div></div><div class="ref-block" id="hump.timerupdate"><h4>function <span class="name">update</span><span class="arglist">(dt)</span><a class="top" href="#hump.timer">^top</a></h4><p>Update timers and execute functions if the deadline is reached. Use this in
+<code class="lua">love.update(dt)</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>number <code class="lua">dt</code></dt>
+<dd>Time that has passed since the last <code class="lua">update()</code>.</dd></dl>
+</div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Examples:<pre><code class="lua">function love.update(dt)
     do_stuff()
     Timer.update(dt)
-end</code></pre></div></div></div><a name="vector" id="vector"></a><div class="outer-block"><h3>hump.vector<a class="top" href="#top">^ top</a></h3><div class="preamble"><pre><code class="lua">vector = require "hump.vector"</code></pre><p>A handy 2D vector class providing most of the things you do with vectors.</p><p>You can access the individual coordinates by using <code class="lua">vec.x</code> and <code class="lua">vec.y</code>.</p></div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#vector-operators">operators</a></dt><dd>Arithmetics and relations</dd><dt><a href="#vector-new">new()</a></dt><dd>Create a new vector.</dd><dt><a href="#vector-isvector">isvector()</a></dt><dd>Test if value is a vector.</dd><dt><a href="#vector-vector:clone">vector:clone()</a></dt><dd>Copy a vector.</dd><dt><a href="#vector-vector:unpack">vector:unpack()</a></dt><dd>Extract coordinates.</dd><dt><a href="#vector-vector:permul">vector:permul()</a></dt><dd>Per element multiplication.</dd><dt><a href="#vector-vector:len">vector:len()</a></dt><dd>Get length.</dd><dt><a href="#vector-vector:len2">vector:len2()</a></dt><dd>Get squared length.</dd><dt><a href="#vector-vector:dist">vector:dist()</a></dt><dd>Distance to other vector.</dd><dt><a href="#vector-vector:normalized">vector:normalized()</a></dt><dd>Get normalized vector.</dd><dt><a href="#vector-vector:normalize_inplace">vector:normalize_inplace()</a></dt><dd>Normalize vector in-place.</dd><dt><a href="#vector-vector:rotated">vector:rotated()</a></dt><dd>Get rotated vector.</dd><dt><a href="#vector-vector:rotate_inplace">vector:rotate_inplace()</a></dt><dd>Rotate vector in-place.</dd><dt><a href="#vector-vector:perpendicular">vector:perpendicular()</a></dt><dd>Get perpendicular vector.</dd><dt><a href="#vector-vector:projectOn">vector:projectOn()</a></dt><dd>Get projection onto another vector.</dd><dt><a href="#vector-vector:mirrorOn">vector:mirrorOn()</a></dt><dd>Mirrors vector on other vector</dd><dt><a href="#vector-vector:cross">vector:cross()</a></dt><dd>Cross product of two vectors.</dd></dl></div><a name="vector-operators" id="vector-operators"></a><div class="section-block"><h4>Arithmetics and relations<a class="top" href="#vector">^ top</a></h4><p>Vector arithmetic is implemented by using <code class="lua">__add</code>, <code class="lua">__mul</code> and other metamethods:</p><p><dl><dt><code class="lua">vector + vector = vector</code></dt><dd>Component wise sum.</dd><dt><code class="lua">vector - vector = vector</code></dt><dd>Component wise difference.</dd><dt><code class="lua">vector * vector = number</code></dt><dd>Dot product.</dd><dt><code class="lua">number * vector = vector</code></dt><dd>Scalar multiplication (scaling).</dd><dt><code class="lua">vector * number = vector</code></dt><dd>Scalar multiplication.</dd><dt><code class="lua">vector / number = vector</code></dt><dd>Scalar multiplication.</dd></dl></p><p>Relational operators are defined, too:</p><p><dl><dt>a == b</dt><dd><code class="lua">true</code>, if <code class="lua">a.x == b.x</code> and <code class="lua">a.y == b.y</code>.</dd><dt>a <= b</dt><dd><code class="lua">true</code>, if <code class="lua">a.x <= b.x</code> and <code class="lua">a.y <= b.y</code>.</dd><dt>a < b</dt><dd>Lexical sort: <code class="lua">true</code>, if <code class="lua">a.x < b.x</code> or <code class="lua">a.x == b.x</code> and <code class="lua">a.y < b.y</code>.</dd></dl></p><div class="example">Example:<pre><code class="lua">-- acceleration, player.velocity and player.position are vectors
+end
+</code></pre>
+<pre><code class="lua">-- using hump.gamestate and a timer instance
+function menuState:update(dt)
+    self.timer:update(dt)
+end
+</code></pre>
+</div></div></div><div class="outer-block" id="hump.vector"><h3>hump.vector<a class="top" href="#top">^top</a></h3><div class="preamble"><pre><code class="lua">vector = require "hump.vector"
+</code></pre>
+
+<p>A handy 2D vector class providing most of the things you do with vectors.</p>
+
+<p>You can access the individual coordinates by using vec.x and vec.y.</p>
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.vectorOperators ">Operators </a></dt><dd>Arithmetics and relations.</dd><dt><a href="#hump.vectornew">new()</a></dt><dd>Create a new vector.</dd><dt><a href="#hump.vectorisvector">isvector()</a></dt><dd>Test if value is a vector.</dd><dt><a href="#hump.vectorvector:clone">vector:clone()</a></dt><dd>Copy a vector.</dd><dt><a href="#hump.vectorvector:unpack">vector:unpack()</a></dt><dd>Extract coordinates.</dd><dt><a href="#hump.vectorvector:permul">vector:permul()</a></dt><dd>Per element multiplication.</dd><dt><a href="#hump.vectorvector:len">vector:len()</a></dt><dd>Get length.</dd><dt><a href="#hump.vectorvector:len2">vector:len2()</a></dt><dd>Get squared length.</dd><dt><a href="#hump.vectorvector:dist">vector:dist()</a></dt><dd>Distance to other vector.</dd><dt><a href="#hump.vectorvector:normalized">vector:normalized()</a></dt><dd>Get normalized vector.</dd><dt><a href="#hump.vectorvector:normalize_inplace">vector:normalize_inplace()</a></dt><dd>Normalize vector in-place.</dd><dt><a href="#hump.vectorvector:rotated">vector:rotated()</a></dt><dd>Get rotated vector.</dd><dt><a href="#hump.vectorvector:rotate_inplace">vector:rotate_inplace()</a></dt><dd>Rotate vector in-place.</dd><dt><a href="#hump.vectorvector:perpendicular">vector:perpendicular()</a></dt><dd>Get perpendicular vector.</dd><dt><a href="#hump.vectorvector:projectOn">vector:projectOn()</a></dt><dd>Get projection onto another vector.</dd><dt><a href="#hump.vectorvector:mirrorOn">vector:mirrorOn()</a></dt><dd>Mirrors vector on other vector</dd><dt><a href="#hump.vectorvector:cross">vector:cross()</a></dt><dd>Cross product of two vectors.</dd></dl></div><div class="section-block" id="hump.vectorOperators "><h4>Operators <a class="top" href="#hump.vector">^top</a></h4><p>Vector arithmetic is implemented by using <code class="lua">__add</code>, <code class="lua">__mul</code> and other
+metamethods:</p>
+
+<dl>
+<dt><code class="lua">vector + vector = vector</code></dt>
+<dd>Component wise sum.</dd><dt><code class="lua">vector - vector = vector</code></dt>
+<dd>Component wise difference.</dd><dt><code class="lua">vector * vector = number</code></dt>
+<dd>Dot product.</dd><dt><code class="lua">number * vector = vector</code></dt>
+<dd>Scalar multiplication (scaling).</dd><dt><code class="lua">vector * number = vector</code></dt>
+<dd>Scalar multiplication.</dd><dt><code class="lua">vector / number = vector</code></dt>
+<dd>Scalar multiplication.</dd></dl>
+
+<p>Relational operators are defined, too:</p>
+
+<dl>
+<dt><code class="lua">a == b</code></dt>
+<dd>Same as <code class="lua">a.x == b.x and a.y == b.y</code>.</dd><dt><code class="lua">a &lt;= b</code></dt>
+<dd>Same as <code class="lua">a.x &lt;= b.x and a.y &lt;= b.y</code>.</dd><dt><code class="lua">a &lt; b</code></dt>
+<dd>Lexical sort: <code class="lua">a.x &lt; b.x or (a.x == b.x and a.y &lt; b.y)</code>.</dd></dl>
+
+<h4>Example:</h4>
+
+<pre><code class="lua">-- acceleration, player.velocity and player.position are vectors
 acceleration = vector(0,-9)
 player.velocity = player.velocity + acceleration * dt
-player.position = player.position + player.velocity * dt</code></pre></div></div><a name="vector-new" id="vector-new"></a><div class="ref-block"><h4>function <span class="name">new</span><span class="arglist">(x,y)</span><a class="top" href="#vector">^ top</a></h4><p>Create a new vector.</p><div class="arguments">Parameters:<dl><dt>numbers <code>x,y</code></dt><dd>Coordinates.</dd></dl></div><div class="returns">Returns:<dl><dt>vector</dt><dd>The vector.</dd></dl></div><div class="example">Example:<pre><code class="lua">a = vector.new(10,10)</code></pre><pre><code class="lua">-- as a shortcut, you can call the module like a function:
-vector = require "hump.vector"
-a = vector(10,10)</code></pre></div></div><a name="vector-isvector" id="vector-isvector"></a><div class="ref-block"><h4>function <span class="name">isvector</span><span class="arglist">(v)</span><a class="top" href="#vector">^ top</a></h4><p>Test whether a variable is a vector.</p><div class="arguments">Parameters:<dl><dt>mixed <code>v</code></dt><dd>The variable to test.</dd></dl></div><div class="returns">Returns:<dl><dt>boolean</dt><dd><code class="lua">true</code> if <code class="lua">v</code> is a vector, <code class="lua">false</code> otherwise</dd></dl></div><div class="example">Example:<pre><code class="lua">if not vector.isvector(v) then
+player.position = player.position + player.velocity * dt
+</code></pre>
+</div><div class="ref-block" id="hump.vectornew"><h4>function <span class="name">new</span><span class="arglist">(x,y)</span><a class="top" href="#hump.vector">^top</a></h4><p>Create a new vector.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x,y</code></dt>
+<dd>Coordinates.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>vector</dt>
+<dd>The vector.</dd></dl>
+</div><div class="example">Examples:<p> a = vector.new(10,10)</p>
+<p> -- as a shortcut, you can call the module like a function:
+ vector = require "hump.vector"
+ a = vector(10,10)</p>
+</div></div><div class="ref-block" id="hump.vectorisvector"><h4>function <span class="name">isvector</span><span class="arglist">(v)</span><a class="top" href="#hump.vector">^top</a></h4><p>Test whether a variable is a vector.</p>
+<div class="arguments">Parameters:<dl>
+<dt>mixed <code class="lua">v</code></dt>
+<dd>The variable to test.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>boolean</dt>
+<dd><code class="lua">true</code> if <code class="lua">v</code> is a vector, <code class="lua">false</code> otherwise</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">if not vector.isvector(v) then
     v = vector(v,0)
-end</code></pre></div></div><a name="vector-vector:clone" id="vector-vector:clone"></a><div class="ref-block"><h4>function <span class="name">vector:clone</span><span class="arglist">()</span><a class="top" href="#vector">^ top</a></h4><p>Copy a vector. Simply assigning a vector a vector to a variable will create 	a reference, so when modifying the vector referenced by the new variable 	would also change the old one: 	<pre><code class="lua">a = vector(1,1) -- create vector
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.vectorvector:clone"><h4>function <span class="name">vector:clone</span><span class="arglist">()</span><a class="top" href="#hump.vector">^top</a></h4><p>Copy a vector. Simply assigning a vector a vector to a variable will create a
+<em>reference</em>, so when modifying the vector referenced by the new variable would
+also change the old one:</p>
+
+<pre><code class="lua">a = vector(1,1) -- create vector
 b = a           -- b references a
 c = a:clone()   -- c is a copy of a
 b.x = 0         -- changes a,b and c
-print(a,b,c)    -- prints '(1,0), (1,0), (1,1)'</code></pre></p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>vector</dt><dd>Copy of the vector</dd></dl></div><div class="example">Example:<pre><code class="lua">copy = original:clone</code></pre></div></div><a name="vector-vector:unpack" id="vector-vector:unpack"></a><div class="ref-block"><h4>function <span class="name">vector:unpack</span><span class="arglist">()</span><a class="top" href="#vector">^ top</a></h4><p>Extract coordinates.</p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>numbers</dt><dd>The coordinates</dd></dl></div><div class="example">Example:<pre><code class="lua">x,y = pos:unpack()</code></pre><pre><code class="lua">love.graphics.draw(self.image, self.pos:unpack())</code></pre></div></div><a name="vector-vector:permul" id="vector-vector:permul"></a><div class="ref-block"><h4>function <span class="name">vector:permul</span><span class="arglist">(other)</span><a class="top" href="#vector">^ top</a></h4><p>Multiplies vectors coordinate wise, i.e. <code class="lua">result = vector(a.x * b.x, a.y * b.y)</code>.</p><p>This does not change either argument vectors, but creates a new one.</p><div class="arguments">Parameters:<dl><dt>vector <code>other</code></dt><dd>The other vector</dd></dl></div><div class="returns">Returns:<dl><dt>vector</dt><dd>The new vector as described above</dd></dl></div><div class="example">Example:<pre><code class="lua">scaled = original:permul(vector(1,1.5))</code></pre></div></div><a name="vector-vector:len" id="vector-vector:len"></a><div class="ref-block"><h4>function <span class="name">vector:len</span><span class="arglist">()</span><a class="top" href="#vector">^ top</a></h4><p>Get length of a vector, i.e. <code class="lua">math.sqrt(vec.x * vec.x + vec.y * vec.y)</code>.</p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>number</dt><dd>Length of the vector.</dd></dl></div><div class="example">Example:<pre><code class="lua">distance = (a - b):len()</code></pre></div></div><a name="vector-vector:len2" id="vector-vector:len2"></a><div class="ref-block"><h4>function <span class="name">vector:len2</span><span class="arglist">()</span><a class="top" href="#vector">^ top</a></h4><p>Get squared length of a vector, i.e. <code class="lua">vec.x * vec.x + vec.y * vec.y</code>.</p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>number</dt><dd>Squared length of the vector.</dd></dl></div><div class="example">Example:<pre><code class="lua">-- get closest vertex to a given vector
+print(a,b,c)    -- prints '(1,0), (1,0), (1,1)'
+</code></pre>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>vector</dt>
+<dd>Copy of the vector</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">copy = original:clone()
+</code></pre>
+</div></div><div class="ref-block" id="hump.vectorvector:unpack"><h4>function <span class="name">vector:unpack</span><span class="arglist">()</span><a class="top" href="#hump.vector">^top</a></h4><p>Extract coordinates.</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>numbers</dt>
+<dd>The coordinates</dd></dl>
+</div><div class="example">Examples:<pre><code class="lua">x,y = pos:unpack()
+</code></pre>
+<pre><code class="lua">love.graphics.draw(self.image, self.pos:unpack())
+</code></pre>
+</div></div><div class="ref-block" id="hump.vectorvector:permul"><h4>function <span class="name">vector:permul</span><span class="arglist">(other)</span><a class="top" href="#hump.vector">^top</a></h4><p>Multiplies vectors coordinate wise, i.e. <code class="lua">result = vector(a.x * b.x, a.y *
+b.y)</code>.</p>
+
+<p>This does not change either argument vectors, but creates a new one.</p>
+<div class="arguments">Parameters:<dl>
+<dt>vector <code class="lua">other</code></dt>
+<dd>The other vector</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>vector</dt>
+<dd>The new vector as described above</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">scaled = original:permul(vector(1,1.5))
+</code></pre>
+</div></div><div class="ref-block" id="hump.vectorvector:len"><h4>function <span class="name">vector:len</span><span class="arglist">()</span><a class="top" href="#hump.vector">^top</a></h4><p>Get length of a vector, i.e. <code class="lua">math.sqrt(vec.x * vec.x + vec.y * vec.y)</code>.</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>number</dt>
+<dd>Length of the vector.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">distance = (a - b):len()
+</code></pre>
+</div></div><div class="ref-block" id="hump.vectorvector:len2"><h4>function <span class="name">vector:len2</span><span class="arglist">()</span><a class="top" href="#hump.vector">^top</a></h4><p>Get squared length of a vector, i.e. <code class="lua">vec.x * vec.x + vec.y * vec.y</code>.</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>number</dt>
+<dd>Squared length of the vector.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">-- get closest vertex to a given vector
 closest, dsq = vertices[1], (pos - vertices[1]):len2()
 for i = 2,#vertices do
     local temp = (pos - vertices[i]):len2()
-    if temp < dsq then
+    if temp &lt; dsq then
         closest, dsq = vertices[i], temp
     end
-end</code></pre></div></div><a name="vector-vector:dist" id="vector-vector:dist"></a><div class="ref-block"><h4>function <span class="name">vector:dist</span><span class="arglist">(other)</span><a class="top" href="#vector">^ top</a></h4><p>Get distance of two vectors. The same as <code class="lua">(a - b):len()</code>.</p><div class="arguments">Parameters:<dl><dt>vector <code>other</code></dt><dd>Other vector to measure the distance to.</dd></dl></div><div class="returns">Returns:<dl><dt>number</dt><dd>The distance of the vectors.</dd></dl></div><div class="example">Example:<pre><code class="lua">-- get closest vertex to a given vector
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.vectorvector:dist"><h4>function <span class="name">vector:dist</span><span class="arglist">(other)</span><a class="top" href="#hump.vector">^top</a></h4><p>Get distance of two vectors. The same as <code class="lua">(a - b):len()</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>vector <code class="lua">other</code></dt>
+<dd>Other vector to measure the distance to.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>number</dt>
+<dd>The distance of the vectors.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">-- get closest vertex to a given vector
 -- slightly slower than the example using len2()
 closest, dist = vertices[1], pos:dist(vertices[1])
 for i = 2,#vertices do
     local temp = pos:dist(vertices[i])
-    if temp < dist then
+    if temp &lt; dist then
         closest, dist = vertices[i], temp
     end
-end</code></pre></div></div><a name="vector-vector:normalized" id="vector-vector:normalized"></a><div class="ref-block"><h4>function <span class="name">vector:normalized</span><span class="arglist">()</span><a class="top" href="#vector">^ top</a></h4><p>Get normalized vector, i.e. a vector with the same direction as the input 	vector, but with length 1.</p><p>This does not change the input vector, but creates a new vector.</p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>vector</dt><dd>Vector with same direction as the input vector, but length 1.</dd></dl></div><div class="example">Example:<pre><code class="lua">direction = velocity:normalized()</code></pre></div></div><a name="vector-vector:normalize_inplace" id="vector-vector:normalize_inplace"></a><div class="ref-block"><h4>function <span class="name">vector:normalize_inplace</span><span class="arglist">()</span><a class="top" href="#vector">^ top</a></h4><p>Normalize a vector, i.e. make the vector unit length. Great to use on 	intermediate results.</p><p><span class="warning">This modifies the vector. If in doubt, use <code class="lua">vector:normalized()</code>.</span></p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>vector</dt><dd>Itself - the normalized vector</dd></dl></div><div class="example">Example:<pre><code class="lua">normal = (b - a):perpendicular():normalize_inplace()</code></pre></div></div><a name="vector-vector:rotated" id="vector-vector:rotated"></a><div class="ref-block"><h4>function <span class="name">vector:rotated</span><span class="arglist">(phi)</span><a class="top" href="#vector">^ top</a></h4><p>Get a rotated vector.</p><p>This does not change the input vector, but creates a new vector.</p><div class="arguments">Parameters:<dl><dt>number <code>phi</code></dt><dd>Rotation angle in <a href="http://en.wikipedia.org/wiki/Radians">radians</a>.</dd></dl></div><div class="returns">Returns:<dl><dt>vector</dt><dd>The rotated vector</dd></dl></div><div class="example">Example:<pre><code class="lua">-- approximate a circle
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.vectorvector:normalized"><h4>function <span class="name">vector:normalized</span><span class="arglist">()</span><a class="top" href="#hump.vector">^top</a></h4><p>Get normalized vector, i.e. a vector with the same direction as the input
+vector, but with length 1.</p>
+
+<p>This does not change the input vector, but creates a new vector.</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>vector</dt>
+<dd>Vector with same direction as the input vector, but length 1.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">direction = velocity:normalized()
+</code></pre>
+</div></div><div class="ref-block" id="hump.vectorvector:normalize_inplace"><h4>function <span class="name">vector:normalize_inplace</span><span class="arglist">()</span><a class="top" href="#hump.vector">^top</a></h4><p>Normalize a vector, i.e. make the vector unit length. Great to use on
+intermediate results.</p>
+
+<p><strong>This modifies the vector. If in doubt, use
+<a href="#hump.vectornormalized"><code class="lua">vector:normalized()</code></a>.</strong></p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>vector</dt>
+<dd>Itself - the normalized vector</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">normal = (b - a):perpendicular():normalize_inplace()
+</code></pre>
+</div></div><div class="ref-block" id="hump.vectorvector:rotated"><h4>function <span class="name">vector:rotated</span><span class="arglist">(angle)</span><a class="top" href="#hump.vector">^top</a></h4><p>Get a rotated vector.</p>
+
+<p>This does not change the input vector, but creates a new vector.</p>
+<div class="arguments">Parameters:<dl>
+<dt>number <code class="lua">angle</code></dt>
+<dd>Rotation angle in radians.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>vector</dt>
+<dd>The rotated vector</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">-- approximate a circle
 circle = {}
 for i = 1,30 do
     local phi = 2 * math.pi * i / 30
     circle[#circle+1] = vector(0,1):rotated(phi)
-end</code></pre></div><div class="example">Sketch:<img src="vector-rotated.png" width="260" height="171" /></div></div><a name="vector-vector:rotate_inplace" id="vector-vector:rotate_inplace"></a><div class="ref-block"><h4>function <span class="name">vector:rotate_inplace</span><span class="arglist">(phi)</span><a class="top" href="#vector">^ top</a></h4><p>Rotate a vector in-place. Great to use on intermediate results.</p><p><span class="warning">This modifies the vector. If in doubt, use <code class="lua">vector:rotate()</code></span></p><div class="arguments">Parameters:<dl><dt>number <code>phi</code></dt><dd>Rotation angle in <a href="http://en.wikipedia.org/wiki/Radians">radians</a>.</dd></dl></div><div class="returns">Returns:<dl><dt>vector</dt><dd>Itself - the rotated vector</dd></dl></div><div class="example">Example:<pre><code class="lua">-- ongoing rotation
-spawner.direction:rotate_inplace(dt)</code></pre></div></div><a name="vector-vector:perpendicular" id="vector-vector:perpendicular"></a><div class="ref-block"><h4>function <span class="name">vector:perpendicular</span><span class="arglist">()</span><a class="top" href="#vector">^ top</a></h4><p>Quick rotation by 90&deg;. Creates a new vector. The same (but faster) as 	<code class="lua">vec:rotate(math.pi/2)</code></p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>vector</dt><dd>A vector perpendicular to the input vector</dd></dl></div><div class="example">Example:<pre><code class="lua">normal = (b - a):perpendicular():normalize_inplace()</code></pre></div><div class="example">Sketch:<img src="vector-perpendicular.png" width="267" height="202" /></div></div><a name="vector-vector:projectOn" id="vector-vector:projectOn"></a><div class="ref-block"><h4>function <span class="name">vector:projectOn</span><span class="arglist">(v)</span><a class="top" href="#vector">^ top</a></h4><p>Project vector onto another vector (see sketch).</p><div class="arguments">Parameters:<dl><dt>vector <code>v</code></dt><dd>The vector to project on.</dd></dl></div><div class="returns">Returns:<dl><dt>vector</dt><dd>The projected vector.</dd></dl></div><div class="example">Example:<pre><code class="lua">velocity_component = velocity:projectOn(axis)</code></pre></div><div class="example">Sketch:<img src="vector-projectOn.png" width="605" height="178" /></div></div><a name="vector-vector:mirrorOn" id="vector-vector:mirrorOn"></a><div class="ref-block"><h4>function <span class="name">vector:mirrorOn</span><span class="arglist">(v)</span><a class="top" href="#vector">^ top</a></h4><p>Mirrors vector on the axis defined by the other vector.</p><div class="arguments">Parameters:<dl><dt>vector <code>v</code></dt><dd>The vector to mirror on.</dd></dl></div><div class="returns">Returns:<dl><dt>vector</dt><dd>The mirrored vector.</dd></dl></div><div class="example">Example:<pre><code class="lua">deflected_velocity = ball.velocity:mirrorOn(surface_normal)</code></pre></div><div class="example">Sketch:<img src="vector-mirrorOn.png" width="334" height="201" /></div></div><a name="vector-vector:cross" id="vector-vector:cross"></a><div class="ref-block"><h4>function <span class="name">vector:cross</span><span class="arglist">(other)</span><a class="top" href="#vector">^ top</a></h4><p>Get cross product of both vectors. Equals the area of the parallelogram 	spanned by both vectors.</p><div class="arguments">Parameters:<dl><dt>vector <code>other</code></dt><dd>Vector to compute the cross product with.</dd></dl></div><div class="returns">Returns:<dl><dt>number</dt><dd>Cross product of both vectors.</dd></dl></div><div class="example">Example:<pre><code class="lua">parallelogram_area = a:cross(b)</code></pre></div><div class="example">Sketch:<img src="vector-cross.png" width="271" height="137" /></div></div></div><a name="vector-light" id="vector-light"></a><div class="outer-block"><h3>hump.vector-light<a class="top" href="#top">^ top</a></h3><div class="preamble"><pre><code class="lua">vector = require "hump.vector-light"</code></pre><p>An table-free version of <code class="lua">hump.vector</code>. Instead of a vector class, <code class="lua">hump.vector-light</code> provides functions that operate on numbers.</p><p>Using this module instead of <code class="lua">vector</code> might result in faster code, but does so at the expense of readability. Unless you are sure that it causes a significant performance penalty, I recommend to use <code class="lua">hump.vector</code>.</p></div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#vector-light-str">str()</a></dt><dd>String representation.</dd><dt><a href="#vector-light-mul">mul()</a></dt><dd>Product of a vector and a scalar.</dd><dt><a href="#vector-light-div">div()</a></dt><dd>Product of a vector and the inverse of a scalar.</dd><dt><a href="#vector-light-add">add()</a></dt><dd>Sum of two vectors.</dd><dt><a href="#vector-light-sub">sub()</a></dt><dd>Difference of two vectors.</dd><dt><a href="#vector-light-permul">permul()</a></dt><dd>Per element multiplication.</dd><dt><a href="#vector-light-dot">dot()</a></dt><dd>[^http://en.wikipedia.org/wiki/Dot_product Dot product]</dd><dt><a href="#vector-light-det">det()</a></dt><dd>Cross product</dd><dt><a href="#vector-light-cross">cross()</a></dt><dd>Cross product</dd><dt><a href="#vector-light-eq">eq()</a></dt><dd>Equality.</dd><dt><a href="#vector-light-le">le()</a></dt><dd>Partial lexical order.</dd><dt><a href="#vector-light-lt">lt()</a></dt><dd>Strict lexical order.</dd><dt><a href="#vector-light-len">len()</a></dt><dd>Get length.</dd><dt><a href="#vector-light-len2">len2()</a></dt><dd>Get squared length.</dd><dt><a href="#vector-light-dist">dist()</a></dt><dd>Distance of two points.</dd><dt><a href="#vector-light-normalize">normalize()</a></dt><dd>Normalize vector.</dd><dt><a href="#vector-light-rotate">rotate()</a></dt><dd>Rotate vector.</dd><dt><a href="#vector-light-perpendicular">perpendicular()</a></dt><dd>Get perpendicular vector.</dd><dt><a href="#vector-light-project">project()</a></dt><dd>Project projection onto another vector.</dd><dt><a href="#vector-light-mirror">mirror()</a></dt><dd>Mirrors vector on other vector.</dd></dl></div><a name="vector-light-str" id="vector-light-str"></a><div class="ref-block"><h4>function <span class="name">str</span><span class="arglist">(x,y)</span><a class="top" href="#vector-light">^ top</a></h4><p>Transforms a vector to a string of the form <code class="lua">(x,y)</code>.</p><div class="arguments">Parameters:<dl><dt>numbers <code>x,y</code></dt><dd>The vector</dd></dl></div><div class="returns">Returns:<dl><dt>string</dt><dd>The string representation</dd></dl></div><div class="example">Example:<pre><code class="lua">print(vector.str(love.mouse.getPosition()))</code></pre></div></div><a name="vector-light-mul" id="vector-light-mul"></a><a name="vector-light-div" id="vector-light-div"></a><div class="ref-block"><h4>function <span class="name">mul</span><span class="arglist">(s, x,y)</span><a class="top" href="#vector-light">^ top</a></h4><h4>function <span class="name">div</span><span class="arglist">(s, x,y)</span><a class="top" href="#vector-light">^ top</a></h4><p>Computes <code class="lua">x*s,y*s</code> and <code class="lua">x/s,y/s</code> respectively. The order of arguments is chosen so that it's possible to chain multiple operations (see example).</p><div class="arguments">Parameters:<dl><dt>number <code>s</code></dt><dd>The scalar.</dd><dt>numbers <code>x,y</code></dt><dd>The vector.</dd></dl></div><div class="returns">Returns:<dl><dt>numbers</dt><dd>The result of the operation.</dd></dl></div><div class="example">Example:<pre><code class="lua">velx,vely = vec.mul(dt, vec.add(velx,vely, accx,accy))</code></pre><pre><code class="lua">x,y = vec.div(self.zoom, x-w/2, y-h/2)</code></pre></div></div><a name="vector-light-add" id="vector-light-add"></a><a name="vector-light-sub" id="vector-light-sub"></a><div class="ref-block"><h4>function <span class="name">add</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#vector-light">^ top</a></h4><h4>function <span class="name">sub</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#vector-light">^ top</a></h4><p>Computes the sum/difference of vectors. Same as <code class="lua">x1+x2,y1+y2</code> and <code class="lua">x1-x2,y1-y2</code> respectively. Meant to be used in conjunction with other functions.</p><div class="arguments">Parameters:<dl><dt>numbers <code>x1,y1</code></dt><dd>First vector.</dd><dt>numbers <code>x2,y2</code></dt><dd>Second vector.</dd></dl></div><div class="returns">Returns:<dl><dt>numbers</dt><dd>The result of the operation.</dd></dl></div><div class="example">Example:<pre><code class="lua">player.x,player.y = vector.add(player.x,player.y, vector.mul(dt, dx,dy))</code></pre><pre><code class="lua">dx,dy = vector.sub(400,300, love.mouse.getPosition())</code></pre></div></div><a name="vector-light-permul" id="vector-light-permul"></a><div class="ref-block"><h4>function <span class="name">permul</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#vector-light">^ top</a></h4><p>Multiplies vectors coordinate wise, i.e. <code class="lua">x1*x2,y1*y2</code>.</p><div class="arguments">Parameters:<dl><dt>numbers <code>x1,y1</code></dt><dd>First vector.</dd><dt>numbers <code>x2,y2</code></dt><dd>Second vector.</dd></dl></div><div class="returns">Returns:<dl><dt>numbers</dt><dd>The result of the operation.</dd></dl></div><div class="example">Example:<pre><code class="lua">x,y = vector.permul(x,y, 1,1.5)</code></pre></div></div><a name="vector-light-dot" id="vector-light-dot"></a><div class="ref-block"><h4>function <span class="name">dot</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#vector-light">^ top</a></h4><p>Computes the <a href="http://en.wikipedia.org/wiki/Dot_product">dot product</a> of two vectors, <code class="lua">x1*x2+y1*y2</code>.</p><div class="arguments">Parameters:<dl><dt>numbers <code>x1,y1</code></dt><dd>First vector.</dd><dt>numbers <code>x2,y2</code></dt><dd>Second vector.</dd></dl></div><div class="returns">Returns:<dl><dt>number</dt><dd>The dot product.</dd></dl></div><div class="example">Example:<pre><code class="lua">cosphi = vector.dot(rx,ry, vx,vy)</code></pre></div></div><a name="vector-light-det" id="vector-light-det"></a><a name="vector-light-cross" id="vector-light-cross"></a><div class="ref-block"><h4>function <span class="name">det</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#vector-light">^ top</a></h4><h4>function <span class="name">cross</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#vector-light">^ top</a></h4><p>Computes the cross product/determinant of two vectors, <code class="lua">x1*y2-y1*x2</code>.</p><div class="arguments">Parameters:<dl><dt>numbers <code>x1,y1</code></dt><dd>First vector.</dd><dt>numbers <code>x2,y2</code></dt><dd>Second vector.</dd></dl></div><div class="returns">Returns:<dl><dt>number</dt><dd>The cross product.</dd></dl></div><div class="example">Example:<pre><code class="lua">parallelogram_area = vector.det(ax,ay, bx,by)</code></pre></div></div><a name="vector-light-eq" id="vector-light-eq"></a><a name="vector-light-le" id="vector-light-le"></a><a name="vector-light-lt" id="vector-light-lt"></a><div class="ref-block"><h4>function <span class="name">eq</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#vector-light">^ top</a></h4><h4>function <span class="name">le</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#vector-light">^ top</a></h4><h4>function <span class="name">lt</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#vector-light">^ top</a></h4><p>Compares two vectors according to <dl><dt><code class="lua">vector.eq(x1,y1, x2,y2)</code></dt><dd><code class="lua">x1 == x2 and y1 == y2</code></dd><dt><code class="lua">vector.le(x1,y1, x2,y2)</code></dt><dd><code class="lua">x1 <= x2 and y1 <= y2</code></dd><dt><code class="lua">vector.lt(x1,y1, x2,y2)</code></dt><dd><code class="lua">x1 < x2 or (x1 == x2) and y1 <= y2</code></dd></dl> 	</p><div class="arguments">Parameters:<dl><dt>numbers <code>x1,y1</code></dt><dd>First vector.</dd><dt>numbers <code>x2,y2</code></dt><dd>Second vector.</dd></dl></div><div class="returns">Returns:<dl><dt>boolean</dt><dd>The result of the operation.</dd></dl></div><div class="example">Example:<pre><code class="lua">...</code></pre></div></div><a name="vector-light-len" id="vector-light-len"></a><div class="ref-block"><h4>function <span class="name">len</span><span class="arglist">(x,y)</span><a class="top" href="#vector-light">^ top</a></h4><p>Get length of a vector, i.e. <code class="lua">math.sqrt(x*x + y*y)</code>.</p><div class="arguments">Parameters:<dl><dt>numbers <code>x,y</code></dt><dd>The vector.</dd></dl></div><div class="returns">Returns:<dl><dt>number</dt><dd>Length of the vector.</dd></dl></div><div class="example">Example:<pre><code class="lua">distance = vector.len(love.mouse.getPosition())</code></pre></div></div><a name="vector-light-len2" id="vector-light-len2"></a><div class="ref-block"><h4>function <span class="name">len2</span><span class="arglist">(x,y)</span><a class="top" href="#vector-light">^ top</a></h4><p>Get squared length of a vector, i.e. <code class="lua">x*x + y*y</code>.</p><div class="arguments">Parameters:<dl><dt>numbers <code>x,y</code></dt><dd>The vector.</dd></dl></div><div class="returns">Returns:<dl><dt>number</dt><dd>Squared length of the vector.</dd></dl></div><div class="example">Example:<pre><code class="lua">-- get closest vertex to a given vector
+end
+</code></pre>
+</div><div class="example">Sketch:<p><img src="vector-rotated.png" alt="Rotated vector sketch" /></p>
+</div></div><div class="ref-block" id="hump.vectorvector:rotate_inplace"><h4>function <span class="name">vector:rotate_inplace</span><span class="arglist">(angle)</span><a class="top" href="#hump.vector">^top</a></h4><p>Rotate a vector in-place. Great to use on intermediate results.</p>
+
+<p><strong>This modifies the vector. If in doubt, use
+<a href="#hump.vectorrotate"><code class="lua">vector:rotate()</code></a>.</strong></p>
+<div class="arguments">Parameters:<dl>
+<dt>number <code class="lua">angle</code></dt>
+<dd>Rotation angle in radians.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>vector</dt>
+<dd>Itself - the rotated vector</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">-- ongoing rotation
+spawner.direction:rotate_inplace(dt)
+</code></pre>
+</div></div><div class="ref-block" id="hump.vectorvector:perpendicular"><h4>function <span class="name">vector:perpendicular</span><span class="arglist">()</span><a class="top" href="#hump.vector">^top</a></h4><p>Quick rotation by 90°. Creates a new vector. The same (but faster) as
+<code class="lua">vec:rotate(math.pi/2)</code>.</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>vector</dt>
+<dd>A vector perpendicular to the input vector</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">normal = (b - a):perpendicular():normalize_inplace()
+</code></pre>
+</div><div class="example">Sketch:<p><img src="vector-perpendicular.png" alt="Perpendiculat vector sketch" /></p>
+</div></div><div class="ref-block" id="hump.vectorvector:projectOn"><h4>function <span class="name">vector:projectOn</span><span class="arglist">(v)</span><a class="top" href="#hump.vector">^top</a></h4><p>Project vector onto another vector (see sketch).</p>
+<div class="arguments">Parameters:<dl>
+<dt>vector <code class="lua">v</code></dt>
+<dd>The vector to project on.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>vector</dt>
+<dd>The projected vector.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">velocity_component = velocity:projectOn(axis)
+</code></pre>
+</div><div class="example">Sketch:<p><img src="vector-projectOn.png" alt="Projected vector sketch" /></p>
+</div></div><div class="ref-block" id="hump.vectorvector:mirrorOn"><h4>function <span class="name">vector:mirrorOn</span><span class="arglist">(v)</span><a class="top" href="#hump.vector">^top</a></h4><p>Mirrors vector on the axis defined by the other vector.</p>
+<div class="arguments">Parameters:<dl>
+<dt>vector <code class="lua">v</code></dt>
+<dd>The vector to mirror on.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>vector</dt>
+<dd>The mirrored vector.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">deflected_velocity = ball.velocity:mirrorOn(surface_normal)
+</code></pre>
+</div><div class="example">Sketch:<p><img src="vector-mirrorOn.png" alt="Mirrored vector sketch" /></p>
+</div></div><div class="ref-block" id="hump.vectorvector:cross"><h4>function <span class="name">vector:cross</span><span class="arglist">(other)</span><a class="top" href="#hump.vector">^top</a></h4><p>Get cross product of both vectors. Equals the area of the parallelogram spanned
+by both vectors.</p>
+<div class="arguments">Parameters:<dl>
+<dt>vector <code class="lua">other</code></dt>
+<dd>Vector to compute the cross product with.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>number</dt>
+<dd>Cross product of both vectors.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">parallelogram_area = a:cross(b)
+</code></pre>
+</div></div></div><div class="outer-block" id="hump.vector-light"><h3>hump.vector-light<a class="top" href="#top">^top</a></h3><div class="preamble"><pre><code class="lua">vector = require "hump.vector-light"
+</code></pre>
+
+<p>An table-free version of <a href="#hump.vector"><code class="lua">hump.vector</code></a>. Instead of a vector
+type, <code class="lua">hump.vector-light</code> provides functions that operate on numbers.</p>
+
+<p><strong>Note:</strong> Using this module instead of <a href="#hump.vector"><code class="lua">hump.vector</code></a> might
+result in faster code, but does so at the expense of readability. Unless you
+are sure that it causes a significant performance penalty, I recommend using
+<a href="#hump.vector"><code class="lua">hump.vector</code></a>.</p>
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.vector-lightstr">str()</a></dt><dd>String representation.</dd><dt><a href="#hump.vector-lightmul">mul()</a></dt><dd>Product of a vector and a scalar.</dd><dt><a href="#hump.vector-lightmul">mul()</a></dt><dd>Product of a vector and the inverse of a scalar.</dd><dt><a href="#hump.vector-lightadd">add()</a></dt><dd>Sum of two vectors.</dd><dt><a href="#hump.vector-lightsub">sub()</a></dt><dd>Difference of two vectors.</dd><dt><a href="#hump.vector-lightpermul">permul()</a></dt><dd>Per element multiplication.</dd><dt><a href="#hump.vector-lightdot">dot()</a></dt><dd>Dot product.</dd><dt><a href="#hump.vector-lightcross">cross()</a></dt><dd>Cross product.</dd><dt><a href="#hump.vector-lighteq">eq()</a></dt><dd>Equality.</dd><dt><a href="#hump.vector-lightle">le()</a></dt><dd>Partial lexical order.</dd><dt><a href="#hump.vector-lightlt">lt()</a></dt><dd>Strict lexical order.</dd><dt><a href="#hump.vector-lightlen">len()</a></dt><dd>Get length.</dd><dt><a href="#hump.vector-lightlen2">len2()</a></dt><dd>Get squared length.</dd><dt><a href="#hump.vector-lightdist">dist()</a></dt><dd>Distance of two points.</dd><dt><a href="#hump.vector-lightnormalize">normalize()</a></dt><dd>Normalize vector.</dd><dt><a href="#hump.vector-lightrotate">rotate()</a></dt><dd>Rotate vector.</dd><dt><a href="#hump.vector-lightperpendicular">perpendicular()</a></dt><dd>Get perpendicular vector.</dd><dt><a href="#hump.vector-lightproject">project()</a></dt><dd>Project vector onto another vector.</dd><dt><a href="#hump.vector-lightmirror">mirror()</a></dt><dd>Mirror vector on other vector.</dd></dl></div><div class="ref-block" id="hump.vector-lightstr"><h4>function <span class="name">str</span><span class="arglist">(x,y)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Transforms a vector to a string of the form <code class="lua">(x,y)</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x,y</code></dt>
+<dd>The vector</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>string</dt>
+<dd>The string representation</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">print(vector.str(love.mouse.getPosition()))
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightmul"><h4>function <span class="name">mul</span><span class="arglist">(s, x,y)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Computes <code class="lua">x*s,y*s</code>. The order of arguments is chosen so that it's possible to
+chain multiple operations (see example).</p>
+<div class="arguments">Parameters:<dl>
+<dt>number <code class="lua">s</code></dt>
+<dd>The scalar.</dd><dt>numbers <code class="lua">x,y</code></dt>
+<dd>The vector.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>numbers</dt>
+<dd><code class="lua">x*s, y*s</code></dd></dl>
+</div><div class="example">Example:<pre><code class="lua">velx,vely = vec.mul(dt, vec.add(velx,vely, accx,accy))
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightmul"><h4>function <span class="name">mul</span><span class="arglist">(s, x,y)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Computes <code class="lua">x/s,y/s</code>. The order of arguments is chosen so that it's possible to
+chain multiple operations.</p>
+<div class="arguments">Parameters:<dl>
+<dt>number <code class="lua">s</code></dt>
+<dd>The scalar.</dd><dt>numbers <code class="lua">x,y</code></dt>
+<dd>The vector.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>numbers</dt>
+<dd><code class="lua">x/s, y/s</code></dd></dl>
+</div><div class="example">Example:<pre><code class="lua">x,y = vec.div(self.zoom, x-w/2, y-h/2)
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightadd"><h4>function <span class="name">add</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Computes the sum (<code class="lua">x1+x2,y1+y2</code>) of two vectors. Meant to be used in
+conjunction with other functions.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x1,y1</code></dt>
+<dd>First vector.</dd><dt>numbers <code class="lua">x2,y2</code></dt>
+<dd>Second vector.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>numbers</dt>
+<dd><code class="lua">x1+x2, x1+x2</code></dd></dl>
+</div><div class="example">Example:<pre><code class="lua">player.x,player.y = vector.add(player.x,player.y, vector.mul(dt, dx,dy))
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightsub"><h4>function <span class="name">sub</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Computes the difference (<code class="lua">x1-x2,y1-y2</code>) of two vectors. Meant to be used in
+conjunction with other functions.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x1,y1</code></dt>
+<dd>First vector.</dd><dt>numbers <code class="lua">x2,y2</code></dt>
+<dd>Second vector.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>numbers</dt>
+<dd><code class="lua">x1-x2, x1-x2</code></dd></dl>
+</div><div class="example">Example:<pre><code class="lua">dx,dy = vector.sub(400,300, love.mouse.getPosition())
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightpermul"><h4>function <span class="name">permul</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Multiplies vectors coordinates, i.e.: <code class="lua">x1*x2, y1*y2</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x1,y1</code></dt>
+<dd>First vector.</dd><dt>numbers <code class="lua">x2,y2</code></dt>
+<dd>Second vector.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>numbers</dt>
+<dd><code class="lua">x1*x2, y1*y2</code></dd></dl>
+</div><div class="example">Example:<pre><code class="lua">x,y = vector.permul(x,y, 1,1.5)
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightdot"><h4>function <span class="name">dot</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Computes the <a href="http://en.wikipedia.org/wiki/Dot_product">dot product</a> of two
+vectors: <code class="lua">x1*x2 + y1*y2</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x1,y1</code></dt>
+<dd>First vector.</dd><dt>numbers <code class="lua">x2,y2</code></dt>
+<dd>Second vector.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>number</dt>
+<dd><code class="lua">x1*x2 + y1*y2</code></dd></dl>
+</div><div class="example">Example:<pre><code class="lua">cosphi = vector.dot(rx,ry, vx,vy)
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightcross"><h4>function <span class="name">cross</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Computes the <a href="http://en.wikipedia.org/wiki/Cross_product">cross product</a> of two
+vectors, <code class="lua">x1*y2 - y1*x2</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x1,y1</code></dt>
+<dd>First vector.</dd><dt>numbers <code class="lua">x2,y2</code></dt>
+<dd>Second vector.</dd></dl>
+<dl>
+<dt>numbers <code class="lua">x1,y1</code></dt>
+<dd>First vector.</dd><dt>numbers <code class="lua">x2,y2</code></dt>
+<dd>Second vector.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>number</dt>
+<dd><code class="lua">x1*y2 - y1*x2</code></dd></dl>
+<dl>
+<dt>number</dt>
+<dd><code class="lua">x1*y2 - y1*x2</code></dd></dl>
+</div><div class="example">Examples:<pre><code class="lua">parallelogram_area = vector.cross(ax,ay, bx,by)
+</code></pre>
+
+<p>Alias to [<code class="lua">vector.cross(x1,y1, x2,y2)</code>].</p>
+<pre><code class="lua">parallelogram_area = vector.det(ax,ay, bx,by)
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lighteq"><h4>function <span class="name">eq</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Test for equality.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x1,y1</code></dt>
+<dd>First vector.</dd><dt>numbers <code class="lua">x2,y2</code></dt>
+<dd>Second vector.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>boolean</dt>
+<dd><code class="lua">x1 == x2 and y1 == y2</code></dd></dl>
+</div><div class="example">Example:<pre><code class="lua">if vector.eq(x1,y1, x2,y2) then be.happy() end
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightle"><h4>function <span class="name">le</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Test for partial lexical order, <code class="lua">&lt;=</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x1,y1</code></dt>
+<dd>First vector.</dd><dt>numbers <code class="lua">x2,y2</code></dt>
+<dd>Second vector.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>boolean</dt>
+<dd><code class="lua">x1 &lt;= x2 and y1 &lt;= y2</code></dd></dl>
+</div><div class="example">Example:<pre><code class="lua">if vector.le(x1,y1, x2,y2) then be.happy() end
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightlt"><h4>function <span class="name">lt</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Test for strict lexical order, <code class="lua">&lt;</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x1,y1</code></dt>
+<dd>First vector.</dd><dt>numbers <code class="lua">x2,y2</code></dt>
+<dd>Second vector.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>boolean</dt>
+<dd><code class="lua">x1 &lt; x2 or (x1 == x2) and y1 &lt;= y2</code></dd></dl>
+</div><div class="example">Example:<pre><code class="lua">if vector.lt(x1,y1, x2,y2) then be.happy() end
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightlen"><h4>function <span class="name">len</span><span class="arglist">(x,y)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Get length of a vector, i.e. <code class="lua">math.sqrt(x*x + y*y)</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x,y</code></dt>
+<dd>The vector.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>number</dt>
+<dd>Length of the vector.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">distance = vector.len(love.mouse.getPosition())
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightlen2"><h4>function <span class="name">len2</span><span class="arglist">(x,y)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Get squared length of a vector, i.e. <code class="lua">x*x + y*y</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x,y</code></dt>
+<dd>The vector.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>number</dt>
+<dd>Squared length of the vector.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">-- get closest vertex to a given vector
 closest, dsq = vertices[1], vector.len2(px-vertices[1].x, py-vertices[1].y)
 for i = 2,#vertices do
     local temp = vector.len2(px-vertices[i].x, py-vertices[i].y)
-    if temp < dsq then
+    if temp &lt; dsq then
         closest, dsq = vertices[i], temp
     end
-end</code></pre></div></div><a name="vector-light-dist" id="vector-light-dist"></a><div class="ref-block"><h4>function <span class="name">dist</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#vector-light">^ top</a></h4><p>Get distance of two points. The same as <code class="lua">vector.len(x1-x2, y1-y2)</code>.</p><div class="arguments">Parameters:<dl><dt>numbers <code>x1,y1</code></dt><dd>First vector.</dd><dt>numbers <code>x2,y2</code></dt><dd>Second vector.</dd></dl></div><div class="returns">Returns:<dl><dt>number</dt><dd>The distance of the points.</dd></dl></div><div class="example">Example:<pre><code class="lua">-- get closest vertex to a given vector
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightdist"><h4>function <span class="name">dist</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Get distance of two points. The same as <code class="lua">vector.len(x1-x2, y1-y2)</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x1,y1</code></dt>
+<dd>First vector.</dd><dt>numbers <code class="lua">x2,y2</code></dt>
+<dd>Second vector.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>number</dt>
+<dd>The distance of the points.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">-- get closest vertex to a given vector
 -- slightly slower than the example using len2()
 closest, dist = vertices[1], vector.dist(px,py, vertices[1].x,vertices[1].y)
 for i = 2,#vertices do
     local temp = vector.dist(px,py, vertices[i].x,vertices[i].y)
-    if temp < dist then
+    if temp &lt; dist then
         closest, dist = vertices[i], temp
     end
-end</code></pre></div></div><a name="vector-light-normalize" id="vector-light-normalize"></a><div class="ref-block"><h4>function <span class="name">normalize</span><span class="arglist">(x,y)</span><a class="top" href="#vector-light">^ top</a></h4><p>Get normalized vector, i.e. a vector with the same direction as the input 	vector, but with length 1.</p><div class="arguments">Parameters:<dl><dt>numbers <code>x,y</code></dt><dd>The vector.</dd></dl></div><div class="returns">Returns:<dl><dt>numbers</dt><dd>Vector with same direction as the input vector, but length 1.</dd></dl></div><div class="example">Example:<pre><code class="lua">dx,dy = vector.normalize(vx,vy)</code></pre></div></div><a name="vector-light-rotate" id="vector-light-rotate"></a><div class="ref-block"><h4>function <span class="name">rotate</span><span class="arglist">(phi, x,y)</span><a class="top" href="#vector-light">^ top</a></h4><p>Get a rotated vector.</p><div class="arguments">Parameters:<dl><dt>number <code>phi</code></dt><dd>Rotation angle in <a href="http://en.wikipedia.org/wiki/Radians">radians</a>.</dd><dt>numbers <code>x,y</code></dt><dd>The vector.</dd></dl></div><div class="returns">Returns:<dl><dt>numbers</dt><dd>The rotated vector</dd></dl></div><div class="example">Example:<pre><code class="lua">-- approximate a circle
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightnormalize"><h4>function <span class="name">normalize</span><span class="arglist">(x,y)</span><a class="top" href="#hump.vector-light">^top</a></h4><pre><code class="lua">Get normalized vector, i.e. a vector with the same direction as the input
+vector, but with length 1.
+</code></pre>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x,y</code></dt>
+<dd>The vector.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>numbers</dt>
+<dd>Vector with same direction as the input vector, but length 1.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">dx,dy = vector.normalize(vx,vy)
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightrotate"><h4>function <span class="name">rotate</span><span class="arglist">(phi, x,y)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Get a rotated vector.</p>
+<div class="arguments">Parameters:<dl>
+<dt>number <code class="lua">phi</code></dt>
+<dd>Rotation angle in radians.</dd><dt>numbers <code class="lua">x,y</code></dt>
+<dd>The vector.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>numbers</dt>
+<dd>The rotated vector</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">-- approximate a circle
 circle = {}
 for i = 1,30 do
     local phi = 2 * math.pi * i / 30
     circle[i*2-1], circle[i*2] = vector.rotate(phi, 0,1)
-end</code></pre></div></div><a name="vector-light-perpendicular" id="vector-light-perpendicular"></a><div class="ref-block"><h4>function <span class="name">perpendicular</span><span class="arglist">(x,y)</span><a class="top" href="#vector-light">^ top</a></h4><p>Quick rotation by 90&deg;. The same (but faster) as <code class="lua">vector.rotate(math.pi/2, x,y)</code></p><div class="arguments">Parameters:<dl><dt>numbers <code>x,y</code></dt><dd>The vector.</dd></dl></div><div class="returns">Returns:<dl><dt>numbers</dt><dd>A vector perpendicular to the input vector</dd></dl></div><div class="example">Example:<pre><code class="lua">nx,ny = vector.normalize(vector.perpendicular(bx-ax, by-ay))</code></pre></div></div><a name="vector-light-project" id="vector-light-project"></a><div class="ref-block"><h4>function <span class="name">project</span><span class="arglist">(x,y, u,v)</span><a class="top" href="#vector-light">^ top</a></h4><p>Project vector onto another vector.</p><div class="arguments">Parameters:<dl><dt>numbers <code>x,y</code></dt><dd>The vector to project.</dd><dt>numbers <code>u,v</code></dt><dd>The vector to project onto.</dd></dl></div><div class="returns">Returns:<dl><dt>numbers</dt><dd>The projected vector.</dd></dl></div><div class="example">Example:<pre><code class="lua">vx_p,vy_p = vector.project(vx,vy, ax,ay)</code></pre></div></div><a name="vector-light-mirror" id="vector-light-mirror"></a><div class="ref-block"><h4>function <span class="name">mirror</span><span class="arglist">(x,y, u,v)</span><a class="top" href="#vector-light">^ top</a></h4><p>Mirrors vector on the axis defined by the other vector.</p><div class="arguments">Parameters:<dl><dt>numbers <code>x,y</code></dt><dd>The vector to mirror.</dd><dt>numbers <code>u,v</code></dt><dd>The vector defining the axis.</dd></dl></div><div class="returns">Returns:<dl><dt>numbers</dt><dd>The mirrored vector.</dd></dl></div><div class="example">Example:<pre><code class="lua">vx,vy = vector.mirror(vx,vy, surface.x,surface.y)</code></pre></div></div></div><a name="Class" id="Class"></a><div class="outer-block"><h3>hump.class<a class="top" href="#top">^ top</a></h3><div class="preamble"><pre><code class="lua">Class = require "hump.class"</code></pre><p>A small, fast class implementation with multiple inheritance support</p></div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#Class-new">new()</a></dt><dd>Declare a new class.</dd><dt><a href="#Class-class.construct">class.construct()</a></dt><dd>Call class constructor.</dd><dt><a href="#Class-class:inherit">class:inherit()</a></dt><dd>Explicit class inheritance/mixin support.</dd><dt><a href="#Class-object:is_a">object:is_a()</a></dt><dd>Test object's type.</dd><dt><a href="#Class-caveats">caveats</a></dt><dd>Caveats</dd></dl></div><a name="Class-new" id="Class-new"></a><div class="ref-block"><h4>function <span class="name">new</span><span class="arglist">{constructor, name = the_name, inherits = super}</span><a class="top" href="#Class">^ top</a></h4><p>Declare a new class.</p><p>The constructor will receive the newly create object as first argument.</p><p>You can check if an object is an instance of a class using <code class="lua">object:is_a()</code>.</p><p>The name of the variable that holds the module can be used as a shortcut to 	<code class="lua">new()</code> (see example).</p><div class="arguments">Parameters:<dl><dt>function <code>constructor</code> (optional)</dt><dd>Class constructor. Can be accessed with <code class="lua">theclass.construct(object, ...)</code></dd><dt>string <code>the_name</code> (optional)</dt><dd>Class name (used only to make the class compliant to <code class="lua">tostring()</code>.</dd><dt>class or table of classes <code>super</code> (optional)</dt><dd>Classes to inherit from. Can either be a single class or a table of classes</dd></dl></div><div class="returns">Returns:<dl><dt>class</dt><dd>The class</dd></dl></div><div class="example">Example:<pre><code class="lua">Class = require 'hump.class' -- `Class' is now a shortcut to new()
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightperpendicular"><h4>function <span class="name">perpendicular</span><span class="arglist">(x,y)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Quick rotation by 90°. The same (but faster) as <code class="lua">vector.rotate(math.pi/2, x,y)</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x,y</code></dt>
+<dd>The vector.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>numbers</dt>
+<dd>A vector perpendicular to the input vector</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">nx,ny = vector.normalize(vector.perpendicular(bx-ax, by-ay))
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightproject"><h4>function <span class="name">project</span><span class="arglist">(x,y, u,v)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Project vector onto another vector.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x,y</code></dt>
+<dd>The vector to project.</dd><dt>numbers <code class="lua">u,v</code></dt>
+<dd>The vector to project onto.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>numbers</dt>
+<dd>The projected vector.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">vx_p,vy_p = vector.project(vx,vy, ax,ay)
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightmirror"><h4>function <span class="name">mirror</span><span class="arglist">(x,y, u,v)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Mirrors vector on the axis defined by the other vector.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x,y</code></dt>
+<dd>The vector to mirror.</dd><dt>numbers <code class="lua">u,v</code></dt>
+<dd>The vector defining the axis.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>numbers</dt>
+<dd>The mirrored vector.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">vx,vy = vector.mirror(vx,vy, surface.x,surface.y)
+</code></pre>
+</div></div></div><div class="outer-block" id="hump.class"><h3>hump.class<a class="top" href="#top">^top</a></h3><div class="preamble"><pre><code class="lua">Class = require "hump.class"
+</code></pre>
+
+<p>A small, fast class implementation with multiple inheritance support.</p>
+
+<p>Implements <a href="https://github.com/bartbes/Class-Commons">class commons</a>.</p>
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.classnew">new()</a></dt><dd>Declare a new class.</dd><dt><a href="#hump.classclass.construct">class.construct()</a></dt><dd>Call class constructor.</dd><dt><a href="#hump.classclass:inherit">class:inherit()</a></dt><dd>Explicit class inheritance/mixin support.</dd><dt><a href="#hump.classobject:is_a">object:is_a()</a></dt><dd>Test object's type.</dd><dt><a href="#hump.classCaveats ">Caveats </a></dt><dd>Common gotchas.</dd></dl></div><div class="ref-block" id="hump.classnew"><h4>function <span class="name">new</span><span class="arglist">{constructor, name = the_name, inherits = super}</span><a class="top" href="#hump.class">^top</a></h4><p>Declare a new class.</p>
+
+<p>The constructor will receive the newly create object as first argument.</p>
+
+<p>You can check if an object is an instance of a class using
+<a href="#hump.classis_a"><code class="lua">object:is_a()</code></a>.</p>
+
+<p>The name of the variable that holds the module can be used as a shortcut to
+<code class="lua">new()</code> (see example).</p>
+<div class="arguments">Parameters:<dl>
+<dt>function <code class="lua">constructor</code> (optional)</dt>
+<dd>Class constructor. Can be accessed with theclass.construct(object, ...)</dd><dt>string <code class="lua">the_name</code> (optional)</dt>
+<dd>Class name (used only to make the class compliant to tostring().</dd><dt>class <code class="lua">or table of classes super</code> (optional)</dt>
+<dd>Classes to inherit from. Can either be a single class or a table of classes</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>class</dt>
+<dd>The class</dd></dl>
+</div><div class="example">Examples:<pre><code class="lua">Class = require 'hump.class' -- `Class' is now a shortcut to new()
 
 -- define unnamed class
 Feline = Class{function(self, size, weight)
     self.size = size
     self.weight = weight
 end}
-print(Feline) -- prints '<unnamed class>
+print(Feline) -- prints '
 
 -- define class method
 function Feline:stats()
@@ -160,7 +815,8 @@ garfield = Feline(.7, 45)
 felix = Feline(.8, 12)
 
 print("Garfield: " .. garfield:stats(), "Felix: " .. felix:stats())
-</code></pre><pre><code class="lua">Class = require 'hump.class'
+</code></pre>
+<pre><code class="lua">Class = require 'hump.class'
 
 -- define class with explicit name 'Feline'
 Feline = Class{name = "Feline", function(self, size, weight)
@@ -169,8 +825,9 @@ Feline = Class{name = "Feline", function(self, size, weight)
 end}
 
 garfield = Feline(.7, 45)
-print(Feline, garfield) -- prints '<unnamed class>	<instance of <unnamed class>>'
-</code></pre><pre><code class="lua">Class = require 'hump.class'
+print(Feline, garfield) -- prints ' &gt;'
+</code></pre>
+<pre><code class="lua">Class = require 'hump.class'
 A = Class{}
 function A:foo()
     print('foo')
@@ -191,7 +848,19 @@ D = Class{inherits = {A,B}}
 instance = D()
 instance:foo() -- prints 'foo'
 instance:bar() -- prints 'bar'
-</code></pre></div></div><a name="Class-class.construct" id="Class-class.construct"></a><div class="ref-block"><h4>function <span class="name">class.construct</span><span class="arglist">(object, ...)</span><a class="top" href="#Class">^ top</a></h4><p>Calls class constructor of a class on an object</p><p>Derived classes use this function their constructors to initialize the 	parent class(es) portions of the object.</p><div class="arguments">Parameters:<dl><dt>Object <code>object</code></dt><dd>The object. Usually <code class="lua">self</code>.</dd><dt>mixed <code>...</code></dt><dd>Arguments to pass to the constructor</dd></dl></div><div class="returns">Returns:<dl><dt>mixed</dt><dd>Whatever the parent class constructor returns</dd></dl></div><div class="example">Example:<pre><code class="lua">Class = require 'hump.class'
+</code></pre>
+</div></div><div class="ref-block" id="hump.classclass.construct"><h4>function <span class="name">class.construct</span><span class="arglist">(object, ...)</span><a class="top" href="#hump.class">^top</a></h4><p>Calls class constructor of a class on an object.</p>
+
+<p>Derived classes use this function their constructors to initialize the parent
+class(es) portions of the object.</p>
+<div class="arguments">Parameters:<dl>
+<dt>Object <code class="lua">object</code></dt>
+<dd>The object. Usually <code class="lua">self</code>.</dd><dt>mixed <code class="lua">...</code></dt>
+<dd>Arguments to pass to the constructor.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>mixed</dt>
+<dd>Whatever the parent class constructor returns.</dd></dl>
+</div><div class="example">Examples:<pre><code class="lua">Class = require 'hump.class'
 
 Shape = Class{function(self, area)
     self.area = area
@@ -215,7 +884,8 @@ function Rectangle:__tostring()
 end
 
 print( Rectangle(2,4) ) -- prints 'width = 2, height = 4, area = 8'
-</code></pre><pre><code class="lua">Menu = Class{function(self)
+</code></pre>
+<pre><code class="lua">Menu = Class{function(self)
     self.entries = {}
 end}
 function Menu:add(title, entry)
@@ -238,7 +908,25 @@ Submenu = Class{inherits = {Menu, Entry}, function(self, title)
     -- redirect self:execute() to self:display()
     Entry.construct(self, title, Menu.display)
 end}
-</code></pre></div></div><a name="Class-class:inherit" id="Class-class:inherit"></a><div class="ref-block"><h4>function <span class="name">class:inherit</span><span class="arglist">(...)</span><a class="top" href="#Class">^ top</a></h4><p>Inherit functions and variables of another class, if they are not already 	defined for the class. This is done by simply copying the functions and 	variables over to the subclass. The Lua rules for copying apply 	(i.e. tables are referenced, functions and primitive types are copied by value).</p><p><span class="warning">Be careful with changing table values in a subclass: This will change the 	value in the parent class too.</span></p><p>If more than one parent class is specified, inherit from all of these, in 	order of occurrence. That means that when two parent classes define the same 	method, the one from the first class will be inherited.</p><p>Note: <code class="lua">class:inherit()</code> doesn't actually care if the arguments supplied are 	hump classes. Just any table will work.</p><div class="arguments">Parameters:<dl><dt>tables <code>...</code></dt><dd>Parent classes to inherit from</dd></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">Class = require 'hump.class'
+</code></pre>
+</div></div><div class="ref-block" id="hump.classclass:inherit"><h4>function <span class="name">class:inherit</span><span class="arglist">(...)</span><a class="top" href="#hump.class">^top</a></h4><p>Inherit functions and variables of another class, if they are not already
+defined for the class. This is done by simply copying the functions and
+variables over to the subclass. The Lua rules for copying apply (i.e. tables
+are referenced, functions and primitive types are copied by value).</p>
+
+<p><strong>Be careful with changing table values in a subclass: This will change the
+value in the parent class too.</strong></p>
+
+<p>If more than one parent class is specified, inherit from all of these, in order
+of occurrence. That means that when two parent classes define the same method,
+the one from the first class will be inherited.</p>
+
+<p><strong>Note:</strong> <code class="lua">class:inherit()</code> doesn't actually care if the arguments supplied are
+hump classes. Just any table will work.</p>
+<div class="arguments">Parameters:<dl>
+<dt>tables <code class="lua">...</code></dt>
+<dd>Parent classes to inherit from</dd></dl>
+</div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">Class = require 'hump.class'
 
 Entity = Class{function(self)
     GameObjects.register(self)
@@ -266,24 +954,37 @@ Spaceship:inherit(Collidable)
 function Spaceship:collision_handler["Spaceship"](other, dx, dy)
     -- ...
 end
-</code></pre></div></div><a name="Class-object:is_a" id="Class-object:is_a"></a><div class="ref-block"><h4>function <span class="name">object:is_a</span><span class="arglist">(cls)</span><a class="top" href="#Class">^ top</a></h4><p>Tests whether an object is an instance of a class.</p><div class="arguments">Parameters:<dl><dt>class <code>cls</code></dt><dd>Class to test. Note: this is the class itself, <em>not</em> the name of the class.</dd></dl></div><div class="returns">Returns:<dl><dt>Boolean</dt><dd><code class="lua">true</code> if the object is an instance of the class, <code class="lua">false</code> otherwise</dd></dl></div><div class="example">Example:<pre><code class="lua">Class = require 'hump.class'
+</code></pre>
+</div></div><div class="ref-block" id="hump.classobject:is_a"><h4>function <span class="name">object:is_a</span><span class="arglist">(cls)</span><a class="top" href="#hump.class">^top</a></h4><p>Tests whether an object is an instance of a class.</p>
+<div class="arguments">Parameters:<dl>
+<dt>class <code class="lua">cls</code></dt>
+<dd>Class to test. <strong>Note:</strong> this is the class itself, not the name of the class.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>boolean</dt>
+<dd><code class="lua">true</code> if the object is an instance of the class, <code class="lua">false</code> otherwise</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">Class = require 'hump.class'
 
 A = Class{}
 B = Class{inherits=A}
 C = Class{inherits=B}
 a, b, c = A(), B(), C()
-print(a:is_a(A), a:is_a(B), a:is_a(C)) --> true   false  false
-print(b:is_a(A), b:is_a(B), b:is_a(C)) --> true   true   false
-print(c:is_a(A), c:is_a(B), c:is_a(C)) --> true   true   true
+print(a:is_a(A), a:is_a(B), a:is_a(C)) --&gt; true   false  false
+print(b:is_a(A), b:is_a(B), b:is_a(C)) --&gt; true   true   false
+print(c:is_a(A), c:is_a(B), c:is_a(C)) --&gt; true   true   true
 
 D = Class{}
 E = Class{inherits={B,D}}
 d, e = D(), E()
-print(d:is_a(A), d:is_a(B), d:is_a(D)) --> false  false  true
-print(e:is_a(A), e:is_a(B), e:is_a(D)) --> true   true   true
-</code></pre></div></div><a name="Class-caveats" id="Class-caveats"></a><div class="section-block"><h4>Caveats<a class="top" href="#Class">^ top</a></h4><p>Be careful when using metamethods like <code class="lua">__add</code> or <code class="lua">__mul</code>: If subclass 	inherits those methods from a superclass, but does not overwrite them, the 	result of the operation may be of the type superclass. Consider the following: 	<pre><code class="lua">Class = require 'hump.class'
+print(d:is_a(A), d:is_a(B), d:is_a(D)) --&gt; false  false  true
+print(e:is_a(A), e:is_a(B), e:is_a(D)) --&gt; true   true   true
+</code></pre>
+</div></div><div class="section-block" id="hump.classCaveats "><h4>Caveats <a class="top" href="#hump.class">^top</a></h4><p>Be careful when using metamethods like <code class="lua">__add</code> or <code class="lua">__mul</code>: If subclass inherits
+those methods from a superclass, but does not overwrite them, the result of the
+operation may be of the type superclass. Consider the following:</p>
 
-A = Class{function(self, x) self.x = x end}
+<p>Class = require 'hump.class'</p>
+
+<pre><code class="lua">A = Class{function(self, x) self.x = x end}
 function A:__add(other) return A(self.x + other.x) end
 function A:show() print("A:", self.x) end
 
@@ -294,7 +995,15 @@ function B:foo() print("foo") end
 one, two = B(1,2), B(3,4)
 result = one + two
 result:show()   -- prints "A:    4"
-result:foo()    -- error: method does not exist</code></pre></p><p>Note that while you can define the <code class="lua">__index</code> metamethod of the class, this 	is not a good idea: It will break the class. To add a custom <code class="lua">__index</code> 	metamethod without breaking the class system, you have to use <code class="lua">rawget()</code>. 	But beware that this won't affect subclasses: 	<pre><code class="lua">Class = require 'hump.class'
+result:foo()    -- error: method does not exist
+</code></pre>
+
+<p>Note that while you can define the <code class="lua">__index</code> metamethod of the class, this is
+not a good idea: It will break the class. To add a custom <code class="lua">__index</code> metamethod
+without breaking the class system, you have to use <code class="lua">rawget()</code>. But beware that
+this won't affect subclasses:</p>
+
+<pre><code class="lua">Class = require 'hump.class'
 
 A = Class{}
 function A:foo() print('bar') end
@@ -305,92 +1014,410 @@ function A:__index(key)
 end
 
 instance = A()
-instance:foo() -- prints foo <newline> bar
+instance:foo() -- prints foo  bar
 
 B = Class{inherits = A}
 instance = B()
-instance:foo() -- prints only foo</code></pre></p></div></div><a name="Signal" id="Signal"></a><div class="outer-block"><h3>hump.signal<a class="top" href="#top">^ top</a></h3><div class="preamble"><pre><code class="lua">Signal = require "hump.signal"</code></pre><p>A simple yet effective implementation of <a href="http://en.wikipedia.org/wiki/Signals_and_slots">Signals and Slots</a>, also known as <a href="http://en.wikipedia.org/wiki/Observer_pattern">Observer pattern</a>: Functions can be dynamically bound to <em>signals</em>. When a signal is <em>emitted</em>, all registered functions will be invoked. Simple as that.</p><p><code class="lua">hump.signal</code> makes things more interesing by allowing to emit all signals that match a <a href="http://www.lua.org/manual/5.1/manual.html#5.4.1">Lua string 
-	pattern</a>.</p></div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#Signal-new">new()</a></dt><dd>Create new signal registry.</dd><dt><a href="#Signal-register">register()</a></dt><dd>Register function with a signal.</dd><dt><a href="#Signal-emit">emit()</a></dt><dd>Call all functions bound to a signal.</dd><dt><a href="#Signal-remove">remove()</a></dt><dd>Remove functions from registry.</dd><dt><a href="#Signal-clear">clear()</a></dt><dd>Clears a signal registry.</dd><dt><a href="#Signal-emit_pattern">emit_pattern()</a></dt><dd>Emits signals matching a pattern.</dd><dt><a href="#Signal-remove_pattern">remove_pattern()</a></dt><dd>Remove functions from signals matching a pattern.</dd><dt><a href="#Signal-clear_pattern">clear_pattern()</a></dt><dd>Clears signal registry matching a pattern.</dd></dl></div><a name="Signal-new" id="Signal-new"></a><div class="ref-block"><h4>function <span class="name">new</span><span class="arglist">()</span><a class="top" href="#Signal">^ top</a></h4><p><span class="warning">If you don't need multiple independent registries, you can use the 	global/default registry (see examples).</span></p><p>Creates a new signal registry that is independent of the default 	registry: It will manage it's own list of signals and does not in any 	way affect the the global registry. Likewise, the global registry does 	not affect the instance.</p><p><span class="warning">Note:</span> Independent registries use the colon-notation (e.g. 	<code class="lua">instance:emit("foo")</code>), while the global registry uses the 	dot-notation (e.g. <code class="lua">Signal.emit("foo")</code>).</p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>Registry</dt><dd>A new signal registry.</dd></dl></div><div class="example">Example:<pre><code class="lua">player.signals = Signals.new()</code></pre></div></div><a name="Signal-register" id="Signal-register"></a><a name="Signal-instance:register" id="Signal-instance:register"></a><div class="ref-block"><h4>function <span class="name">register</span><span class="arglist">(s, f)</span><a class="top" href="#Signal">^ top</a></h4><h4>function <span class="name">instance:register</span><span class="arglist">(s, f)</span><a class="top" href="#Signal">^ top</a></h4><p>Registers a function <code class="lua">f</code> to be called when signal <code class="lua">s</code> is emitted. 	</p><div class="arguments">Parameters:<dl><dt>string <code>s</code></dt><dd>The signal identifier.</dd><dt>function <code>f</code></dt><dd>The function to register.</dd></dl></div><div class="returns">Returns:<dl><dt>function</dt><dd>A function handle to use in <code class="lua">remove</code>.</dd></dl></div><div class="example">Example:<pre><code class="lua">Signal.register('level-complete', function() self.fanfare:play() end)</code></pre><pre><code class="lua">handle = Signal.register('level-load', function(level) level.show_help() end)</code></pre><pre><code class="lua">menu:register('key-left', select_previous_item)</code></pre></div></div><a name="Signal-emit" id="Signal-emit"></a><a name="Signal-instance:emit" id="Signal-instance:emit"></a><div class="ref-block"><h4>function <span class="name">emit</span><span class="arglist">(s, ...)</span><a class="top" href="#Signal">^ top</a></h4><h4>function <span class="name">instance:emit</span><span class="arglist">(s, ...)</span><a class="top" href="#Signal">^ top</a></h4><p>Calls all functions bound to signal <code class="lua">s</code> with the supplied arguments. 	</p><div class="arguments">Parameters:<dl><dt>string <code>s</code></dt><dd>The signal identifier.</dd><dt>mixed <code>...</code> (optional)</dt><dd>Arguments to pass to the bound functions.</dd></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">function love.keypressed(key)
-    if key == 'left' then menu:emit('key-left') end
-end</code></pre><pre><code class="lua">if level.is_finished() then
-    Signal.emit('level-load', level.next_level)
-end</code></pre><pre><code class="lua">function on_collide(dt, a,b, dx,dy)
-    a.signals:emit('collide', b,  dx, dy)
-    b.signals:emit('collide', a, -dx,-dy)
-end</code></pre></div></div><a name="Signal-remove" id="Signal-remove"></a><a name="Signal-instance:remove" id="Signal-instance:remove"></a><div class="ref-block"><h4>function <span class="name">remove</span><span class="arglist">(s, ...)</span><a class="top" href="#Signal">^ top</a></h4><h4>function <span class="name">instance:remove</span><span class="arglist">(s, ...)</span><a class="top" href="#Signal">^ top</a></h4><p>Unbinds (removes) functions from signal <code class="lua">s</code>. 	</p><div class="arguments">Parameters:<dl><dt>string <code>s</code></dt><dd>The signal identifier.</dd><dt>functions <code>...</code></dt><dd>Functions to unbind from the signal.</dd></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">Signal.remove('level-load', handle)</code></pre></div></div><a name="Signal-clear" id="Signal-clear"></a><a name="Signal-instance:clear" id="Signal-instance:clear"></a><div class="ref-block"><h4>function <span class="name">clear</span><span class="arglist">(s)</span><a class="top" href="#Signal">^ top</a></h4><h4>function <span class="name">instance:clear</span><span class="arglist">(s)</span><a class="top" href="#Signal">^ top</a></h4><p>Removes all functions from signal <code class="lua">s</code>. 	</p><div class="arguments">Parameters:<dl><dt>string <code>s</code></dt><dd>The signal identifier.</dd></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">Signal.clear('key-left')</code></pre></div></div><a name="Signal-emit_pattern" id="Signal-emit_pattern"></a><a name="Signal-instance:emit_pattern" id="Signal-instance:emit_pattern"></a><div class="ref-block"><h4>function <span class="name">emit_pattern</span><span class="arglist">(p, ...)</span><a class="top" href="#Signal">^ top</a></h4><h4>function <span class="name">instance:emit_pattern</span><span class="arglist">(p, ...)</span><a class="top" href="#Signal">^ top</a></h4><p>Emits all signals matching a 	<a href="http://www.lua.org/manual/5.1/manual.html#5.4.1">string pattern</a>. 	</p><div class="arguments">Parameters:<dl><dt>string <code>p</code></dt><dd>The signal identifier pattern.</dd><dt>mixed <code>...</code> (optional)</dt><dd>Arguments to pass to the bound functions.</dd></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">Signal.emit_pattern('^update%-.*', dt)</code></pre></div></div><a name="Signal-remove_pattern" id="Signal-remove_pattern"></a><a name="Signal-instance:remove_pattern" id="Signal-instance:remove_pattern"></a><div class="ref-block"><h4>function <span class="name">remove_pattern</span><span class="arglist">(p, ...)</span><a class="top" href="#Signal">^ top</a></h4><h4>function <span class="name">instance:remove_pattern</span><span class="arglist">(p, ...)</span><a class="top" href="#Signal">^ top</a></h4><p>Removes functions from all signals matching a 	<a href="http://www.lua.org/manual/5.1/manual.html#5.4.1">string pattern</a>. 	</p><div class="arguments">Parameters:<dl><dt>string <code>p</code></dt><dd>The signal identifier pattern.</dd><dt>functions <code>...</code></dt><dd>Functions to unbind from the signals.</dd></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">Signal.remove_pattern('key%-.*', play_click_sound)</code></pre></div></div><a name="Signal-clear_pattern" id="Signal-clear_pattern"></a><a name="Signal-instance:clear_pattern" id="Signal-instance:clear_pattern"></a><div class="ref-block"><h4>function <span class="name">clear_pattern</span><span class="arglist">(p)</span><a class="top" href="#Signal">^ top</a></h4><h4>function <span class="name">instance:clear_pattern</span><span class="arglist">(p)</span><a class="top" href="#Signal">^ top</a></h4><p>Removes all functions from all signals matching a 	<a href="http://www.lua.org/manual/5.1/manual.html#5.4.1">string pattern</a>. 	</p><div class="arguments">Parameters:<dl><dt>string <code>p</code></dt><dd>The signal identifier pattern.</dd></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">Signal.clear_pattern('sound%-.*')</code></pre><pre><code class="lua">Signal.clear_pattern('.*') -- clear all signals</code></pre></div></div></div><a name="Camera" id="Camera"></a><div class="outer-block"><h3>hump.camera<a class="top" href="#top">^ top</a></h3><div class="preamble"><pre><code class="lua">Camera = require "hump.camera"</code></pre><p>A camera utility for L&Ouml;VE. A camera can "look" at a position. It can zoom in and out and it can rotate it's view. In the background, this is done by actually moving, scaling and rotating everything in the game world. But don't worry about that.</p></div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#Camera-new">new()</a></dt><dd>Create a new camera.</dd><dt><a href="#Camera-camera:rotate">camera:rotate()</a></dt><dd>Rotate camera.</dd><dt><a href="#Camera-camera:rotation">camera:rotation()</a></dt><dd>Get or set camera rotation.</dd><dt><a href="#Camera-camera:move">camera:move()</a></dt><dd>Move camera.</dd><dt><a href="#Camera-camera:lookAt">camera:lookAt()</a></dt><dd>Move camera to a position.</dd><dt><a href="#Camera-camera:pos">camera:pos()</a></dt><dd>Get camera position..</dd><dt><a href="#Camera-camera:attach">camera:attach()</a></dt><dd>Attach camera.</dd><dt><a href="#Camera-camera:detach">camera:detach()</a></dt><dd>Detach camera.</dd><dt><a href="#Camera-camera:draw">camera:draw()</a></dt><dd>Attach, draw and detach.</dd><dt><a href="#Camera-camera:worldCoords">camera:worldCoords()</a></dt><dd>Convert point to world coordinates.</dd><dt><a href="#Camera-camera:cameraCoords">camera:cameraCoords()</a></dt><dd>Convert point to camera coordinates.</dd><dt><a href="#Camera-camera:mousepos">camera:mousepos()</a></dt><dd>Get mouse position in world coordinates.</dd></dl></div><a name="Camera-new" id="Camera-new"></a><div class="ref-block"><h4>function <span class="name">new</span><span class="arglist">(x,y, zoom, rot)</span><a class="top" href="#Camera">^ top</a></h4><p>Creates a new camera. You can access the camera position using 	<code class="lua">camera.x, camera.y</code>, the zoom using <code class="lua">camera.zoom</code> and the rotation using 	<code class="lua">camera.rot</code>.</p><p>The module variable name can be used at a shortcut to <code class="lua">new()</code>.</p><div class="arguments">Parameters:<dl><dt>numbers <code>x,y</code></dt><dd>Point for the camera to look at.</dd><dt>number <code>zoom</code></dt><dd>Camera zoom.</dd><dt>number <code>rot</code></dt><dd>Camera rotation in radians.</dd></dl></div><div class="returns">Returns:<dl><dt>camera</dt><dd>A new camera.</dd></dl></div><div class="example">Example:<pre><code class="lua">camera = require 'hump.camera'
+instance:foo() -- prints only foo
+</code></pre>
+</div></div><div class="outer-block" id="hump.signal"><h3>hump.signal<a class="top" href="#top">^top</a></h3><div class="preamble"><p>A simple yet effective implementation of <a href="http://en.wikipedia.org/wiki/Signals_and_slots">Signals and
+Slots</a>, also known as <a href="http://en.wikipedia.org/wiki/Observer_pattern">Observer
+pattern</a>: Functions can be
+dynamically bound to signals. When a <em>signal</em> is <em>emitted</em>, all registered
+functions will be invoked. Simple as that.</p>
 
+<p><code class="lua">hump.signal</code> makes things more interesing by allowing to emit all signals that
+match a <a href="http://www.lua.org/manual/5.1/manual.html#5.4.1">Lua string pattern</a>.</p>
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.signalnew">new()</a></dt><dd>Create a new signal registry</dd><dt><a href="#hump.signalregister">register()</a></dt><dd>Register function with signal.</dd><dt><a href="#hump.signalemit">emit()</a></dt><dd>Call all functions bound to a signal.</dd><dt><a href="#hump.signalremove">remove()</a></dt><dd>Remove functions from registry. </dd><dt><a href="#hump.signalclear">clear()</a></dt><dd>Clears a signal registry.</dd><dt><a href="#hump.signalemit_pattern">emit_pattern()</a></dt><dd>Emits signals matching a pattern.</dd><dt><a href="#hump.signalremove_pattern">remove_pattern()</a></dt><dd>Remove functions from signals matching a pattern.</dd><dt><a href="#hump.signalclear_pattern">clear_pattern()</a></dt><dd>Clears signal registry matching a pattern.</dd></dl></div><div class="ref-block" id="hump.signalnew"><h4>function <span class="name">new</span><span class="arglist">()</span><a class="top" href="#hump.signal">^top</a></h4><p><strong>If you don't need multiple independent registries, you can use the
+global/default registry (see examples).</strong></p>
+
+<p>Creates a new signal registry that is independent of the default registry: It
+will manage it's own list of signals and does not in any way affect the the
+global registry. Likewise, the global registry does not affect the instance.</p>
+
+<p><strong>Note:</strong> Independent registries use the colon-notation (e.g.
+<code class="lua">instance:emit("foo")</code>), while the global registry uses the dot-notation (e.g.
+<code class="lua">Signal.emit("foo")</code>).</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>Registry</dt>
+<dd>A new signal registry.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">player.signals = Signals.new()
+</code></pre>
+</div></div><div class="ref-block" id="hump.signalregister"><h4>function <span class="name">register</span><span class="arglist">(s, f)</span><a class="top" href="#hump.signal">^top</a></h4><p>Registers a function <code class="lua">f</code> to be called when signal <code class="lua">s</code> is emitted.</p>
+<div class="arguments">Parameters:<dl>
+<dt>string <code class="lua">s</code></dt>
+<dd>The signal identifier.</dd><dt>function <code class="lua">f</code></dt>
+<dd>The function to register.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>function</dt>
+<dd>A function handle to use in <a href="#hump.signalremove"><code class="lua">remove()</code></a>.</dd></dl>
+</div><div class="example">Examples:<pre><code class="lua">Signal.register('level-complete', function() self.fanfare:play() end)
+</code></pre>
+<pre><code class="lua">handle = Signal.register('level-load', function(level) level.show_help() end)
+</code></pre>
+<pre><code class="lua">menu:register('key-left', select_previous_item)
+</code></pre>
+</div></div><div class="ref-block" id="hump.signalemit"><h4>function <span class="name">emit</span><span class="arglist">(s, ...)</span><a class="top" href="#hump.signal">^top</a></h4><p>Calls all functions bound to signal <code class="lua">s</code> with the supplied arguments.</p>
+<div class="arguments">Parameters:<dl>
+<dt>string <code class="lua">s</code></dt>
+<dd>The signal identifier.</dd><dt>mixed <code class="lua">...</code> (optional)</dt>
+<dd>Arguments to pass to the bound functions.</dd></dl>
+</div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Examples:<pre><code class="lua">function love.keypressed(key)
+    -- using a signal instance
+    if key == 'left' then menu:emit('key-left') end
+end
+</code></pre>
+<pre><code class="lua">if level.is_finished() then
+    -- adding arguments
+    Signal.emit('level-load', level.next_level)
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.signalremove"><h4>function <span class="name">remove</span><span class="arglist">(s, ...)</span><a class="top" href="#hump.signal">^top</a></h4><p>Unbinds (removes) functions from signal <code class="lua">s</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>string <code class="lua">s</code></dt>
+<dd>The signal identifier.</dd><dt>functions <code class="lua">...</code></dt>
+<dd>Functions to unbind from the signal.</dd></dl>
+</div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">Signal.remove('level-load', handle)
+</code></pre>
+</div></div><div class="ref-block" id="hump.signalclear"><h4>function <span class="name">clear</span><span class="arglist">(s)</span><a class="top" href="#hump.signal">^top</a></h4><p>Removes all functions from signal <code class="lua">s</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>string <code class="lua">s</code></dt>
+<dd>The signal identifier.</dd></dl>
+</div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">Signal.clear('key-left')
+</code></pre>
+</div></div><div class="ref-block" id="hump.signalemit_pattern"><h4>function <span class="name">emit_pattern</span><span class="arglist">(p, ...)</span><a class="top" href="#hump.signal">^top</a></h4><p>Emits all signals matching a <a href="http://www.lua.org/manual/5.1/manual.html#5.4.1">string pattern</a>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>string <code class="lua">p</code></dt>
+<dd>The signal identifier pattern.</dd><dt>mixed <code class="lua">...</code> (optional)</dt>
+<dd>Arguments to pass to the bound functions.</dd></dl>
+</div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">Signal.emit_pattern('^update%-.*', dt)
+</code></pre>
+</div></div><div class="ref-block" id="hump.signalremove_pattern"><h4>function <span class="name">remove_pattern</span><span class="arglist">(p, ...)</span><a class="top" href="#hump.signal">^top</a></h4><p>Removes functions from all signals matching a <a href="http://www.lua.org/manual/5.1/manual.html#5.4.1">string pattern</a>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>string <code class="lua">p</code></dt>
+<dd>The signal identifier pattern.</dd><dt>functions <code class="lua">...</code></dt>
+<dd>Functions to unbind from the signals.</dd></dl>
+</div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">Signal.remove_pattern('key%-.*', play_click_sound)
+</code></pre>
+</div></div><div class="ref-block" id="hump.signalclear_pattern"><h4>function <span class="name">clear_pattern</span><span class="arglist">(p)</span><a class="top" href="#hump.signal">^top</a></h4><p>Removes <em>all</em> functions from all signals matching a <a href="http://www.lua.org/manual/5.1/manual.html#5.4.1">string pattern</a>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>string <code class="lua">p</code></dt>
+<dd>The signal identifier pattern.</dd></dl>
+</div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Examples:<pre><code class="lua">Signal.clear_pattern('sound%-.*')
+</code></pre>
+<pre><code class="lua">player.signals:clear_pattern('.*') -- clear all signals
+</code></pre>
+</div></div></div><div class="outer-block" id="hump.camera"><h3>hump.camera<a class="top" href="#top">^top</a></h3><div class="preamble"><pre><code class="lua">Camera = require "hump.camera"
+</code></pre>
+
+<p>A camera utility for LÖVE. A camera can "look" at a position. It can zoom in
+and out and it can rotate it's view. In the background, this is done by
+actually moving, scaling and rotating everything in the game world. But don't
+worry about that.</p>
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.cameranew">new()</a></dt><dd>Create a new camera.</dd><dt><a href="#hump.cameracamera:rotate">camera:rotate()</a></dt><dd>Rotate camera.</dd><dt><a href="#hump.cameracamera:rotation">camera:rotation()</a></dt><dd>Get or set camera rotation.</dd><dt><a href="#hump.cameracamera:move">camera:move()</a></dt><dd>Move camera.</dd><dt><a href="#hump.cameracamera:lookAt">camera:lookAt()</a></dt><dd>Move camera to position.</dd><dt><a href="#hump.cameracamera:pos">camera:pos()</a></dt><dd>Get camera position.</dd><dt><a href="#hump.cameracamera:attach">camera:attach()</a></dt><dd>Attach camera.</dd><dt><a href="#hump.cameracamera:detach">camera:detach()</a></dt><dd>Detach camera.</dd><dt><a href="#hump.cameracamera:draw">camera:draw()</a></dt><dd>Attach, draw, then detach.</dd><dt><a href="#hump.cameracamera:worldCoords">camera:worldCoords()</a></dt><dd>Convert point to world coordinates.</dd><dt><a href="#hump.cameracamera:cameraCoords">camera:cameraCoords()</a></dt><dd>Convert point to camera coordinates.</dd><dt><a href="#hump.cameracamera:mousepos">camera:mousepos()</a></dt><dd>Get mouse position in world coordinates.</dd></dl></div><div class="ref-block" id="hump.cameranew"><h4>function <span class="name">new</span><span class="arglist">(x,y, zoom, rot)</span><a class="top" href="#hump.camera">^top</a></h4><p>Creates a new camera. You can access the camera position using <code class="lua">camera.x,
+camera.y</code>, the zoom using <code class="lua">camera.zoom</code> and the rotation using <code class="lua">camera.rot</code>.</p>
+
+<p>The module variable name can be used at a shortcut to <code class="lua">new()</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x,y</code> (optional)</dt>
+<dd>Point for the camera to look at.</dd><dt>number <code class="lua">zoom</code> (optional)</dt>
+<dd>Camera zoom.</dd><dt>number <code class="lua">rot</code> (optional)</dt>
+<dd>Camera rotation in radians.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>camera</dt>
+<dd>A new camera.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">camera = require 'hump.camera'
 -- camera looking at (100,100) with zoom 2 and rotated by 45 degrees
 cam = camera(100,100, 2, math.pi/2)
-</code></pre></div></div><a name="Camera-camera:rotate" id="Camera-camera:rotate"></a><div class="ref-block"><h4>function <span class="name">camera:rotate</span><span class="arglist">(angle)</span><a class="top" href="#Camera">^ top</a></h4><p>Rotate the camera <em>by</em> some angle. To <em>set</em> the angle use 	<code class="lua">camera.rot = new_angle</code>.</p><p>This function is shortcut to <code class="lua">camera.rot = camera.rot + angle</code>.</p><div class="arguments">Parameters:<dl><dt>number <code>angle</code></dt><dd>Rotation angle in radians</dd></dl></div><div class="returns">Returns:<dl><dt>camera</dt><dd>The camera.</dd></dl></div><div class="example">Example:<pre><code class="lua">function love.update(dt)
+</code></pre>
+</div></div><div class="ref-block" id="hump.cameracamera:rotate"><h4>function <span class="name">camera:rotate</span><span class="arglist">(angle)</span><a class="top" href="#hump.camera">^top</a></h4><p>Rotate the camera by some angle. To set the angle use <code class="lua">camera.rot = new_angle</code>.</p>
+
+<p>This function is shortcut to <code class="lua">camera.rot = camera.rot + angle</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>number <code class="lua">angle</code></dt>
+<dd>Rotation angle in radians</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>camera</dt>
+<dd>The camera.</dd></dl>
+</div><div class="example">Examples:<pre><code class="lua">function love.update(dt)
     camera:rotate(dt)
-end</code></pre><pre><code class="lua">function love.update(dt)
+end
+</code></pre>
+<pre><code class="lua">function love.update(dt)
     camera:rotate(dt):move(dt,dt)
-end</code></pre></div></div><a name="Camera-camera:rotation" id="Camera-camera:rotation"></a><div class="ref-block"><h4>function <span class="name">camera:rotation</span><span class="arglist">(angle)</span><a class="top" href="#Camera">^ top</a></h4><p>Returns <code class="lua">camera.rot</code>.</p><p>If given an angle, set rotation: <code class="lua">camera.rot = angle</code>.</p><div class="arguments">Parameters:<dl><dt>number <code>angle</code> (optional)</dt><dd>Rotation angle in radians</dd></dl></div><div class="returns">Returns:<dl><dt>number</dt><dd>Rotation angle in radians.</dd></dl></div><div class="example">Example:<pre><code class="lua">love.graphics.print(camera:rotation(), 10, 10)</code></pre><pre><code class="lua">camera:rotation(math.pi/2)</code></pre></div></div><a name="Camera-camera:move" id="Camera-camera:move"></a><div class="ref-block"><h4>function <span class="name">camera:move</span><span class="arglist">(dx,dy)</span><a class="top" href="#Camera">^ top</a></h4><p><em>Move</em> the camera <em>by</em> some vector. To <em>set</em> the position, use <code class="lua">camera:lookAt(x,y)</code>.</p><p>This function is shortcut to <code class="lua">camera.x,camera.y = camera.x+dx, camera.y+dy</code>.</p><div class="arguments">Parameters:<dl><dt>numbers <code>dx,dy</code></dt><dd>Direction to move the camera.</dd></dl></div><div class="returns">Returns:<dl><dt>camera</dt><dd>The camera.</dd></dl></div><div class="example">Example:<pre><code class="lua">function love.update(dt)
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.cameracamera:rotation"><h4>function <span class="name">camera:rotation</span><span class="arglist">(angle)</span><a class="top" href="#hump.camera">^top</a></h4><p>Returns <code class="lua">camera.rot</code>.</p>
+
+<p>If given an angle, set rotation: <code class="lua">camera.rot = angle</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>number <code class="lua">angle</code> (optional)</dt>
+<dd>Rotation angle in radians</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>number</dt>
+<dd>Rotation angle in radians.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">love.graphics.print(camera:rotation(), 10, 10)
+camera:rotation(math.pi/2)
+</code></pre>
+</div></div><div class="ref-block" id="hump.cameracamera:move"><h4>function <span class="name">camera:move</span><span class="arglist">(dx,dy)</span><a class="top" href="#hump.camera">^top</a></h4><p>Move the camera <em>by</em> some vector. To set the position, use
+<a href="#hump.cameralookAt"><code class="lua">camera:lookAt(x,y)</code></a>.</p>
+
+<p>This function is shortcut to camera.x,camera.y = camera.x+dx, camera.y+dy.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">dx,dy</code></dt>
+<dd>Direction to move the camera.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>camera</dt>
+<dd>The camera.</dd></dl>
+</div><div class="example">Examples:<pre><code class="lua">function love.update(dt)
     camera:move(dt * 5, dt * 6)
-end</code></pre><pre><code class="lua">function love.update(dt)
+end
+</code></pre>
+<pre><code class="lua">function love.update(dt)
     camera:move(dt * 5, dt * 6):rotate(dt)
-end</code></pre></div></div><a name="Camera-camera:lookAt" id="Camera-camera:lookAt"></a><div class="ref-block"><h4>function <span class="name">camera:lookAt</span><span class="arglist">(x,y)</span><a class="top" href="#Camera">^ top</a></h4><p>Let the camera look at a point. In other words, it <em>sets</em> the camera position. 	To <em>move</em> the camera <em>by</em> some amount, use <code class="lua">camera:move(x,y)</code>.</p><p>This function is shortcut to <code class="lua">camera.x,camera.y = x, y</code>.</p><div class="arguments">Parameters:<dl><dt>numbers <code>x,y</code></dt><dd>Position to look at.</dd></dl></div><div class="returns">Returns:<dl><dt>camera</dt><dd>The camera.</dd></dl></div><div class="example">Example:<pre><code class="lua">function love.update(dt)
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.cameracamera:lookAt"><h4>function <span class="name">camera:lookAt</span><span class="arglist">(x,y)</span><a class="top" href="#hump.camera">^top</a></h4><p>Let the camera look at a point. In other words, it sets the camera position. To
+move the camera <em>by</em> some amount, use <a href="#hump.cameramove"><code class="lua">camera:move(x,y)</code></a>.</p>
+
+<p>This function is shortcut to <code class="lua">camera.x,camera.y = x, y</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x,y</code></dt>
+<dd>Position to look at.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>camera</dt>
+<dd>The camera.</dd></dl>
+</div><div class="example">Examples:<pre><code class="lua">function love.update(dt)
     camera:lookAt(player.pos:unpack())
-end</code></pre><pre><code class="lua">function love.update(dt)
+end
+</code></pre>
+<pre><code class="lua">function love.update(dt)
     camera:lookAt(player.pos:unpack()):rotation(player.rot)
-end</code></pre></div></div><a name="Camera-camera:pos" id="Camera-camera:pos"></a><div class="ref-block"><h4>function <span class="name">camera:pos</span><span class="arglist">()</span><a class="top" href="#Camera">^ top</a></h4><p>Returns <code class="lua">camera.x, camera.y</code>.</p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>numbers</dt><dd>Camera position.</dd></dl></div><div class="example">Example:<pre><code class="lua">-- let the camera fly!
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.cameracamera:pos"><h4>function <span class="name">camera:pos</span><span class="arglist">()</span><a class="top" href="#hump.camera">^top</a></h4><p>Returns <code class="lua">camera.x, camera.y</code>.</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>numbers</dt>
+<dd>Camera position.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">-- let the camera fly!
 local cam_dx, cam_dy = 0, 0
+
 function love.mousereleased(x,y)
-	local cx,cy = camera:position()
-	dx, dy = x-cx, y-cy
+    local cx,cy = camera:position()
+    dx, dy = x-cx, y-cy
 end
 
 function love.update(dt)
-	camera:move(dx * dt, dy * dt)
-end</code></pre></div></div><a name="Camera-camera:attach" id="Camera-camera:attach"></a><div class="ref-block"><h4>function <span class="name">camera:attach</span><span class="arglist">()</span><a class="top" href="#Camera">^ top</a></h4><p>Start looking through the camera.</p><p>Apply camera transformations, i.e. move, scale and rotate everything until 	<code class="lua">camera:detach()</code> as if looking through the camera.</p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">function love.draw()
+    camera:move(dx * dt, dy * dt)
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.cameracamera:attach"><h4>function <span class="name">camera:attach</span><span class="arglist">()</span><a class="top" href="#hump.camera">^top</a></h4><p>Start looking through the camera.</p>
+
+<p>Apply camera transformations, i.e. move, scale and rotate everything until
+<code class="lua">camera:detach()</code> as if looking through the camera.</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">function love.draw()
     camera:attach()
     draw_world()
     cam:detach()
 
     draw_hud()
-end</code></pre></div></div><a name="Camera-camera:detach" id="Camera-camera:detach"></a><div class="ref-block"><h4>function <span class="name">camera:detach</span><span class="arglist">()</span><a class="top" href="#Camera">^ top</a></h4><p>Stop looking through the camera.</p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">function love.draw()
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.cameracamera:detach"><h4>function <span class="name">camera:detach</span><span class="arglist">()</span><a class="top" href="#hump.camera">^top</a></h4><p>Stop looking through the camera.</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">function love.draw()
     camera:attach()
     draw_world()
     cam:detach()
 
     draw_hud()
-end</code></pre></div></div><a name="Camera-camera:draw" id="Camera-camera:draw"></a><div class="ref-block"><h4>function <span class="name">camera:draw</span><span class="arglist">(func)</span><a class="top" href="#Camera">^ top</a></h4><p>Wrap a function between a <code class="lua">camera:attach()</code>/<code class="lua">camera:detach()</code> pair: 	<pre><code class="lua">cam:attach()
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.cameracamera:draw"><h4>function <span class="name">camera:draw</span><span class="arglist">(func)</span><a class="top" href="#hump.camera">^top</a></h4><p>Wrap a function between a <code class="lua">camera:attach()/camera:detach()</code> pair:</p>
+
+<pre><code class="lua">cam:attach()
 func()
-cam:detach()</code></pre></p><div class="arguments">Parameters:<dl><dt>function <code>func</code></dt><dd>Drawing function to be wrapped.</dd></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">function love.draw()
+cam:detach()
+</code></pre>
+<div class="arguments">Parameters:<dl>
+<dt>function <code class="lua">func</code></dt>
+<dd>Drawing function to be wrapped.</dd></dl>
+</div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">function love.draw()
     camera:draw(draw_world)
     draw_hud()
-end</code></pre></div></div><a name="Camera-camera:worldCoords" id="Camera-camera:worldCoords"></a><a name="Camera-camera:cameraCoords" id="Camera-camera:cameraCoords"></a><div class="ref-block"><h4>function <span class="name">camera:worldCoords</span><span class="arglist">(x, y)</span><a class="top" href="#Camera">^ top</a></h4><h4>function <span class="name">camera:cameraCoords</span><span class="arglist">(x, y)</span><a class="top" href="#Camera">^ top</a></h4><p>Because a camera has a point it looks at, a rotation and a zoom factor, it 	defines a coordinate system. A point now has two sets of coordinates: One 	defines where the point is to be found in the game world, and the other 	describes the position on the computer screen. The first set of coordinates 	is called <em>world coordinates</em>, the second one <em>camera coordinates</em>. 	 	Sometimes it is needed to convert between the two coordinate systems, for 	example to get the position of a mouse click in the game world in a strategy 	game, or to see if an object is visible on the screen.</p><p>These two functions convert a point between these two coordinate systems.</p><div class="arguments">Parameters:<dl><dt>numbers <code>x, y</code></dt><dd>Point to transform.</dd></dl></div><div class="returns">Returns:<dl><dt>numbers</dt><dd>Transformed point.</dd></dl></div><div class="example">Example:<pre><code class="lua">x,y = camera:worldCoords(love.mouse.getPosition())
-selectedUnit:plotPath(x,y)
-</code></pre><pre><code class="lua">x,y = cam:cameraCoords(player.pos)
-love.graphics.line(x, y, love.mouse.getPosition())
-</code></pre></div></div><a name="Camera-camera:mousepos" id="Camera-camera:mousepos"></a><div class="ref-block"><h4>function <span class="name">camera:mousepos</span><span class="arglist">()</span><a class="top" href="#Camera">^ top</a></h4><p>Shortcut to <code class="lua">camera:worldCoords(love.mouse.getPosition())</code>.</p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>numbers</dt><dd>Mouse position in world coordinates.</dd></dl></div><div class="example">Example:<pre><code class="lua">x,y = camera:mousepos()
-selectedUnit:plotPath(x,y)
-</code></pre></div></div></div><a name="Ringbuffer" id="Ringbuffer"></a><div class="outer-block"><h3>hump.ringbuffer<a class="top" href="#top">^ top</a></h3><div class="preamble"><pre><code class="lua">Ringbuffer = require "hump.ringbuffer"</code></pre><p>A ring-buffer is a circular array: It does not have a first nor a last item, but it has a <em>selected</em> or <em>current</em> element.</p><p>A ring-buffer can be used to implement <em>Tomb Raider</em> style inventories, looping play-lists, recurring dialogs (like a unit's answers when selecting it multiple times in <em>Warcraft</em>) and generally everything that has a circular or looping structure.</p></div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#Ringbuffer-new">new()</a></dt><dd>Create new ring-buffer.</dd><dt><a href="#Ringbuffer-ringbuffer:insert">ringbuffer:insert()</a></dt><dd>Insert element.</dd><dt><a href="#Ringbuffer-ringbuffer:remove">ringbuffer:remove()</a></dt><dd>Remove currently selected item.</dd><dt><a href="#Ringbuffer-ringbuffer:removeAt">ringbuffer:removeAt()</a></dt><dd>Remove an item.</dd><dt><a href="#Ringbuffer-ringbuffer:next">ringbuffer:next()</a></dt><dd>Select next item.</dd><dt><a href="#Ringbuffer-ringbuffer:prev">ringbuffer:prev()</a></dt><dd>Select previous item.</dd><dt><a href="#Ringbuffer-ringbuffer:get">ringbuffer:get()</a></dt><dd>Get currently selected item.</dd><dt><a href="#Ringbuffer-ringbuffer:size">ringbuffer:size()</a></dt><dd>Get ringbuffer size.</dd></dl></div><a name="Ringbuffer-new" id="Ringbuffer-new"></a><div class="ref-block"><h4>function <span class="name">new</span><span class="arglist">(...)</span><a class="top" href="#Ringbuffer">^ top</a></h4><p>Create new ring-buffer.</p><p>The module name is a shortcut to this function.</p><div class="arguments">Parameters:<dl><dt>mixed <code>...</code></dt><dd>Initial elements.</dd></dl></div><div class="returns">Returns:<dl><dt>Ringbuffer</dt><dd>The ring-buffer object.</dd></dl></div><div class="example">Example:<pre><code class="lua">Ringbuffer = require 'hump.ringbuffer'
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.cameracamera:worldCoords"><h4>function <span class="name">camera:worldCoords</span><span class="arglist">(x, y)</span><a class="top" href="#hump.camera">^top</a></h4><p>Because a camera has a point it looks at, a rotation and a zoom factor, it
+defines a coordinate system. A point now has two sets of coordinates: One
+defines where the point is to be found in the game world, and the other
+describes the position on the computer screen. The first set of coordinates is
+called <em>world coordinates</em>, the second one <em>camera coordinates</em>. Sometimes it
+is needed to convert between the two coordinate systems, for example to get the
+position of a mouse click in the game world in a strategy game, or to see if an
+object is visible on the screen.</p>
 
+<p><code class="lua">camera:worldCoords(x,y)</code> and <code class="lua">camera:cameraCoords(x,y)</code> transform a point
+between these two coordinate systems.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x, y</code></dt>
+<dd>Point to transform.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>numbers</dt>
+<dd>Transformed point.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">x,y = camera:worldCoords(love.mouse.getPosition())
+selectedUnit:plotPath(x,y)
+</code></pre>
+</div></div><div class="ref-block" id="hump.cameracamera:cameraCoords"><h4>function <span class="name">camera:cameraCoords</span><span class="arglist">(x, y)</span><a class="top" href="#hump.camera">^top</a></h4><p>Because a camera has a point it looks at, a rotation and a zoom factor, it
+defines a coordinate system. A point now has two sets of coordinates: One
+defines where the point is to be found in the game world, and the other
+describes the position on the computer screen. The first set of coordinates is
+called <em>world coordinates</em>, the second one <em>camera coordinates</em>. Sometimes it
+is needed to convert between the two coordinate systems, for example to get the
+position of a mouse click in the game world in a strategy game, or to see if an
+object is visible on the screen.</p>
+
+<p><code class="lua">camera:worldCoords(x,y)</code> and <code class="lua">camera:cameraCoords(x,y)</code> transform a point
+between these two coordinate systems.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x, y</code></dt>
+<dd>Point to transform.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>numbers</dt>
+<dd>Transformed point.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">x,y = cam:cameraCoords(player.pos)
+love.graphics.line(x, y, love.mouse.getPosition())
+</code></pre>
+</div></div><div class="ref-block" id="hump.cameracamera:mousepos"><h4>function <span class="name">camera:mousepos</span><span class="arglist">()</span><a class="top" href="#hump.camera">^top</a></h4><p>Shortcut to <code class="lua">camera:worldCoords(love.mouse.getPosition())</code>.</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>numbers</dt>
+<dd>Mouse position in world coordinates.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">x,y = camera:mousepos()
+selectedUnit:plotPath(x,y)
+</code></pre>
+</div></div></div><div class="outer-block" id="hump.ringbuffer"><h3>hump.ringbuffer<a class="top" href="#top">^top</a></h3><div class="preamble"><pre><code class="lua">Ringbuffer = require "hump.ringbuffer"
+</code></pre>
+
+<p>A ring-buffer is a circular array: It does not have a first nor a last item,
+but it has a <em>selected</em> or <em>current</em> element.</p>
+
+<p>A ring-buffer can be used to implement <a href="http://www.youtube.com/watch?v=YTdsKq77_lg">Tomb Raider style
+inventories</a>, looping play-lists,
+recurring dialogs (like a unit's answers when selecting it multiple
+times in <em>Warcraft</em>) and generally everything that has a circular or looping
+structure.</p>
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.ringbuffernew">new()</a></dt><dd>Create a new ringbuffer.</dd><dt><a href="#hump.ringbufferringbuffer:insert">ringbuffer:insert()</a></dt><dd>Inser elements.</dd><dt><a href="#hump.ringbufferringbuffer:remove">ringbuffer:remove()</a></dt><dd>Remove currently selected item.</dd><dt><a href="#hump.ringbufferringbuffer:removeAt">ringbuffer:removeAt()</a></dt><dd>Remove an item.</dd><dt><a href="#hump.ringbufferringbuffer:next">ringbuffer:next()</a></dt><dd>Select next item.</dd><dt><a href="#hump.ringbufferringbuffer:prev">ringbuffer:prev()</a></dt><dd>Select previous item.</dd><dt><a href="#hump.ringbufferringbuffer:get">ringbuffer:get()</a></dt><dd>Get currently selected item.</dd><dt><a href="#hump.ringbufferringbuffer:size">ringbuffer:size()</a></dt><dd>Get ringbuffer size.</dd></dl></div><div class="ref-block" id="hump.ringbuffernew"><h4>function <span class="name">new</span><span class="arglist">(...)</span><a class="top" href="#hump.ringbuffer">^top</a></h4><p>Create new ring-buffer.</p>
+
+<p>The module name is a shortcut to this function.</p>
+<div class="arguments">Parameters:<dl>
+<dt>mixed <code class="lua">...</code></dt>
+<dd>Initial elements.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>Ringbuffer</dt>
+<dd>The ring-buffer object.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">ringbuffer = require 'hump.ringbuffer'
+rb = ringbuffer.new(1,2,3)
+-- or:
 rb = ringbuffer(1,2,3)
-</code></pre></div></div><a name="Ringbuffer-ringbuffer:insert" id="Ringbuffer-ringbuffer:insert"></a><div class="ref-block"><h4>function <span class="name">ringbuffer:insert</span><span class="arglist">(...)</span><a class="top" href="#Ringbuffer">^ top</a></h4><p>Insert items behind current element.</p><div class="arguments">Parameters:<dl><dt>mixed <code>...</code></dt><dd>Items to insert.</dd></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">rb = RingbuffeR(1,5,6) -- content: 1,5,6
+</code></pre>
+</div></div><div class="ref-block" id="hump.ringbufferringbuffer:insert"><h4>function <span class="name">ringbuffer:insert</span><span class="arglist">(...)</span><a class="top" href="#hump.ringbuffer">^top</a></h4><p>Insert items behind current element.</p>
+<div class="arguments">Parameters:<dl>
+<dt>mixed <code class="lua">...</code></dt>
+<dd>Items to insert.</dd></dl>
+</div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,5,6) -- content: 1,5,6
 rb:insert(2,3,4)       -- content: 1,2,3,4,5,6
-</code></pre></div></div><a name="Ringbuffer-ringbuffer:remove" id="Ringbuffer-ringbuffer:remove"></a><div class="ref-block"><h4>function <span class="name">ringbuffer:remove</span><span class="arglist">()</span><a class="top" href="#Ringbuffer">^ top</a></h4><p>Remove current item, return it and select next element.</p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>mixed</dt><dd>The removed item.</dd></dl></div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,2,3,4) -- content: 1,2,3,4
+</code></pre>
+</div></div><div class="ref-block" id="hump.ringbufferringbuffer:remove"><h4>function <span class="name">ringbuffer:remove</span><span class="arglist">()</span><a class="top" href="#hump.ringbuffer">^top</a></h4><p>Remove current item, return it and select next element.</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>mixed</dt>
+<dd>The removed item.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,2,3,4) -- content: 1,2,3,4
 val = rb:remove()        -- content: 2,3,4
 print(val)               -- prints `1'
-</code></pre></div></div><a name="Ringbuffer-ringbuffer:removeAt" id="Ringbuffer-ringbuffer:removeAt"></a><div class="ref-block"><h4>function <span class="name">ringbuffer:removeAt</span><span class="arglist">(pos)</span><a class="top" href="#Ringbuffer">^ top</a></h4><p>Remove the item at a position relative to the current element.</p><div class="arguments">Parameters:<dl><dt>number <code>pos</code></dt><dd>Position of the item to remove.</dd></dl></div><div class="returns">Returns:<dl><dt>mixed</dt><dd>The removed item.</dd></dl></div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,2,3,4,5) -- content: 1,2,3,4,5
+</code></pre>
+</div></div><div class="ref-block" id="hump.ringbufferringbuffer:removeAt"><h4>function <span class="name">ringbuffer:removeAt</span><span class="arglist">(pos)</span><a class="top" href="#hump.ringbuffer">^top</a></h4><p>Remove the item at a position relative to the current element.</p>
+<div class="arguments">Parameters:<dl>
+<dt>number <code class="lua">pos</code></dt>
+<dd>Position of the item to remove.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>mixed</dt>
+<dd>The removed item.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,2,3,4,5) -- content: 1,2,3,4,5
 rb:removeAt(2)             -- content: 1,2,4,5
 rb:removeAt(-1)            -- content: 1,2,4
-</code></pre></div></div><a name="Ringbuffer-ringbuffer:next" id="Ringbuffer-ringbuffer:next"></a><div class="ref-block"><h4>function <span class="name">ringbuffer:next</span><span class="arglist">()</span><a class="top" href="#Ringbuffer">^ top</a></h4><p>Select and return the next element.</p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>mixed</dt><dd>The next item.</dd></dl></div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,2,3)
+</code></pre>
+</div></div><div class="ref-block" id="hump.ringbufferringbuffer:next"><h4>function <span class="name">ringbuffer:next</span><span class="arglist">()</span><a class="top" href="#hump.ringbuffer">^top</a></h4><p>Select and return the next element.</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>mixed</dt>
+<dd>The next item.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,2,3)
 rb:next()     -- content: 2,3,1
 rb:next()     -- content: 3,1,2
 x = rb:next() -- content: 1,2,3
 print(x)      -- prints `1'
-</code></pre></div></div><a name="Ringbuffer-ringbuffer:prev" id="Ringbuffer-ringbuffer:prev"></a><div class="ref-block"><h4>function <span class="name">ringbuffer:prev</span><span class="arglist">()</span><a class="top" href="#Ringbuffer">^ top</a></h4><p>Select and return the previous item.</p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>mixed</dt><dd>The previous item.</dd></dl></div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,2,3)
+</code></pre>
+</div></div><div class="ref-block" id="hump.ringbufferringbuffer:prev"><h4>function <span class="name">ringbuffer:prev</span><span class="arglist">()</span><a class="top" href="#hump.ringbuffer">^top</a></h4><p>Select and return the previous item.</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>mixed</dt>
+<dd>The previous item.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,2,3)
 rb:prev())    -- content: 3,1,2
 rb:prev())    -- content: 2,3,1
 x = rb:prev() -- content: 1,2,3
 print(x)      -- prints `1'
-</code></pre></div></div><a name="Ringbuffer-ringbuffer:get" id="Ringbuffer-ringbuffer:get"></a><div class="ref-block"><h4>function <span class="name">ringbuffer:get</span><span class="arglist">()</span><a class="top" href="#Ringbuffer">^ top</a></h4><p>Return the current element.</p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>mixed</dt><dd>The currently selected element.</dd></dl></div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,2,3)
+</code></pre>
+</div></div><div class="ref-block" id="hump.ringbufferringbuffer:get"><h4>function <span class="name">ringbuffer:get</span><span class="arglist">()</span><a class="top" href="#hump.ringbuffer">^top</a></h4><p>Return the current element.</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>mixed</dt>
+<dd>The currently selected element.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,2,3)
 rb:next()       -- content: 2,3,1
 print(rb:get()) -- prints '2'
-</code></pre></div></div><a name="Ringbuffer-ringbuffer:size" id="Ringbuffer-ringbuffer:size"></a><div class="ref-block"><h4>function <span class="name">ringbuffer:size</span><span class="arglist">()</span><a class="top" href="#Ringbuffer">^ top</a></h4><p>Get number of items in the buffer</p><div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>number</dt><dd>Number of items in the buffer.</dd></dl></div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,2,3)
+</code></pre>
+</div></div><div class="ref-block" id="hump.ringbufferringbuffer:size"><h4>function <span class="name">ringbuffer:size</span><span class="arglist">()</span><a class="top" href="#hump.ringbuffer">^top</a></h4><p>Get number of items in the buffer</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>number</dt>
+<dd>Number of items in the buffer.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,2,3)
 print(rb:size()) -- prints '3'
 rb:remove()
 print(rb:size()) -- prints '2'
-</code></pre></div></div></div><a name="license" id="license"></a><div class="outer-block"><h3>License<a class="top" href="#top">^ top</a></h3><div class="preamble"><p>Yay, <em>free software</em>:</p><blockquote><p>Copyright (c) 2010 Matthias Richter</p><p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p><p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p><p>Except as contained in this notice, the name(s) of the above copyright holders shall not be used in advertising or otherwise to promote the sale, use or other dealings in this Software without prior written authorization.</p><p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></blockquote></div></div><a name="download" id="download"></a><div class="outer-block"><h3>Download<a class="top" href="#top">^ top</a></h3><div class="preamble"><p>You can view and download the individual modules on github: <a href="http://github.com/vrld/hump">vrld/hump</a>. You may also download the whole packed sourcecode either in <a href="http://github.com/vrld/hump/zipball/master">zip</a> or <a href="http://github.com/vrld/hump/tarball/master">tar</a> formats.</p><p>You can clone the project with <a href="http://git-scm.com">Git</a> by running: <pre>git clone git://github.com/vrld/hump</pre> Once done, you can check for updates by running <pre>git pull</pre></p></div></div></body>
+</code></pre>
+</div></div></div><div class="outer-block" id="License"><h3>License<a class="top" href="#top">^top</a></h3><div class="preamble"><p>Yay, <em>free software</em></p>
+
+<blockquote><p>Copyright (c) 2010-2012 Matthias Richter</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>Except as contained in this notice, the name(s) of the above copyright holders
+shall not be used in advertising or otherwise to promote the sale, use or
+other dealings in this Software without prior written authorization.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</p></blockquote>
+</div></div><div class="outer-block" id="Download"><h3>Download<a class="top" href="#top">^top</a></h3><div class="preamble"><p>You can view and download the individual modules on github: <a href="%22http://github.com/vrld/hump%22">vrld/hump</a>
+You may also download the whole packed sourcecode either in
+<a href="http://github.com/vrld/hump/zipball/master">zip</a> or
+<a href="http://github.com/vrld/hump/tarball/master">tar</a> formats.</p>
+
+<p>Using <a href="http://git-scm.com">Git</a>, you can clone the project by running:</p>
+
+<pre><code class="lua">git clone git://github.com/vrld/hump
+</code></pre>
+
+<p>Once done, tou can check for updates by running</p>
+
+<pre><code class="lua">git pull
+</code></pre>
+</div></div></body></html>
