@@ -878,7 +878,7 @@ chain multiple operations (see example).
 	velx,vely = vec.mul(dt, vec.add(velx,vely, accx,accy))
 
 
-### function mul(s, x,y) [Product of a vector and the inverse of a scalar.]
+### function div(s, x,y) [Product of a vector and the inverse of a scalar.]
 
 Computes `x/s,y/s`. The order of arguments is chosen so that it's possible to
 chain multiple operations.
