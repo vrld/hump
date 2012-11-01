@@ -123,15 +123,15 @@ h3 {
 }
 
 h4 {
+	color: #444;
+	font-size: 1em;
 	margin: 0;
-	color: #405070;
-	font-size: 1.2em;
 	font-weight: bold;
 }
 
-.ref-block h4 {
-	color: #444;
-	font-size: 1em;
+.overview h4 {
+	color: #405070;
+	font-size: 1.2em;
 }
 
 .ref-block h4 .name {
