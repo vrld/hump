@@ -169,7 +169,7 @@ dd {
 	margin: .2em 0;
 }
 
-.warning {
+strong {
 	color: #D03000;
 	font-weight: bold;
 }

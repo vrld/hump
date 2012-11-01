@@ -2,9 +2,12 @@
 
 ## Introduction
 
-Helper Utilities for a Multitude of Problems is a set of lightweight helpers for the awesome LÖVE Engine.
+Helper Utilities for a Multitude of Problems is a set of lightweight helpers
+for the awesome LÖVE Engine.
 
-hump differs from other libraries in that every component is independent of the remaining ones. hump's footprint is very small and thus should fit nicely into your projects.
+hump differs from other libraries in that every component is independent of the
+remaining ones. hump's footprint is very small and thus should fit nicely into
+your projects.
 
 
 ## Module hump.gamestate [A gamestate system.]
@@ -14,6 +17,39 @@ hump differs from other libraries in that every component is independent of the 
 A gamestate encapsulates independent data an behaviour into a single entity.
 
 A typical game could consist of a menu-state, a level-state and a game-over-state.
+
+#### Example:
+
+	local menu = Gamestate.new()
+	local game = Gamestate.new()
+	
+	function menu:draw()
+		love.graphics.print("Press Enter to continue", 10, 10)
+	end
+	
+	function menu:keyreleased(key, code)
+		if key == 'enter' then
+			Gamestate.switch(game)
+		end
+	end
+	
+	function game:enter()
+		Entities.clear()
+		-- setup entities here
+	end
+	
+	function game:update(dt)
+		Entities.update(dt)
+	end
+	
+	function game:draw()
+		Entities.draw()
+	end
+	
+	function love.load()
+		Gamestate.registerEvents()
+		Gamestate.switch(menu)
+	end
 
 
 ### Callbacks [Gamestate Callbacks.]
@@ -219,6 +255,18 @@ hump.timer offers a simple interface to schedule the execution of functions. It
 is possible to run functions *after* and *for* some amount of time. For
 example, a timer could be set to move critters every 5 seconds or to make the
 player invincible for a short amount of time.
+
+#### Example:
+
+	function love.keypressed(key)
+		if key == ' ' then
+			Timer.add(1, function() print("Hello, world!") end)
+		end
+	end
+	
+	function love.update(dt)
+		Timer.update(dt)
+	end
 
 
 ### function new() [Create new timer instance.]
@@ -447,6 +495,31 @@ Update timers and execute functions if the deadline is reached. Use this in
 A handy 2D vector class providing most of the things you do with vectors.
 
 You can access the individual coordinates by using vec.x and vec.y.
+
+#### Example:
+
+	function player:update(dt)
+		local delta = vector(0,0)
+		if love.keyboard.isDown('left') then
+			delta.x = -1
+		elseif love.keyboard.isDown('right') then
+			delta.x =  1
+		end
+		if love.keyboard.isDown('up') then
+			delta.y = -1
+		elseif love.keyboard.isDown('down') then
+			delta.y =  1
+		end
+		delta:normalize_inplace()
+
+		player.velocity = player.velocity + delta * player.acceleration * dt
+
+		if player.velocity:len() > player.max_velocity then
+			player.velocity = player.velocity:normalized() * player.max_velocity
+		end
+
+		player.position = player.position + player.velocity * dt
+	end
 
 ### Operators [Arithmetics and relations.]
 
@@ -838,6 +911,34 @@ type, `hump.vector-light` provides functions that operate on numbers.
 result in faster code, but does so at the expense of readability. Unless you
 are sure that it causes a significant performance penalty, I recommend using
 [`hump.vector`](#hump.vector).
+
+#### Example:
+
+	function player:update(dt)
+		local dx,dy = 0,0
+		if love.keyboard.isDown('left') then
+			dx = -1
+		elseif love.keyboard.isDown('right') then
+			dx =  1
+		end
+		if love.keyboard.isDown('up') then
+			dy = -1
+		elseif love.keyboard.isDown('down') then
+			dy =  1
+		end
+		dx,dy = vector.normalize(dx, dy)
+
+		player.velx, player.vely = vector.add(player.velx, player.vely,
+										vector.mul(dy, dx, dy))
+
+		if vector.len(player.velx, player.vely) > player.max_velocity then
+			player.velx, player.vely = vector.mul(player.max_velocity,
+								vector.normalize(player.velx, player.vely)
+		end
+
+		player.x = player.x + dt * player.velx
+		player.y = player.y + dt * player.vely
+	end
 
 ### function str(x,y) [String representation.]
 
@@ -1276,6 +1377,24 @@ A small, fast class implementation with multiple inheritance support.
 
 Implements [class commons](https://github.com/bartbes/Class-Commons).
 
+#### Example:
+
+	Critter = Class{function(self, pos, img)
+		self.pos = pos
+		self.img = img
+	end}
+	Critter.speed = 5
+	
+	function Critter:update(dt, player)
+		-- see hump.vector
+		local dir = (player.pos - self.pos):normalize_inplace()
+		self.pos = self.pos + dir * Critter.speed * dt
+	end
+	
+	function Critter:draw()
+		love.graphics.draw(self.img, self.pos.x, self.pos.y)
+	end
+
 
 ### function new{constructor, name = the_name, inherits = super} [Declare a new class.]
 
@@ -1567,6 +1686,8 @@ this won't affect subclasses:
 
 ## Module hump.signal [Simple Signal/Slot (aka. Observer) implementation.]
 
+    Signals = require 'hump.signal'
+
 A simple yet effective implementation of [Signals and
 Slots](http://en.wikipedia.org/wiki/Signals_and_slots), also known as [Observer
 pattern](http://en.wikipedia.org/wiki/Observer_pattern): Functions can be
@@ -1575,6 +1696,33 @@ functions will be invoked. Simple as that.
 
 `hump.signal` makes things more interesing by allowing to emit all signals that
 match a [Lua string pattern](http://www.lua.org/manual/5.1/manual.html#5.4.1).
+
+#### Example:
+
+	-- in AI.lua
+	signals.register('shoot', function(x,y, dx,dy)
+		-- for every critter in the path of the bullet:
+		-- try to avoid being hit
+		for critter in pairs(critters) do
+			if critter:intersectsRay(x,y, dx,dy) then
+				critter:setMoveDirection(-dy, dx)
+			end
+		end
+	end)
+	
+	-- in sounds.lua
+	signals.register('shoot', function()
+		Sounds.fire_bullet:play()
+	end)
+	
+	-- in main.lua
+	function love.keypressed(key)
+		if key == ' ' then
+			local x,y   = player.pos:unpack()
+			local dx,dy = player.direction:unpack()
+			signals.emit('shoot', x,y, dx,dy)
+		end
+	end
 
 ### function new() [Create a new signal registry]
 
@@ -1743,6 +1891,17 @@ A camera utility for LÖVE. A camera can "look" at a position. It can zoom in
 and out and it can rotate it's view. In the background, this is done by
 actually moving, scaling and rotating everything in the game world. But don't
 worry about that.
+
+#### Example:
+
+	function love.load()
+		cam = Camera(player.pos.x, player.pos.y)
+	end
+	
+	function love.update(dt)
+		local dx,dy = player.x - cam.x, player.y - cam.y
+		cam:move(dx/2, dy/2)
+	end
 
 ### function new(x,y, zoom, rot) [Create a new camera.]
 
@@ -2049,7 +2208,6 @@ inventories](http://www.youtube.com/watch?v=YTdsKq77_lg), looping play-lists,
 recurring dialogs (like a unit's answers when selecting it multiple
 times in *Warcraft*) and generally everything that has a circular or looping
 structure.
-
 
 ### function new(...) [Create a new ringbuffer.]
 
