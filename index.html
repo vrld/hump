@@ -1281,8 +1281,8 @@ function love.update(dt)
     cam:move(dx/2, dy/2)
 end
 </code></pre>
-</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.cameranew">new()</a></dt><dd>Create a new camera.</dd><dt><a href="#hump.cameracamera:rotate">camera:rotate()</a></dt><dd>Rotate camera.</dd><dt><a href="#hump.cameracamera:rotation">camera:rotation()</a></dt><dd>Get or set camera rotation.</dd><dt><a href="#hump.cameracamera:move">camera:move()</a></dt><dd>Move camera.</dd><dt><a href="#hump.cameracamera:lookAt">camera:lookAt()</a></dt><dd>Move camera to position.</dd><dt><a href="#hump.cameracamera:pos">camera:pos()</a></dt><dd>Get camera position.</dd><dt><a href="#hump.cameracamera:attach">camera:attach()</a></dt><dd>Attach camera.</dd><dt><a href="#hump.cameracamera:detach">camera:detach()</a></dt><dd>Detach camera.</dd><dt><a href="#hump.cameracamera:draw">camera:draw()</a></dt><dd>Attach, draw, then detach.</dd><dt><a href="#hump.cameracamera:worldCoords">camera:worldCoords()</a></dt><dd>Convert point to world coordinates.</dd><dt><a href="#hump.cameracamera:cameraCoords">camera:cameraCoords()</a></dt><dd>Convert point to camera coordinates.</dd><dt><a href="#hump.cameracamera:mousepos">camera:mousepos()</a></dt><dd>Get mouse position in world coordinates.</dd></dl></div><div class="ref-block" id="hump.cameranew"><h4>function <span class="name">new</span><span class="arglist">(x,y, zoom, rot)</span><a class="top" href="#hump.camera">^top</a></h4><p>Creates a new camera. You can access the camera position using <code class="lua">camera.x,
-camera.y</code>, the zoom using <code class="lua">camera.zoom</code> and the rotation using <code class="lua">camera.rot</code>.</p>
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.cameranew">new()</a></dt><dd>Create a new camera.</dd><dt><a href="#hump.cameracamera:move">camera:move()</a></dt><dd>Move camera.</dd><dt><a href="#hump.cameracamera:lookAt">camera:lookAt()</a></dt><dd>Move camera to position.</dd><dt><a href="#hump.cameracamera:pos">camera:pos()</a></dt><dd>Get camera position.</dd><dt><a href="#hump.cameracamera:rotate">camera:rotate()</a></dt><dd>Rotate camera.</dd><dt><a href="#hump.cameracamera:rotateTo">camera:rotateTo()</a></dt><dd>Set camera rotation.</dd><dt><a href="#hump.cameracamera:zoom">camera:zoom()</a></dt><dd>Change zoom.</dd><dt><a href="#hump.cameracamera:zoomTo">camera:zoomTo()</a></dt><dd>Set zoom.</dd><dt><a href="#hump.cameracamera:attach">camera:attach()</a></dt><dd>Attach camera.</dd><dt><a href="#hump.cameracamera:detach">camera:detach()</a></dt><dd>Detach camera.</dd><dt><a href="#hump.cameracamera:draw">camera:draw()</a></dt><dd>Attach, draw, then detach.</dd><dt><a href="#hump.cameracamera:worldCoords">camera:worldCoords()</a></dt><dd>Convert point to world coordinates.</dd><dt><a href="#hump.cameracamera:cameraCoords">camera:cameraCoords()</a></dt><dd>Convert point to camera coordinates.</dd><dt><a href="#hump.cameracamera:mousepos">camera:mousepos()</a></dt><dd>Get mouse position in world coordinates.</dd></dl></div><div class="ref-block" id="hump.cameranew"><h4>function <span class="name">new</span><span class="arglist">(x,y, zoom, rot)</span><a class="top" href="#hump.camera">^top</a></h4><p>Creates a new camera. You can access the camera position using <code class="lua">camera.x,
+camera.y</code>, the zoom using <code class="lua">camera.scale</code> and the rotation using <code class="lua">camera.rot</code>.</p>
 
 <p>The module variable name can be used at a shortcut to <code class="lua">new()</code>.</p>
 <div class="arguments">Parameters:<dl>
@@ -1296,35 +1296,6 @@ camera.y</code>, the zoom using <code class="lua">camera.zoom</code> and the rot
 </div><div class="example">Example:<pre><code class="lua">camera = require 'hump.camera'
 -- camera looking at (100,100) with zoom 2 and rotated by 45 degrees
 cam = camera(100,100, 2, math.pi/2)
-</code></pre>
-</div></div><div class="ref-block" id="hump.cameracamera:rotate"><h4>function <span class="name">camera:rotate</span><span class="arglist">(angle)</span><a class="top" href="#hump.camera">^top</a></h4><p>Rotate the camera by some angle. To set the angle use <code class="lua">camera.rot = new_angle</code>.</p>
-
-<p>This function is shortcut to <code class="lua">camera.rot = camera.rot + angle</code>.</p>
-<div class="arguments">Parameters:<dl>
-<dt>number <code class="lua">angle</code></dt>
-<dd>Rotation angle in radians</dd></dl>
-</div><div class="returns">Returns:<dl>
-<dt>camera</dt>
-<dd>The camera.</dd></dl>
-</div><div class="example">Examples:<pre><code class="lua">function love.update(dt)
-    camera:rotate(dt)
-end
-</code></pre>
-<pre><code class="lua">function love.update(dt)
-    camera:rotate(dt):move(dt,dt)
-end
-</code></pre>
-</div></div><div class="ref-block" id="hump.cameracamera:rotation"><h4>function <span class="name">camera:rotation</span><span class="arglist">(angle)</span><a class="top" href="#hump.camera">^top</a></h4><p>Returns <code class="lua">camera.rot</code>.</p>
-
-<p>If given an angle, set rotation: <code class="lua">camera.rot = angle</code>.</p>
-<div class="arguments">Parameters:<dl>
-<dt>number <code class="lua">angle</code> (optional)</dt>
-<dd>Rotation angle in radians</dd></dl>
-</div><div class="returns">Returns:<dl>
-<dt>number</dt>
-<dd>Rotation angle in radians.</dd></dl>
-</div><div class="example">Example:<pre><code class="lua">love.graphics.print(camera:rotation(), 10, 10)
-camera:rotation(math.pi/2)
 </code></pre>
 </div></div><div class="ref-block" id="hump.cameracamera:move"><h4>function <span class="name">camera:move</span><span class="arglist">(dx,dy)</span><a class="top" href="#hump.camera">^top</a></h4><p>Move the camera <em>by</em> some vector. To set the position, use
 <a href="#hump.cameralookAt"><code class="lua">camera:lookAt(x,y)</code></a>.</p>
@@ -1377,6 +1348,54 @@ end
 function love.update(dt)
     camera:move(dx * dt, dy * dt)
 end
+</code></pre>
+</div></div><div class="ref-block" id="hump.cameracamera:rotate"><h4>function <span class="name">camera:rotate</span><span class="arglist">(angle)</span><a class="top" href="#hump.camera">^top</a></h4><p>Rotate the camera by some angle. To set the angle use <code class="lua">camera.rot = new_angle</code>.</p>
+
+<p>This function is shortcut to <code class="lua">camera.rot = camera.rot + angle</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>number <code class="lua">angle</code></dt>
+<dd>Rotation angle in radians</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>camera</dt>
+<dd>The camera.</dd></dl>
+</div><div class="example">Examples:<pre><code class="lua">function love.update(dt)
+    camera:rotate(dt)
+end
+</code></pre>
+<pre><code class="lua">function love.update(dt)
+    camera:rotate(dt):move(dt,dt)
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.cameracamera:rotateTo"><h4>function <span class="name">camera:rotateTo</span><span class="arglist">(angle)</span><a class="top" href="#hump.camera">^top</a></h4><p>Set rotation: <code class="lua">camera.rot = angle</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>number <code class="lua">angle</code></dt>
+<dd>Rotation angle in radians</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>number</dt>
+<dd>The camera.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">camera:rotateTo(math.pi/2)
+</code></pre>
+</div></div><div class="ref-block" id="hump.cameracamera:zoom"><h4>function <span class="name">camera:zoom</span><span class="arglist">(mul)</span><a class="top" href="#hump.camera">^top</a></h4><p><em>Multiply</em> zoom: <code class="lua">camera.scale = camera.scale * mul</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>number <code class="lua">mul</code></dt>
+<dd>Zoom change. Should be > 0.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>number</dt>
+<dd>The camera.</dd></dl>
+</div><div class="example">Examples:<pre><code class="lua">camera:zoom(2)   -- make everything twice as big
+</code></pre>
+<pre><code class="lua">camera:zoom(0.5) -- ... and back to normal
+</code></pre>
+<pre><code class="lua">camera:zoom(-1)  -- flip everything
+</code></pre>
+</div></div><div class="ref-block" id="hump.cameracamera:zoomTo"><h4>function <span class="name">camera:zoomTo</span><span class="arglist">(zoom)</span><a class="top" href="#hump.camera">^top</a></h4><p>Set zoom: <code class="lua">camera.scale = zoom</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>number <code class="lua">zoom</code></dt>
+<dd>New zoom.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>number</dt>
+<dd>The camera.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">camera:zoomTo(1)
 </code></pre>
 </div></div><div class="ref-block" id="hump.cameracamera:attach"><h4>function <span class="name">camera:attach</span><span class="arglist">()</span><a class="top" href="#hump.camera">^top</a></h4><p>Start looking through the camera.</p>
 

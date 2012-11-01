@@ -1906,7 +1906,7 @@ worry about that.
 ### function new(x,y, zoom, rot) [Create a new camera.]
 
 Creates a new camera. You can access the camera position using `camera.x,
-camera.y`, the zoom using `camera.zoom` and the rotation using `camera.rot`.
+camera.y`, the zoom using `camera.scale` and the rotation using `camera.rot`.
 
 The module variable name can be used at a shortcut to `new()`.
 
@@ -1930,57 +1930,6 @@ The module variable name can be used at a shortcut to `new()`.
 	camera = require 'hump.camera'
 	-- camera looking at (100,100) with zoom 2 and rotated by 45 degrees
 	cam = camera(100,100, 2, math.pi/2)
-
-
-### function camera:rotate(angle) [Rotate camera.]
-
-Rotate the camera by some angle. To set the angle use `camera.rot = new_angle`.
-
-This function is shortcut to `camera.rot = camera.rot + angle`.
-
-#### Parameters:
-
-=number angle=
-	Rotation angle in radians
-
-#### Returns:
-
-=camera=
-	The camera.
-
-#### Example:
-
-	function love.update(dt)
-		camera:rotate(dt)
-	end
-
-#### Example:
-
-	function love.update(dt)
-		camera:rotate(dt):move(dt,dt)
-	end
-
-
-### function camera:rotation(angle) [Get or set camera rotation.]
-
-Returns `camera.rot`.
-
-If given an angle, set rotation: `camera.rot = angle`.
-
-#### Parameters:
-
-=number angle (optional)=
-	Rotation angle in radians
-
-#### Returns:
-
-=number=
-	Rotation angle in radians.
-
-#### Example:
-
-	love.graphics.print(camera:rotation(), 10, 10)
-	camera:rotation(math.pi/2)
 
 
 ### function camera:move(dx,dy) [Move camera.]
@@ -2064,6 +2013,100 @@ Returns `camera.x, camera.y`.
 	function love.update(dt)
 		camera:move(dx * dt, dy * dt)
 	end
+
+
+### function camera:rotate(angle) [Rotate camera.]
+
+Rotate the camera by some angle. To set the angle use `camera.rot = new_angle`.
+
+This function is shortcut to `camera.rot = camera.rot + angle`.
+
+#### Parameters:
+
+=number angle=
+	Rotation angle in radians
+
+#### Returns:
+
+=camera=
+	The camera.
+
+#### Example:
+
+	function love.update(dt)
+		camera:rotate(dt)
+	end
+
+#### Example:
+
+	function love.update(dt)
+		camera:rotate(dt):move(dt,dt)
+	end
+
+
+### function camera:rotateTo(angle) [Set camera rotation.]
+
+Set rotation: `camera.rot = angle`.
+
+#### Parameters:
+
+=number angle=
+	Rotation angle in radians
+
+#### Returns:
+
+=number=
+	The camera.
+
+#### Example:
+
+	camera:rotateTo(math.pi/2)
+
+
+### function camera:zoom(mul) [Change zoom.]
+
+*Multiply* zoom: `camera.scale = camera.scale * mul`.
+
+#### Parameters:
+
+=number mul=
+	Zoom change. Should be > 0.
+
+#### Returns:
+
+=number=
+	The camera.
+
+#### Example:
+
+	camera:zoom(2)   -- make everything twice as big
+
+#### Example:
+
+	camera:zoom(0.5) -- ... and back to normal
+
+#### Example:
+
+	camera:zoom(-1)  -- flip everything
+
+
+### function camera:zoomTo(zoom) [Set zoom.]
+
+Set zoom: `camera.scale = zoom`.
+
+#### Parameters:
+
+=number zoom=
+	New zoom.
+
+#### Returns:
+
+=number=
+	The camera.
+
+#### Example:
+
+	camera:zoomTo(1)
 
 
 ### function camera:attach() [Attach camera.]
