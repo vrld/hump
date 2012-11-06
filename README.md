@@ -572,13 +572,13 @@ Create a new vector.
 
 #### Example:
 
- a = vector.new(10,10)
+	a = vector.new(10,10)
 
 #### Example:
 
- -- as a shortcut, you can call the module like a function:
- vector = require "hump.vector"
- a = vector(10,10)
+	-- as a shortcut, you can call the module like a function:
+	vector = require "hump.vector"
+	a = vector(10,10)
 
 
 ### function isvector(v) [Test if value is a vector.]
@@ -2428,7 +2428,7 @@ Yay, *free software*
 
 ## Download
 
-You can view and download the individual modules on github: [vrld/hump]("http://github.com/vrld/hump")
+You can view and download the individual modules on github: [vrld/hump](http://github.com/vrld/hump)
 You may also download the whole packed sourcecode either in
 [zip](http://github.com/vrld/hump/zipball/master) or
 [tar](http://github.com/vrld/hump/tarball/master) formats.
