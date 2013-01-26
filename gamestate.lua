@@ -32,21 +32,7 @@ local current = setmetatable({leave = __NULL__}, {__index = __ERROR__})
 
 local GS = {}
 function GS.new()
-	return {
-		init             = __NULL__,
-		enter            = __NULL__,
-		leave            = __NULL__,
-		update           = __NULL__,
-		draw             = __NULL__,
-		focus            = __NULL__,
-		keyreleased      = __NULL__,
-		keypressed       = __NULL__,
-		mousepressed     = __NULL__,
-		mousereleased    = __NULL__,
-		joystickpressed  = __NULL__,
-		joystickreleased = __NULL__,
-		quit             = __NULL__,
-	}
+	return setmetatable({}, {__index = function() return __NULL__ end})
 end
 
 function GS.switch(to, ...)
@@ -54,7 +40,7 @@ function GS.switch(to, ...)
 	current:leave()
 	local pre = current
 	to:init()
-	to.init = __NULL__
+	to.init = nil
 	current = to
 	return current:enter(pre, ...)
 end
