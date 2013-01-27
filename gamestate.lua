@@ -28,7 +28,7 @@ local function __NULL__() end
 
 -- default gamestate produces error on every callback
 local function __ERROR__() error("Gamestate not initialized. Use Gamestate.switch()") end
-local current = setmetatable({leave = __NULL__}, {__index = __ERROR__})
+local current = {leave = __NULL__}
 
 local GS = {}
 function GS.new()
@@ -67,7 +67,7 @@ end
 setmetatable(GS, {__index = function(_, func)
 	return function(...)
 		registry[func](...)
-		return current[func](current, ...)
+		return (current[func] or __NULL__)(current, ...)
 	end
 end})
 
