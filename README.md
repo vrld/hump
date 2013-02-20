@@ -14,14 +14,14 @@ your projects.
 
 	Gamestate = require "hump.gamestate"
 
-A gamestate encapsulates independent data an behaviour into a single entity.
+A gamestate encapsulates independent data an behaviour in a single table.
 
 A typical game could consist of a menu-state, a level-state and a game-over-state.
 
 #### Example:
 
-	local menu = Gamestate.new()
-	local game = Gamestate.new()
+	local menu = {} -- previously: Gamestate.new()
+	local game = {}
 	
 	function menu:draw()
 		love.graphics.print("Press Enter to continue", 10, 10)
@@ -91,7 +91,7 @@ receive the same arguments (e.g. `state:update(dt)` will be called by
 
 #### Example:
 
-	menu = Gamestate.new()
+	menu = {} -- previously: Gamestate.new()
 	function menu:init() -- run only once
 		self.background = love.graphics.newImage('bg.jpg')
 		Buttons.initialize()
@@ -132,15 +132,20 @@ receive the same arguments (e.g. `state:update(dt)` will be called by
 
 ### function new() [Create a new gamestate.]
 
-Declare a new gamestate. A gamestate can define several callbacks.
+**Deprecated: Use the table constructor instead (see example)**
+
+Declare a new gamestate (just an empty table). A gamestate can define several
+callbacks.
 
 #### Returns:
 
 =Gamestate=
-    The new gamestate.
+    An empty table.
 
 #### Example:
 
+    menu = {}
+    -- deprecated method:
     menu = Gamestate.new()
 
 
@@ -1369,11 +1374,11 @@ Mirrors vector on the axis defined by the other vector.
 	vx,vy = vector.mirror(vx,vy, surface.x,surface.y)
 
 
-## Module hump.class [Class-based object orientated programming for Lua.]
+## Module hump.class [Object oriented programming for Lua.]
 
 	Class = require "hump.class"
 
-A small, fast class implementation with multiple inheritance support.
+A small, fast class/prototype implementation with multiple inheritance.
 
 Implements [class commons](https://github.com/bartbes/Class-Commons).
 
@@ -1396,14 +1401,17 @@ Implements [class commons](https://github.com/bartbes/Class-Commons).
 	end
 
 
-### function new{constructor, name = the_name, inherits = super} [Declare a new class.]
+### function new{init = constructor, __includes = parents, ...} [Declare a new class.]
 
 Declare a new class.
 
-The constructor will receive the newly create object as first argument.
+`init()` will receive the new object instance as first argument. Any other
+arguments will also be forwarded (see examples), i.e. `init()` has the
+following signature:
 
-You can check if an object is an instance of a class using
-[`object:is_a()`](#hump.classis_a).
+	function init(self, ...)
+
+If you do not specify a constructor, an empty constructor will be used instead.
 
 The name of the variable that holds the module can be used as a shortcut to
 `new()` (see example).
@@ -1411,32 +1419,32 @@ The name of the variable that holds the module can be used as a shortcut to
 #### Parameters:
 
 =function constructor (optional)=
-	Class constructor. Can be accessed with theclass.construct(object, ...)
-=string the_name (optional)=
-	Class name (used only to make the class compliant to tostring().
-=class or table of classes super (optional)=
+	Class constructor. Can be accessed with theclass.init(object, ...)
+=class or table of classes parents (optional)=
 	Classes to inherit from. Can either be a single class or a table of classes
+=mixed ... (optional)=
+	Any other fields or methods common to all instances of this class.
 
 #### Returns:
 
 =class=
-	The class
+	The class.
 
 #### Example:
 
 	Class = require 'hump.class' -- `Class' is now a shortcut to new()
 	
-	-- define unnamed class
-	Feline = Class{function(self, size, weight)
-		self.size = size
-		self.weight = weight
-	end}
-	print(Feline) -- prints '
-	
-	-- define class method
-	function Feline:stats()
-		return string.format("size: %.02f, weight %.02f", self.size, self.weight)
-	end
+	-- define a class class
+	Feline = Class{
+		init = function(self, size, weight)
+			self.size = size
+			self.weight = weight
+		end;
+		-- define a method
+		stats = function(self)
+			return string.format("size: %.02f, weight: %.02f", self.size, self.weight)
+		end;
+	}
 	
 	-- create two objects
 	garfield = Feline(.7, 45)
@@ -1448,46 +1456,65 @@ The name of the variable that holds the module can be used as a shortcut to
 
 	Class = require 'hump.class'
 	
-	-- define class with explicit name 'Feline'
-	Feline = Class{name = "Feline", function(self, size, weight)
+	-- same as above, but with 'external' function definitions
+	Feline = Class{}
+	
+	function Feline:init(size, weight)
 		self.size = size
 		self.weight = weight
-	end}
+	end
+	
+	function Feline:stats()
+		return string.format("size: %.02f, weight: %.02f", self.size, self.weight)
+	end
 	
 	garfield = Feline(.7, 45)
-	print(Feline, garfield) -- prints '	>'
+	print(Feline, garfield)
 
 #### Example:
 
 	Class = require 'hump.class'
-	A = Class{}
-	function A:foo()
-		print('foo')
-	end
+	A = Class{
+		foo = function() print('foo') end
+	}
 	
-	B = Class{}
-	function B:bar()
-		print('bar')
-	end
+	B = Class{
+		bar = function() print('bar') end
+	}
 	
 	-- single inheritance
-	C = Class{inherits = A}
+	C = Class{__includes = A}
 	instance = C()
 	instance:foo() -- prints 'foo'
+	instance:bar() -- error: function not defined
 	
 	-- multiple inheritance
-	D = Class{inherits = {A,B}}
+	D = Class{__includes = {A,B}}
 	instance = D()
 	instance:foo() -- prints 'foo'
 	instance:bar() -- prints 'bar'
 
+#### Example:
 
-### function class.construct(object, ...) [Call class constructor.]
+	-- class attributes are shared across instances
+	A = Class{ foo = 'foo' } -- foo is a class attribute/static member
+	
+	one, two, three = A(), A(), A()
+	print(one.foo, two.foo, three.foo) --> prints 'foo    foo    foo'
+	
+	one.foo = 'bar' -- overwrite/specify for instance `one' only
+	print(one.foo, two.foo, three.foo) --> prints 'bar    foo    foo'
+	
+	A.foo = 'baz' -- overwrite for all instances without specification
+	print(one.foo, two.foo, three.foo) --> prints 'bar    baz    baz'
+
+
+### function class.init(object, ...) [Call class constructor.]
 
 Calls class constructor of a class on an object.
 
-Derived classes use this function their constructors to initialize the parent
-class(es) portions of the object.
+Derived classes should use this function their constructors to initialize the
+parent class(es) portions of the object.
 
 #### Parameters:
 
@@ -1506,84 +1533,64 @@ class(es) portions of the object.
 
 	Class = require 'hump.class'
 	
-	Shape = Class{function(self, area)
-		self.area = area
-	end}
-	function Shape:__tostring()
-		return "area = " .. self.area
-	end
+	Shape = Class{
+		init = function(self, area)
+			self.area = area
+		end;
+		__tostring = function(self)
+			return "area = " .. self.area
+		end
+	}
 	
-	Rectangle = Class{inherits = Shape, function(self, width, height)
-		Shape.construct(self, width * height)
-		self.width  = width
-		self.height = height
-	end}
-	function Rectangle:__tostring()
-		local strs = {
-			"width = " .. self.width,
-			"height = " .. self.height,
-			Shape.__tostring(self)
-		},
-		return table.concat(strs, ", ")
-	end
+	Rectangle = Class{__includes = Shape,
+		init = function(self, width, height)
+			Shape.init(self, width * height)
+			self.width  = width
+			self.height = height
+		end;
+		__tostring = function(self)
+			local strs = {
+				"width = " .. self.width,
+				"height = " .. self.height,
+				Shape.__tostring(self)
+			}
+			return table.concat(strs, ", ")
+		end
+	}
 	
 	print( Rectangle(2,4) ) -- prints 'width = 2, height = 4, area = 8'
 
-#### Example:
+### function class:include(other) [Explicit class inheritance/mixin support.]
 
-	Menu = Class{function(self)
-		self.entries = {}
-	end}
-	function Menu:add(title, entry)
-		self.entries[#self.entries + 1] = entry
-	end
-	function Menu:display()
-		-- ...
-	end
-	
-	Entry = Class{function(self, title, command)
-		self.title = title
-		self.command = command
-	end}
-	function Entry:execute()
-		return self.command()
-	end
-	
-	Submenu = Class{inherits = {Menu, Entry}, function(self, title)
-		Menu.construct(self)
-		-- redirect self:execute() to self:display()
-		Entry.construct(self, title, Menu.display)
-	end}
+Inherit functions and variables of another class, but if they are not already
+defined. This is done by (deeply) copying the functions and variables over to
+the subclass.
 
-### function class:inherit(...) [Explicit class inheritance/mixin support.]
-
-Inherit functions and variables of another class, if they are not already
-defined for the class. This is done by simply copying the functions and
-variables over to the subclass. The Lua rules for copying apply (i.e. tables
-are referenced, functions and primitive types are copied by value).
-
-**Be careful with changing table values in a subclass: This will change the
-value in the parent class too.**
-
-If more than one parent class is specified, inherit from all of these, in order
-of occurrence. That means that when two parent classes define the same method,
-the one from the first class will be inherited.
-
-**Note:** `class:inherit()` doesn't actually care if the arguments supplied are
+**Note:** `class:include()` doesn't actually care if the arguments supplied are
 hump classes. Just any table will work.
+
+**Note 2:** You can use `Class.include(a, b)` to copy any fields from table `a`
+to table `b` (see second example).
 
 #### Parameters:
 
-=tables ...=
-	Parent classes to inherit from
+=tables other=
+	Parent classes/mixins.
+
+#### Returns:
+
+=table=
+	The class.
 
 #### Example:
 
 	Class = require 'hump.class'
 	
-	Entity = Class{function(self)
-		GameObjects.register(self)
-	end}
+	Entity = Class{
+		init = function(self)
+			GameObjects.register(self)
+		end
+	}
 	
 	Collidable = {
 		dispatch_collision = function(self, other, dx, dy)
@@ -1596,49 +1603,83 @@ hump classes. Just any table will work.
 		collision_handler = {["*"] = function() end},
 	}
 	
-	Spaceship = Class{function(self)
-		self.type = "Spaceship"
-		-- ...
-	end}
+	Spaceship = Class{
+		init = function(self)
+			self.type = "Spaceship"
+			-- ...
+		end
+	}
 	
 	-- make Spaceship collidable
-	Spaceship:inherit(Collidable)
+	Spaceship:include(Collidable)
 	
 	function Spaceship:collision_handler["Spaceship"](other, dx, dy)
 		-- ...
 	end
 
-### function object:is_a(cls) [Test object's type.]
+#### Example:
 
-Tests whether an object is an instance of a class.
+	-- using Class.include()
+	Class = require 'hump.class'
+	a = {
+		foo = 'bar',
+		bar = {one = 1, two = 2, three = 3},
+		baz = function() print('baz') end,
+	}
+	b = {
+		foo = 'nothing to see here...'
+	}
+	
+	Class.include(b, a) -- copy values from a to b
+	                    -- note that neither a nor b are hump classes!
 
-#### Parameters:
+	print(a.foo, b.foo) -- prints 'bar    nothing to see here...'
+	
+	b.baz() -- prints 'baz'
+	
+	b.bar.one = 10 -- changes only values in b
+	print(a.bar.one, b.bar.one) -- prints '1    10'
 
-=class cls=
-	Class to test. **Note:** this is the class itself, not the name of the class.
+### function class:clone() [Clone class/prototype support.]
+
+Create a clone/deep copy of the class.
+
+**Note:** You can use `Class.clone(a)` to create a deep copy of any table
+(see second example).
 
 #### Returns:
 
-=boolean=
-	`true` if the object is an instance of the class, `false` otherwise
+=table=
+	A deep copy of the class/table.
+
 
 #### Example:
 
 	Class = require 'hump.class'
 	
-	A = Class{}
-	B = Class{inherits=A}
-	C = Class{inherits=B}
-	a, b, c = A(), B(), C()
-	print(a:is_a(A), a:is_a(B), a:is_a(C)) --> true   false  false
-	print(b:is_a(A), b:is_a(B), b:is_a(C)) --> true   true   false
-	print(c:is_a(A), c:is_a(B), c:is_a(C)) --> true   true   true
+	point = Class{ x = 0, y = 0 }
 	
-	D = Class{}
-	E = Class{inherits={B,D}}
-	d, e = D(), E()
-	print(d:is_a(A), d:is_a(B), d:is_a(D)) --> false  false  true
-	print(e:is_a(A), e:is_a(B), e:is_a(D)) --> true   true   true
+	a = point:clone()
+	a.x, a.y = 10, 10
+	print(a.x, a.y) --> prints '10    10'
+	
+	b = point:clone()
+	print(b.x, b.y) --> prints '10    10'
+
+#### Example:
+
+	-- using Class.clone() to copy tables
+	Class = require 'hump.class'
+	a = {
+		foo = 'bar',
+		bar = {one = 1, two = 2, three = 3},
+		baz = function() print('baz') end,
+	}
+	b = Class.clone(a)
+	
+	b.baz() -- prints 'baz'
+	b.bar.one = 10
+	print(a.bar.one, b.bar.one) -- prints '1    10'
 
 ### Caveats [Common gotchas.]
 
@@ -1648,23 +1689,24 @@ operation may be of the type superclass. Consider the following:
 
 Class = require 'hump.class'
 
-	A = Class{function(self, x) self.x = x end}
+	A = Class{init = function(self, x) self.x = x end}
 	function A:__add(other) return A(self.x + other.x) end
 	function A:show() print("A:", self.x) end
 	
-	B = Class{inherits = A, function(self, x, y) A.construct(self, x) self.y = y end}
+	B = Class{init = function(self, x, y) A.init(self, x) self.y = y end}
 	function B:show() print("B:", self.x, self.y) end
 	function B:foo() print("foo") end
+	B:include(A)
 	
 	one, two = B(1,2), B(3,4)
-	result = one + two
-	result:show()   -- prints "A:    4"
-	result:foo()    -- error: method does not exist
+	result = one + two -- result will be of type A, *not* B!
+	result:show()      -- prints "A:    4"
+	result:foo()       -- error: method does not exist
 
 Note that while you can define the `__index` metamethod of the class, this is
-not a good idea: It will break the class. To add a custom `__index` metamethod
-without breaking the class system, you have to use `rawget()`. But beware that
-this won't affect subclasses:
+not a good idea: It will break the class mechanism. To add a custom `__index`
+metamethod without breaking the class system, you have to use `rawget()`. But
+beware that this won't affect subclasses:
 
 	Class = require 'hump.class'
 	
@@ -1679,7 +1721,7 @@ this won't affect subclasses:
 	instance = A()
 	instance:foo() -- prints foo  bar
 	
-	B = Class{inherits = A}
+	B = Class{__includes = A}
 	instance = B()
 	instance:foo() -- prints only foo
 
@@ -2237,166 +2279,6 @@ Shortcut to `camera:worldCoords(love.mouse.getPosition())`.
 
 	x,y = camera:mousepos()
 	selectedUnit:plotPath(x,y)
-
-
-## Module hump.ringbuffer [A data structure that wraps around itself.]
-
-	Ringbuffer = require "hump.ringbuffer"
-
-A ring-buffer is a circular array: It does not have a first nor a last item,
-but it has a *selected* or *current* element.
-
-A ring-buffer can be used to implement [Tomb Raider style
-inventories](http://www.youtube.com/watch?v=YTdsKq77_lg), looping play-lists,
-recurring dialogs (like a unit's answers when selecting it multiple
-times in *Warcraft*) and generally everything that has a circular or looping
-structure.
-
-### function new(...) [Create a new ringbuffer.]
-
-Create new ring-buffer.
-
-The module name is a shortcut to this function.
-
-#### Parameters:
-
-=mixed ...=
-	Initial elements.
-
-#### Returns:
-
-=Ringbuffer=
-	The ring-buffer object.
-
-#### Example:
-
-	ringbuffer = require 'hump.ringbuffer'
-	rb = ringbuffer.new(1,2,3)
-	-- or:
-	rb = ringbuffer(1,2,3)
-
-### function ringbuffer:insert(...) [Inser elements.]
-
-Insert items behind current element.
-
-#### Parameters:
-
-=mixed ...=
-	Items to insert.
-
-#### Example:
-
-	rb = Ringbuffer(1,5,6) -- content: 1,5,6
-	rb:insert(2,3,4)       -- content: 1,2,3,4,5,6
-
-
-### function ringbuffer:remove() [Remove currently selected item.]
-
-Remove current item, return it and select next element.
-
-#### Returns:
-
-=mixed=
-	The removed item.
-
-#### Example:
-
-	rb = Ringbuffer(1,2,3,4) -- content: 1,2,3,4
-	val = rb:remove()        -- content: 2,3,4
-	print(val)               -- prints `1'
-
-
-### function ringbuffer:removeAt(pos) [Remove an item.]
-
-Remove the item at a position relative to the current element.
-
-#### Parameters:
-
-=number pos=
-	Position of the item to remove.
-
-
-#### Returns:
-
-=mixed=
-	The removed item.
-
-
-#### Example:
-
-	rb = Ringbuffer(1,2,3,4,5) -- content: 1,2,3,4,5
-	rb:removeAt(2)             -- content: 1,2,4,5
-	rb:removeAt(-1)            -- content: 1,2,4
-
-
-### function ringbuffer:next() [Select next item.]
-
-Select and return the next element.
-
-#### Returns:
-
-=mixed=
-	The next item.
-
-#### Example:
-
-	rb = Ringbuffer(1,2,3)
-	rb:next()     -- content: 2,3,1
-	rb:next()     -- content: 3,1,2
-	x = rb:next() -- content: 1,2,3
-	print(x)      -- prints `1'
-
-### function ringbuffer:prev() [Select previous item.]
-
-Select and return the previous item.
-
-#### Returns:
-
-=mixed=
-	The previous item.
-
-#### Example:
-
-	rb = Ringbuffer(1,2,3)
-	rb:prev())    -- content: 3,1,2
-	rb:prev())    -- content: 2,3,1
-	x = rb:prev() -- content: 1,2,3
-	print(x)      -- prints `1'
-
-
-### function ringbuffer:get() [Get currently selected item.]
-
-Return the current element.
-
-#### Returns:
-
-=mixed=
-	The currently selected element.
-
-
-#### Example:
-
-	rb = Ringbuffer(1,2,3)
-	rb:next()       -- content: 2,3,1
-	print(rb:get()) -- prints '2'
-
-
-### function ringbuffer:size() [Get ringbuffer size.]
-
-Get number of items in the buffer
-
-#### Returns:
-
-=number=
-	Number of items in the buffer.
-
-#### Example:
-
-	rb = Ringbuffer(1,2,3)
-	print(rb:size()) -- prints '3'
-	rb:remove()
-	print(rb:size()) -- prints '2'
-
 
 ## License
 

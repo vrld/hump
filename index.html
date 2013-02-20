@@ -36,19 +36,19 @@ for the awesome LÖVE Engine.</p>
 <p>hump differs from other libraries in that every component is independent of the
 remaining ones. hump's footprint is very small and thus should fit nicely into
 your projects.</p>
-</div></div><div class="outer-block" id="Modules"><h3>Modules<a class="top" href="#top">^top</a></h3><div class="preamble"><dl><dt><a href="#hump.gamestate">hump.gamestate</a></dt><dd>A gamestate system.</dd><dt><a href="#hump.timer">hump.timer</a></dt><dd>Delayed and time-limited function calls.</dd><dt><a href="#hump.vector">hump.vector</a></dt><dd>2D vector math.</dd><dt><a href="#hump.vector-light">hump.vector-light</a></dt><dd>Lightweight 2D vector math.</dd><dt><a href="#hump.class">hump.class</a></dt><dd>Class-based object orientated programming for Lua.</dd><dt><a href="#hump.signal">hump.signal</a></dt><dd>Simple Signal/Slot (aka. Observer) implementation.</dd><dt><a href="#hump.camera">hump.camera</a></dt><dd>A camera for LÖVE.</dd><dt><a href="#hump.ringbuffer">hump.ringbuffer</a></dt><dd>A data structure that wraps around itself.</dd></dl>
+</div></div><div class="outer-block" id="Modules"><h3>Modules<a class="top" href="#top">^top</a></h3><div class="preamble"><dl><dt><a href="#hump.gamestate">hump.gamestate</a></dt><dd>A gamestate system.</dd><dt><a href="#hump.timer">hump.timer</a></dt><dd>Delayed and time-limited function calls.</dd><dt><a href="#hump.vector">hump.vector</a></dt><dd>2D vector math.</dd><dt><a href="#hump.vector-light">hump.vector-light</a></dt><dd>Lightweight 2D vector math.</dd><dt><a href="#hump.class">hump.class</a></dt><dd>Object oriented programming for Lua.</dd><dt><a href="#hump.signal">hump.signal</a></dt><dd>Simple Signal/Slot (aka. Observer) implementation.</dd><dt><a href="#hump.camera">hump.camera</a></dt><dd>A camera for LÖVE.</dd></dl>
 
 </div></div><div class="outer-block" id="hump.gamestate"><h3>hump.gamestate<a class="top" href="#top">^top</a></h3><div class="preamble"><pre><code class="lua">Gamestate = require "hump.gamestate"
 </code></pre>
 
-<p>A gamestate encapsulates independent data an behaviour into a single entity.</p>
+<p>A gamestate encapsulates independent data an behaviour in a single table.</p>
 
 <p>A typical game could consist of a menu-state, a level-state and a game-over-state.</p>
 
 <h4>Example:</h4>
 
-<pre><code class="lua">local menu = Gamestate.new()
-local game = Gamestate.new()
+<pre><code class="lua">local menu = {} -- previously: Gamestate.new()
+local game = {}
 
 function menu:draw()
     love.graphics.print("Press Enter to continue", 10, 10)
@@ -104,7 +104,7 @@ receive the same arguments (e.g. <code class="lua">state:update(dt)</code> will 
 
 <h4>Example:</h4>
 
-<pre><code class="lua">menu = Gamestate.new()
+<pre><code class="lua">menu = {} -- previously: Gamestate.new()
 function menu:init() -- run only once
     self.background = love.graphics.newImage('bg.jpg')
     Buttons.initialize()
@@ -143,11 +143,16 @@ function menu:mousereleased(x,y, mouse_btn)
     end
 end
 </code></pre>
-</div><div class="ref-block" id="hump.gamestatenew"><h4>function <span class="name">new</span><span class="arglist">()</span><a class="top" href="#hump.gamestate">^top</a></h4><p>Declare a new gamestate. A gamestate can define several callbacks.</p>
+</div><div class="ref-block" id="hump.gamestatenew"><h4>function <span class="name">new</span><span class="arglist">()</span><a class="top" href="#hump.gamestate">^top</a></h4><p><strong>Deprecated: Use the table constructor instead (see example)</strong></p>
+
+<p>Declare a new gamestate (just an empty table). A gamestate can define several
+callbacks.</p>
 <div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
 <dt>Gamestate</dt>
-<dd>The new gamestate.</dd></dl>
-</div><div class="example">Example:<pre><code class="lua">menu = Gamestate.new()
+<dd>An empty table.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">menu = {}
+-- deprecated method:
+menu = Gamestate.new()
 </code></pre>
 </div></div><div class="ref-block" id="hump.gamestateswitch"><h4>function <span class="name">switch</span><span class="arglist">(to, ...)</span><a class="top" href="#hump.gamestate">^top</a></h4><p>Switch to a gamestate, with any additional arguments passed to the new state.</p>
 
@@ -883,7 +888,7 @@ end
 </div></div></div><div class="outer-block" id="hump.class"><h3>hump.class<a class="top" href="#top">^top</a></h3><div class="preamble"><pre><code class="lua">Class = require "hump.class"
 </code></pre>
 
-<p>A small, fast class implementation with multiple inheritance support.</p>
+<p>A small, fast class/prototype implementation with multiple inheritance.</p>
 
 <p>Implements <a href="https://github.com/bartbes/Class-Commons">class commons</a>.</p>
 
@@ -905,36 +910,40 @@ function Critter:draw()
     love.graphics.draw(self.img, self.pos.x, self.pos.y)
 end
 </code></pre>
-</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.classnew">new()</a></dt><dd>Declare a new class.</dd><dt><a href="#hump.classclass.construct">class.construct()</a></dt><dd>Call class constructor.</dd><dt><a href="#hump.classclass:inherit">class:inherit()</a></dt><dd>Explicit class inheritance/mixin support.</dd><dt><a href="#hump.classobject:is_a">object:is_a()</a></dt><dd>Test object's type.</dd><dt><a href="#hump.classCaveats ">Caveats </a></dt><dd>Common gotchas.</dd></dl></div><div class="ref-block" id="hump.classnew"><h4>function <span class="name">new</span><span class="arglist">{constructor, name = the_name, inherits = super}</span><a class="top" href="#hump.class">^top</a></h4><p>Declare a new class.</p>
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.classnew">new()</a></dt><dd>Declare a new class.</dd><dt><a href="#hump.classclass.init">class.init()</a></dt><dd>Call class constructor.</dd><dt><a href="#hump.classclass:include">class:include()</a></dt><dd>Explicit class inheritance/mixin support.</dd><dt><a href="#hump.classclass:clone">class:clone()</a></dt><dd>Clone class/prototype support.</dd><dt><a href="#hump.classCaveats ">Caveats </a></dt><dd>Common gotchas.</dd></dl></div><div class="ref-block" id="hump.classnew"><h4>function <span class="name">new</span><span class="arglist">{init = constructor, __includes = parents, ...}</span><a class="top" href="#hump.class">^top</a></h4><p>Declare a new class.</p>
 
-<p>The constructor will receive the newly create object as first argument.</p>
+<p><code class="lua">init()</code> will receive the new object instance as first argument. Any other
+arguments will also be forwarded (see examples), i.e. <code class="lua">init()</code> has the
+following signature:</p>
 
-<p>You can check if an object is an instance of a class using
-<a href="#hump.classis_a"><code class="lua">object:is_a()</code></a>.</p>
+<pre><code class="lua">function init(self, ...)
+</code></pre>
+
+<p>If you do not specify a constructor, an empty constructor will be used instead.</p>
 
 <p>The name of the variable that holds the module can be used as a shortcut to
 <code class="lua">new()</code> (see example).</p>
 <div class="arguments">Parameters:<dl>
 <dt>function <code class="lua">constructor</code> (optional)</dt>
-<dd>Class constructor. Can be accessed with theclass.construct(object, ...)</dd><dt>string <code class="lua">the_name</code> (optional)</dt>
-<dd>Class name (used only to make the class compliant to tostring().</dd><dt>class <code class="lua">or table of classes super</code> (optional)</dt>
-<dd>Classes to inherit from. Can either be a single class or a table of classes</dd></dl>
+<dd>Class constructor. Can be accessed with theclass.init(object, ...)</dd><dt>class <code class="lua">or table of classes parents</code> (optional)</dt>
+<dd>Classes to inherit from. Can either be a single class or a table of classes</dd><dt>mixed <code class="lua">...</code> (optional)</dt>
+<dd>Any other fields or methods common to all instances of this class.</dd></dl>
 </div><div class="returns">Returns:<dl>
 <dt>class</dt>
-<dd>The class</dd></dl>
+<dd>The class.</dd></dl>
 </div><div class="example">Examples:<pre><code class="lua">Class = require 'hump.class' -- `Class' is now a shortcut to new()
 
--- define unnamed class
-Feline = Class{function(self, size, weight)
-    self.size = size
-    self.weight = weight
-end}
-print(Feline) -- prints '
-
--- define class method
-function Feline:stats()
-    return string.format("size: %.02f, weight %.02f", self.size, self.weight)
-end
+-- define a class class
+Feline = Class{
+    init = function(self, size, weight)
+        self.size = size
+        self.weight = weight
+    end;
+    -- define a method
+    stats = function(self)
+        return string.format("size: %.02f, weight: %.02f", self.size, self.weight)
+    end;
+}
 
 -- create two objects
 garfield = Feline(.7, 45)
@@ -944,41 +953,58 @@ print("Garfield: " .. garfield:stats(), "Felix: " .. felix:stats())
 </code></pre>
 <pre><code class="lua">Class = require 'hump.class'
 
--- define class with explicit name 'Feline'
-Feline = Class{name = "Feline", function(self, size, weight)
+-- same as above, but with 'external' function definitions
+Feline = Class{}
+
+function Feline:init(size, weight)
     self.size = size
     self.weight = weight
-end}
+end
+
+function Feline:stats()
+    return string.format("size: %.02f, weight: %.02f", self.size, self.weight)
+end
 
 garfield = Feline(.7, 45)
-print(Feline, garfield) -- prints ' &gt;'
+print(Feline, garfield)
 </code></pre>
 <pre><code class="lua">Class = require 'hump.class'
-A = Class{}
-function A:foo()
-    print('foo')
-end
+A = Class{
+    foo = function() print('foo') end
+}
 
-B = Class{}
-function B:bar()
-    print('bar')
-end
+B = Class{
+    bar = function() print('bar') end
+}
 
 -- single inheritance
-C = Class{inherits = A}
+C = Class{__includes = A}
 instance = C()
 instance:foo() -- prints 'foo'
+instance:bar() -- error: function not defined
 
 -- multiple inheritance
-D = Class{inherits = {A,B}}
+D = Class{__includes = {A,B}}
 instance = D()
 instance:foo() -- prints 'foo'
 instance:bar() -- prints 'bar'
 </code></pre>
-</div></div><div class="ref-block" id="hump.classclass.construct"><h4>function <span class="name">class.construct</span><span class="arglist">(object, ...)</span><a class="top" href="#hump.class">^top</a></h4><p>Calls class constructor of a class on an object.</p>
+<pre><code class="lua">-- class attributes are shared across instances
+A = Class{ foo = 'foo' } -- foo is a class attribute/static member
 
-<p>Derived classes use this function their constructors to initialize the parent
-class(es) portions of the object.</p>
+one, two, three = A(), A(), A()
+print(one.foo, two.foo, three.foo) --&gt; prints 'foo    foo    foo'
+
+one.foo = 'bar' -- overwrite/specify for instance `one' only
+print(one.foo, two.foo, three.foo) --&gt; prints 'bar    foo    foo'
+
+A.foo = 'baz' -- overwrite for all instances without specification
+print(one.foo, two.foo, three.foo) --&gt; prints 'bar    baz    baz'
+</code></pre>
+</div></div><div class="ref-block" id="hump.classclass.init"><h4>function <span class="name">class.init</span><span class="arglist">(object, ...)</span><a class="top" href="#hump.class">^top</a></h4><p>Calls class constructor of a class on an object.</p>
+
+<p>Derived classes should use this function their constructors to initialize the
+parent class(es) portions of the object.</p>
 <div class="arguments">Parameters:<dl>
 <dt>Object <code class="lua">object</code></dt>
 <dd>The object. Usually <code class="lua">self</code>.</dd><dt>mixed <code class="lua">...</code></dt>
@@ -986,77 +1012,57 @@ class(es) portions of the object.</p>
 </div><div class="returns">Returns:<dl>
 <dt>mixed</dt>
 <dd>Whatever the parent class constructor returns.</dd></dl>
-</div><div class="example">Examples:<pre><code class="lua">Class = require 'hump.class'
+</div><div class="example">Example:<pre><code class="lua">Class = require 'hump.class'
 
-Shape = Class{function(self, area)
-    self.area = area
-end}
-function Shape:__tostring()
-    return "area = " .. self.area
-end
+Shape = Class{
+    init = function(self, area)
+        self.area = area
+    end;
+    __tostring = function(self)
+        return "area = " .. self.area
+    end
+}
 
-Rectangle = Class{inherits = Shape, function(self, width, height)
-    Shape.construct(self, width * height)
-    self.width  = width
-    self.height = height
-end}
-function Rectangle:__tostring()
-    local strs = {
-        "width = " .. self.width,
-        "height = " .. self.height,
-        Shape.__tostring(self)
-    },
-    return table.concat(strs, ", ")
-end
+Rectangle = Class{__includes = Shape,
+    init = function(self, width, height)
+        Shape.init(self, width * height)
+        self.width  = width
+        self.height = height
+    end;
+    __tostring = function(self)
+        local strs = {
+            "width = " .. self.width,
+            "height = " .. self.height,
+            Shape.__tostring(self)
+        }
+        return table.concat(strs, ", ")
+    end
+}
 
 print( Rectangle(2,4) ) -- prints 'width = 2, height = 4, area = 8'
 </code></pre>
-<pre><code class="lua">Menu = Class{function(self)
-    self.entries = {}
-end}
-function Menu:add(title, entry)
-    self.entries[#self.entries + 1] = entry
-end
-function Menu:display()
-    -- ...
-end
+</div></div><div class="ref-block" id="hump.classclass:include"><h4>function <span class="name">class:include</span><span class="arglist">(other)</span><a class="top" href="#hump.class">^top</a></h4><p>Inherit functions and variables of another class, but if they are not already
+defined. This is done by (deeply) copying the functions and variables over to
+the subclass.</p>
 
-Entry = Class{function(self, title, command)
-    self.title = title
-    self.command = command
-end}
-function Entry:execute()
-    return self.command()
-end
-
-Submenu = Class{inherits = {Menu, Entry}, function(self, title)
-    Menu.construct(self)
-    -- redirect self:execute() to self:display()
-    Entry.construct(self, title, Menu.display)
-end}
-</code></pre>
-</div></div><div class="ref-block" id="hump.classclass:inherit"><h4>function <span class="name">class:inherit</span><span class="arglist">(...)</span><a class="top" href="#hump.class">^top</a></h4><p>Inherit functions and variables of another class, if they are not already
-defined for the class. This is done by simply copying the functions and
-variables over to the subclass. The Lua rules for copying apply (i.e. tables
-are referenced, functions and primitive types are copied by value).</p>
-
-<p><strong>Be careful with changing table values in a subclass: This will change the
-value in the parent class too.</strong></p>
-
-<p>If more than one parent class is specified, inherit from all of these, in order
-of occurrence. That means that when two parent classes define the same method,
-the one from the first class will be inherited.</p>
-
-<p><strong>Note:</strong> <code class="lua">class:inherit()</code> doesn't actually care if the arguments supplied are
+<p><strong>Note:</strong> <code class="lua">class:include()</code> doesn't actually care if the arguments supplied are
 hump classes. Just any table will work.</p>
-<div class="arguments">Parameters:<dl>
-<dt>tables <code class="lua">...</code></dt>
-<dd>Parent classes to inherit from</dd></dl>
-</div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">Class = require 'hump.class'
 
-Entity = Class{function(self)
-    GameObjects.register(self)
-end}
+<p><strong>Note 2:</strong> You can use <code class="lua">Class.include(a, b)</code> to copy any fields from table <code class="lua">a</code>
+to table <code class="lua">b</code> (see second example).</p>
+<div class="arguments">Parameters:<dl>
+<dt>tables <code class="lua">other</code></dt>
+<dd>Parent classes/mixins.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>table</dt>
+<dd>The class.</dd></dl>
+</div><div class="example">Examples:<pre><code class="lua">Class = require 'hump.class'
+
+Entity = Class{
+    init = function(self)
+        GameObjects.register(self)
+    end
+}
 
 Collidable = {
     dispatch_collision = function(self, other, dx, dy)
@@ -1069,40 +1075,71 @@ Collidable = {
     collision_handler = {["*"] = function() end},
 }
 
-Spaceship = Class{function(self)
-    self.type = "Spaceship"
-    -- ...
-end}
+Spaceship = Class{
+    init = function(self)
+        self.type = "Spaceship"
+        -- ...
+    end
+}
 
 -- make Spaceship collidable
-Spaceship:inherit(Collidable)
+Spaceship:include(Collidable)
 
 function Spaceship:collision_handler["Spaceship"](other, dx, dy)
     -- ...
 end
 </code></pre>
-</div></div><div class="ref-block" id="hump.classobject:is_a"><h4>function <span class="name">object:is_a</span><span class="arglist">(cls)</span><a class="top" href="#hump.class">^top</a></h4><p>Tests whether an object is an instance of a class.</p>
-<div class="arguments">Parameters:<dl>
-<dt>class <code class="lua">cls</code></dt>
-<dd>Class to test. <strong>Note:</strong> this is the class itself, not the name of the class.</dd></dl>
-</div><div class="returns">Returns:<dl>
-<dt>boolean</dt>
-<dd><code class="lua">true</code> if the object is an instance of the class, <code class="lua">false</code> otherwise</dd></dl>
-</div><div class="example">Example:<pre><code class="lua">Class = require 'hump.class'
+<pre><code class="lua">-- using Class.include()
+Class = require 'hump.class'
+a = {
+    foo = 'bar',
+    bar = {one = 1, two = 2, three = 3},
+    baz = function() print('baz') end,
+}
+b = {
+    foo = 'nothing to see here...'
+}
 
-A = Class{}
-B = Class{inherits=A}
-C = Class{inherits=B}
-a, b, c = A(), B(), C()
-print(a:is_a(A), a:is_a(B), a:is_a(C)) --&gt; true   false  false
-print(b:is_a(A), b:is_a(B), b:is_a(C)) --&gt; true   true   false
-print(c:is_a(A), c:is_a(B), c:is_a(C)) --&gt; true   true   true
+Class.include(b, a) -- copy values from a to b
+                    -- note that neither a nor b are hump classes!
 
-D = Class{}
-E = Class{inherits={B,D}}
-d, e = D(), E()
-print(d:is_a(A), d:is_a(B), d:is_a(D)) --&gt; false  false  true
-print(e:is_a(A), e:is_a(B), e:is_a(D)) --&gt; true   true   true
+print(a.foo, b.foo) -- prints 'bar    nothing to see here...'
+
+b.baz() -- prints 'baz'
+
+b.bar.one = 10 -- changes only values in b
+print(a.bar.one, b.bar.one) -- prints '1    10'
+</code></pre>
+</div></div><div class="ref-block" id="hump.classclass:clone"><h4>function <span class="name">class:clone</span><span class="arglist">()</span><a class="top" href="#hump.class">^top</a></h4><p>Create a clone/deep copy of the class.</p>
+
+<p><strong>Note:</strong> You can use <code class="lua">Class.clone(a)</code> to create a deep copy of any table
+(see second example).</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>table</dt>
+<dd>A deep copy of the class/table.</dd></dl>
+</div><div class="example">Examples:<pre><code class="lua">Class = require 'hump.class'
+
+point = Class{ x = 0, y = 0 }
+
+a = point:clone()
+a.x, a.y = 10, 10
+print(a.x, a.y) --&gt; prints '10    10'
+
+b = point:clone()
+print(b.x, b.y) --&gt; prints '10    10'
+</code></pre>
+<pre><code class="lua">-- using Class.clone() to copy tables
+Class = require 'hump.class'
+a = {
+    foo = 'bar',
+    bar = {one = 1, two = 2, three = 3},
+    baz = function() print('baz') end,
+}
+b = Class.clone(a)
+
+b.baz() -- prints 'baz'
+b.bar.one = 10
+print(a.bar.one, b.bar.one) -- prints '1    10'
 </code></pre>
 </div></div><div class="section-block" id="hump.classCaveats "><h4>Caveats <a class="top" href="#hump.class">^top</a></h4><p>Be careful when using metamethods like <code class="lua">__add</code> or <code class="lua">__mul</code>: If subclass inherits
 those methods from a superclass, but does not overwrite them, the result of the
@@ -1110,24 +1147,25 @@ operation may be of the type superclass. Consider the following:</p>
 
 <p>Class = require 'hump.class'</p>
 
-<pre><code class="lua">A = Class{function(self, x) self.x = x end}
+<pre><code class="lua">A = Class{init = function(self, x) self.x = x end}
 function A:__add(other) return A(self.x + other.x) end
 function A:show() print("A:", self.x) end
 
-B = Class{inherits = A, function(self, x, y) A.construct(self, x) self.y = y end}
+B = Class{init = function(self, x, y) A.init(self, x) self.y = y end}
 function B:show() print("B:", self.x, self.y) end
 function B:foo() print("foo") end
+B:include(A)
 
 one, two = B(1,2), B(3,4)
-result = one + two
-result:show()   -- prints "A:    4"
-result:foo()    -- error: method does not exist
+result = one + two -- result will be of type A, *not* B!
+result:show()      -- prints "A:    4"
+result:foo()       -- error: method does not exist
 </code></pre>
 
 <p>Note that while you can define the <code class="lua">__index</code> metamethod of the class, this is
-not a good idea: It will break the class. To add a custom <code class="lua">__index</code> metamethod
-without breaking the class system, you have to use <code class="lua">rawget()</code>. But beware that
-this won't affect subclasses:</p>
+not a good idea: It will break the class mechanism. To add a custom <code class="lua">__index</code>
+metamethod without breaking the class system, you have to use <code class="lua">rawget()</code>. But
+beware that this won't affect subclasses:</p>
 
 <pre><code class="lua">Class = require 'hump.class'
 
@@ -1142,7 +1180,7 @@ end
 instance = A()
 instance:foo() -- prints foo  bar
 
-B = Class{inherits = A}
+B = Class{__includes = A}
 instance = B()
 instance:foo() -- prints only foo
 </code></pre>
@@ -1480,94 +1518,6 @@ love.graphics.line(x, y, love.mouse.getPosition())
 <dd>Mouse position in world coordinates.</dd></dl>
 </div><div class="example">Example:<pre><code class="lua">x,y = camera:mousepos()
 selectedUnit:plotPath(x,y)
-</code></pre>
-</div></div></div><div class="outer-block" id="hump.ringbuffer"><h3>hump.ringbuffer<a class="top" href="#top">^top</a></h3><div class="preamble"><pre><code class="lua">Ringbuffer = require "hump.ringbuffer"
-</code></pre>
-
-<p>A ring-buffer is a circular array: It does not have a first nor a last item,
-but it has a <em>selected</em> or <em>current</em> element.</p>
-
-<p>A ring-buffer can be used to implement <a href="http://www.youtube.com/watch?v=YTdsKq77_lg">Tomb Raider style
-inventories</a>, looping play-lists,
-recurring dialogs (like a unit's answers when selecting it multiple
-times in <em>Warcraft</em>) and generally everything that has a circular or looping
-structure.</p>
-</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.ringbuffernew">new()</a></dt><dd>Create a new ringbuffer.</dd><dt><a href="#hump.ringbufferringbuffer:insert">ringbuffer:insert()</a></dt><dd>Inser elements.</dd><dt><a href="#hump.ringbufferringbuffer:remove">ringbuffer:remove()</a></dt><dd>Remove currently selected item.</dd><dt><a href="#hump.ringbufferringbuffer:removeAt">ringbuffer:removeAt()</a></dt><dd>Remove an item.</dd><dt><a href="#hump.ringbufferringbuffer:next">ringbuffer:next()</a></dt><dd>Select next item.</dd><dt><a href="#hump.ringbufferringbuffer:prev">ringbuffer:prev()</a></dt><dd>Select previous item.</dd><dt><a href="#hump.ringbufferringbuffer:get">ringbuffer:get()</a></dt><dd>Get currently selected item.</dd><dt><a href="#hump.ringbufferringbuffer:size">ringbuffer:size()</a></dt><dd>Get ringbuffer size.</dd></dl></div><div class="ref-block" id="hump.ringbuffernew"><h4>function <span class="name">new</span><span class="arglist">(...)</span><a class="top" href="#hump.ringbuffer">^top</a></h4><p>Create new ring-buffer.</p>
-
-<p>The module name is a shortcut to this function.</p>
-<div class="arguments">Parameters:<dl>
-<dt>mixed <code class="lua">...</code></dt>
-<dd>Initial elements.</dd></dl>
-</div><div class="returns">Returns:<dl>
-<dt>Ringbuffer</dt>
-<dd>The ring-buffer object.</dd></dl>
-</div><div class="example">Example:<pre><code class="lua">ringbuffer = require 'hump.ringbuffer'
-rb = ringbuffer.new(1,2,3)
--- or:
-rb = ringbuffer(1,2,3)
-</code></pre>
-</div></div><div class="ref-block" id="hump.ringbufferringbuffer:insert"><h4>function <span class="name">ringbuffer:insert</span><span class="arglist">(...)</span><a class="top" href="#hump.ringbuffer">^top</a></h4><p>Insert items behind current element.</p>
-<div class="arguments">Parameters:<dl>
-<dt>mixed <code class="lua">...</code></dt>
-<dd>Items to insert.</dd></dl>
-</div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,5,6) -- content: 1,5,6
-rb:insert(2,3,4)       -- content: 1,2,3,4,5,6
-</code></pre>
-</div></div><div class="ref-block" id="hump.ringbufferringbuffer:remove"><h4>function <span class="name">ringbuffer:remove</span><span class="arglist">()</span><a class="top" href="#hump.ringbuffer">^top</a></h4><p>Remove current item, return it and select next element.</p>
-<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
-<dt>mixed</dt>
-<dd>The removed item.</dd></dl>
-</div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,2,3,4) -- content: 1,2,3,4
-val = rb:remove()        -- content: 2,3,4
-print(val)               -- prints `1'
-</code></pre>
-</div></div><div class="ref-block" id="hump.ringbufferringbuffer:removeAt"><h4>function <span class="name">ringbuffer:removeAt</span><span class="arglist">(pos)</span><a class="top" href="#hump.ringbuffer">^top</a></h4><p>Remove the item at a position relative to the current element.</p>
-<div class="arguments">Parameters:<dl>
-<dt>number <code class="lua">pos</code></dt>
-<dd>Position of the item to remove.</dd></dl>
-</div><div class="returns">Returns:<dl>
-<dt>mixed</dt>
-<dd>The removed item.</dd></dl>
-</div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,2,3,4,5) -- content: 1,2,3,4,5
-rb:removeAt(2)             -- content: 1,2,4,5
-rb:removeAt(-1)            -- content: 1,2,4
-</code></pre>
-</div></div><div class="ref-block" id="hump.ringbufferringbuffer:next"><h4>function <span class="name">ringbuffer:next</span><span class="arglist">()</span><a class="top" href="#hump.ringbuffer">^top</a></h4><p>Select and return the next element.</p>
-<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
-<dt>mixed</dt>
-<dd>The next item.</dd></dl>
-</div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,2,3)
-rb:next()     -- content: 2,3,1
-rb:next()     -- content: 3,1,2
-x = rb:next() -- content: 1,2,3
-print(x)      -- prints `1'
-</code></pre>
-</div></div><div class="ref-block" id="hump.ringbufferringbuffer:prev"><h4>function <span class="name">ringbuffer:prev</span><span class="arglist">()</span><a class="top" href="#hump.ringbuffer">^top</a></h4><p>Select and return the previous item.</p>
-<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
-<dt>mixed</dt>
-<dd>The previous item.</dd></dl>
-</div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,2,3)
-rb:prev())    -- content: 3,1,2
-rb:prev())    -- content: 2,3,1
-x = rb:prev() -- content: 1,2,3
-print(x)      -- prints `1'
-</code></pre>
-</div></div><div class="ref-block" id="hump.ringbufferringbuffer:get"><h4>function <span class="name">ringbuffer:get</span><span class="arglist">()</span><a class="top" href="#hump.ringbuffer">^top</a></h4><p>Return the current element.</p>
-<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
-<dt>mixed</dt>
-<dd>The currently selected element.</dd></dl>
-</div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,2,3)
-rb:next()       -- content: 2,3,1
-print(rb:get()) -- prints '2'
-</code></pre>
-</div></div><div class="ref-block" id="hump.ringbufferringbuffer:size"><h4>function <span class="name">ringbuffer:size</span><span class="arglist">()</span><a class="top" href="#hump.ringbuffer">^top</a></h4><p>Get number of items in the buffer</p>
-<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
-<dt>number</dt>
-<dd>Number of items in the buffer.</dd></dl>
-</div><div class="example">Example:<pre><code class="lua">rb = Ringbuffer(1,2,3)
-print(rb:size()) -- prints '3'
-rb:remove()
-print(rb:size()) -- prints '2'
 </code></pre>
 </div></div></div><div class="outer-block" id="License"><h3>License<a class="top" href="#top">^top</a></h3><div class="preamble"><p>Yay, <em>free software</em></p>
 
