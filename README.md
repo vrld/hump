@@ -6,7 +6,7 @@ __HUMP__ is a small collection of tools for developing games with L&Ouml;VE.
 Contents:
 ------------
 
-*   *gamestate.lua*: Easy gamestate mangement.
+*   *gamestate.lua*: Easy gamestate management.
 *   *timer.lua*: Delayed and time-limited function calls.
 *   *vector.lua*: 2D vector math.
 *   *vector-light.lua*: Lightweight 2D vector math (for optimisation purposes - leads to potentially ugly code).
