@@ -24,70 +24,61 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]--
 
-local function __NULL__() end
+local function include_helper(to, from, seen)
+	if type(from) ~= 'table' then
+		return from
+	elseif seen[from] then
+		return seen[from]
+	end
 
--- class "inheritance" by copying functions
-local function inherit(class, interface, ...)
-	if not interface then return end
-	assert(type(interface) == "table", "Can only inherit from other classes.")
-
-	-- __index and construct are not overwritten as for them class[name] is defined
-	for name, func in pairs(interface) do
-		if not class[name] then
-			class[name] = func
+	seen[from] = to
+	for k,v in pairs(from) do
+		k = include_helper({}, k, seen) -- keys might also be tables
+		if not to[k] then
+			to[k] = include_helper({}, v, seen)
 		end
 	end
-	for super in pairs(interface.__is_a or {}) do
-		class.__is_a[super] = true
-	end
-
-	return inherit(class, ...)
+	return to
 end
 
--- class builder
-local function new(args)
-	local super = {}
-	local name = '<unnamed class>'
-	local constructor = args or __NULL__
-	if type(args) == "table" then
-		-- nasty hack to check if args.inherits is a table of classes or a class or nil
-		super = (args.inherits or {}).__is_a and {args.inherits} or args.inherits or {}
-		name = args.name or name
-		constructor = args[1] or __NULL__
-	end
-	assert(type(constructor) == "function", 'constructor has to be nil or a function')
+-- deeply copies `other' into `class'. keys in `other' that are already
+-- defined in `class' are omitted
+local function include(class, other)
+	return include_helper(class, other, {})
+end
 
-	-- build class
-	local class = {}
+-- returns a deep copy of `other'
+local function clone(other)
+	return include({}, other)
+end
+
+local function new(class)
 	class.__index = class
-	class.__tostring = function() return ("<instance of %s>"):format(tostring(class)) end
-	class.construct = constructor or __NULL__
-	class.inherit = inherit
-	class.__is_a = {[class] = true}
-	class.is_a = function(self, other) return not not self.__is_a[other] end
+	class.init    = class.init    or function() end
+	class.include = class.include or include
+	class.clone   = class.clone   or clone
 
-	-- inherit superclasses (see above)
-	inherit(class, unpack(super))
+	-- mixins
+	local inc = class.__includes or {}
+	if getmetatable(inc) then inc = {inc} end
 
-	-- syntactic sugar
-	local meta = {
-		__call = function(self, ...)
-			local obj = {}
-			setmetatable(obj, self)
-			self.construct(obj, ...)
-			return obj
-		end,
-		__tostring = function() return name end
-	}
-	return setmetatable(class, meta)
+	for _, other in pairs(inc) do
+		include(class, other)
+	end
+
+	-- constructor call
+	return setmetatable(class, {__call = function(c, ...)
+		local o = setmetatable({}, c)
+		o:init(...)
+		return o
+	end})
 end
 
 -- interface for cross class-system compatibility (see https://github.com/bartbes/Class-Commons).
 if class_commons ~= false and not common then
 	common = {}
 	function common.class(name, prototype, parent)
-		local init = prototype.init or (parent or {}).init
-		return new{name = name, inherits = {prototype, parent}, init}
+		return include(new(prototype), parent)
 	end
 	function common.instance(class, ...)
 		return class(...)
@@ -96,5 +87,5 @@ end
 
 
 -- the module
-return setmetatable({new = new, inherit = inherit},
+return setmetatable({new = new, include = include, clone = clone},
 	{__call = function(_,...) return new(...) end})
