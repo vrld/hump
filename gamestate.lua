@@ -31,9 +31,7 @@ local function __ERROR__() error("Gamestate not initialized. Use Gamestate.switc
 local current = {leave = __NULL__}
 
 local GS = {}
-function GS.new()
-	return setmetatable({}, {__index = function() return __NULL__ end})
-end
+function GS.new(t) return t or {} end -- constructor - deprecated!
 
 function GS.switch(to, ...)
 	assert(to, "Missing argument: Gamestate to switch to")
