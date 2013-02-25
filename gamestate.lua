@@ -35,12 +35,12 @@ function GS.new(t) return t or {} end -- constructor - deprecated!
 
 function GS.switch(to, ...)
 	assert(to, "Missing argument: Gamestate to switch to")
-	current:leave()
 	local pre = current
-	to:init()
+	;(current.leave or __NULL__)(self)
+	;(to.init or __NULL__)(to)
 	to.init = nil
 	current = to
-	return current:enter(pre, ...)
+	return (current.enter or __NULL__)(current, pre, ...)
 end
 
 -- holds all defined love callbacks after GS.registerEvents is called
