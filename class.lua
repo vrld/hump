@@ -25,7 +25,9 @@ THE SOFTWARE.
 ]]--
 
 local function include_helper(to, from, seen)
-	if type(from) ~= 'table' then
+	if from == nil then
+		return to
+	elseif type(from) ~= 'table' then
 		return from
 	elseif seen[from] then
 		return seen[from]
@@ -53,18 +55,19 @@ local function clone(other)
 end
 
 local function new(class)
-	class.__index = class
-	class.init    = class.init    or function() end
-	class.include = class.include or include
-	class.clone   = class.clone   or clone
-
 	-- mixins
 	local inc = class.__includes or {}
 	if getmetatable(inc) then inc = {inc} end
 
-	for _, other in pairs(inc) do
+	for _, other in ipairs(inc) do
 		include(class, other)
 	end
+
+	-- class implementation
+	class.__index = class
+	class.init    = class.init    or class[1] or function() end
+	class.include = class.include or include
+	class.clone   = class.clone   or clone
 
 	-- constructor call
 	return setmetatable(class, {__call = function(c, ...)
@@ -78,7 +81,7 @@ end
 if class_commons ~= false and not common then
 	common = {}
 	function common.class(name, prototype, parent)
-		return include(new(prototype), parent)
+		return new{__includes = {prototype, parent}}
 	end
 	function common.instance(class, ...)
 		return class(...)
