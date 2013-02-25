@@ -894,11 +894,13 @@ end
 
 <h4>Example:</h4>
 
-<pre><code class="lua">Critter = Class{function(self, pos, img)
-    self.pos = pos
-    self.img = img
-end}
-Critter.speed = 5
+<pre><code class="lua">Critter = Class{
+    init = function(self, pos, img)
+        self.pos = pos
+        self.img = img
+    end,
+    speed = 5
+}
 
 function Critter:update(dt, player)
     -- see hump.vector

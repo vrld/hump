@@ -1384,11 +1384,13 @@ Implements [class commons](https://github.com/bartbes/Class-Commons).
 
 #### Example:
 
-	Critter = Class{function(self, pos, img)
-		self.pos = pos
-		self.img = img
-	end}
-	Critter.speed = 5
+	Critter = Class{
+		init = function(self, pos, img)
+			self.pos = pos
+			self.img = img
+		end,
+		speed = 5
+	}
 	
 	function Critter:update(dt, player)
 		-- see hump.vector
