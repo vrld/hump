@@ -50,7 +50,7 @@ function Timer:update(dt)
 end
 
 function Timer:do_for(delay, func, after)
-	local handle = {func = func, after = after}
+	local handle = {func = func, after = after or _nothing_}
 	self.functions[handle] = delay
 	return handle
 end
