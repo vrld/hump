@@ -36,7 +36,7 @@ function GS.new(t) return t or {} end -- constructor - deprecated!
 function GS.switch(to, ...)
 	assert(to, "Missing argument: Gamestate to switch to")
 	local pre = current
-	;(current.leave or __NULL__)(self)
+	;(current.leave or __NULL__)(current)
 	;(to.init or __NULL__)(to)
 	to.init = nil
 	current = to
