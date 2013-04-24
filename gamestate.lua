@@ -70,7 +70,7 @@ end
 
 -- forward any undefined functions
 setmetatable(GS, {__index = function(_, func)
-	if func == 'update' and nextstate then
+	if nextstate then
 	  (current.leave or __NULL__)(current)
 	  current = nextstate
 	  nextstate = nil
