@@ -30,17 +30,22 @@ local function __NULL__() end
 local function __ERROR__() error("Gamestate not initialized. Use Gamestate.switch()") end
 local current = {leave = __NULL__}
 
+local switcher = __NULL__
+
 local GS = {}
 function GS.new(t) return t or {} end -- constructor - deprecated!
 
 function GS.switch(to, ...)
 	assert(to, "Missing argument: Gamestate to switch to")
-	local pre = current
-	;(current.leave or __NULL__)(current)
-	;(to.init or __NULL__)(to)
-	to.init = nil
-	current = to
-	return (current.enter or __NULL__)(current, pre, ...)
+	local t = {...}
+	switcher = function() 
+		local pre = current
+		;(current.leave or __NULL__)(current)
+		;(to.init or __NULL__)(to)
+		to.init = nil
+		current = to
+		;(current.enter or __NULL__)(current, pre, unpack(t))
+		end
 end
 
 -- holds all defined love callbacks after GS.registerEvents is called
@@ -64,6 +69,9 @@ end
 -- forward any undefined functions
 setmetatable(GS, {__index = function(_, func)
 	return function(...)
+		(switcher or __NULL__)()
+		switcher = __NULL__
+                
 		registry[func](...)
 		return (current[func] or __NULL__)(current, ...)
 	end
