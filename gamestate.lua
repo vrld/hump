@@ -68,10 +68,11 @@ end
 
 -- forward any undefined functions
 setmetatable(GS, {__index = function(_, func)
-	return function(...)
+	if func == 'update' then
 		(switcher or __NULL__)()
 		switcher = __NULL__
-                
+	end
+	return function(...)                
 		registry[func](...)
 		return (current[func] or __NULL__)(current, ...)
 	end
