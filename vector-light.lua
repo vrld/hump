@@ -109,6 +109,19 @@ local function mirror(x,y, u,v)
 	return s*u - x, s*v - y
 end
 
+-- ref.: http://blog.signalsondisplay.com/?p=336
+local function truncate(maxLen)
+  local s
+    
+  s = maxLen / len()
+    
+  if s < 1 then s = 1 end
+  
+  x = x * s
+  y = y * s
+    
+  return x,y
+end
 
 -- the module
 return {
