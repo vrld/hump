@@ -110,17 +110,10 @@ local function mirror(x,y, u,v)
 end
 
 -- ref.: http://blog.signalsondisplay.com/?p=336
-local function truncate(maxLen)
-  local s
-    
-  s = maxLen / len()
-    
-  if s < 1 then s = 1 end
-  
-  x = x * s
-  y = y * s
-    
-  return x,y
+local function trim(maxLen, x, y)
+	local s = maxLen * maxLen / len2(x, y)
+	s = s < 1 and 1 or math.sqrt(s)
+	return x * s, y * s
 end
 
 -- the module
@@ -151,4 +144,5 @@ return {
 	perpendicular = perpendicular,
 	project       = project,
 	mirror        = mirror,
+	trim          = trim
 }

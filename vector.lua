@@ -159,24 +159,18 @@ function vector:cross(v)
 end
 
 -- ref.: http://blog.signalsondisplay.com/?p=336
-function vector:truncate_inplace(maxLen)
-  local s
-    
-  s = maxLen / self:len()
-    
-  if s < 1 then s = 1 end
-  
-  self.x = self.x * s
-  self.y = self.y * s
-    
-  return self
+function vector:trim_inplace(maxLen)
+	local s = maxLen * maxLen / self:len2()
+	s = s < 1 and 1 or math.sqrt(s)
+	self.x, self.y = self.x * s, self.y * s
+	return self
 end
 
-function vector:truncate(maxLen)
-  return self:clone():truncate_inplace(maxLen)
+function vector:trimmed(maxLen)
+	return self:clone():trim_inplace(maxLen)
 end
 
 
 -- the module
 return setmetatable({new = new, isvector = isvector},
-	{__call = function(_, ...) return new(...) end})
+{__call = function(_, ...) return new(...) end})
