@@ -135,6 +135,16 @@ function vector:rotated(phi)
 	return new(c * self.x - s * self.y, s * self.x + c * self.y)
 end
 
+function vector:angle()
+    local a = new(1,0)
+    local angle = math.acos((a*self)/(a:len()*self:len()))
+    if self.y < 0 then
+      return -angle
+    else
+      return angle
+     end
+end
+
 function vector:perpendicular()
 	return new(-self.y, self.x)
 end
