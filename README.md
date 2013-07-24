@@ -1267,6 +1267,34 @@ Get distance of two points. The same as `vector.len(x1-x2, y1-y2)`.
 	end
 
 
+### function dist2(x1,y1, x2,y2) [Squared distance of two points.]
+
+Get squared distance of two points. The same as `vector.len2(x1-x2, y1-y2)`.
+
+#### Parameters:
+
+=numbers x1,y1=
+	First vector.
+=numbers x2,y2=
+	Second vector.
+
+#### Returns:
+
+=number=
+	The squared distance of the points.
+
+#### Example:
+
+	-- get closest vertex to a given vector
+	closest, dist2 = vertices[1], vector.dist2(px,py, vertices[1].x,vertices[1].y)
+	for i = 2,#vertices do
+		local temp = vector.dist2(px,py, vertices[i].x,vertices[i].y)
+		if temp < dist2 then
+			closest, dist2 = vertices[i], temp
+		end
+	end
+
+
 ### function normalize(x,y) [Normalize vector.]
 
 	Get normalized vector, i.e. a vector with the same direction as the input
