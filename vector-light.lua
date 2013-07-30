@@ -78,6 +78,10 @@ local function len(x,y)
 	return sqrt(x*x + y*y)
 end
 
+local function dist2(x1,y1, x2,y2)
+	return len2(x1-x2, y1-y2)
+end
+
 local function dist(x1,y1, x2,y2)
 	return len(x1-x2, y1-y2)
 end
@@ -138,6 +142,7 @@ return {
 	-- misc operations
 	len2          = len2,
 	len           = len,
+	dist2         = dist2,
 	dist          = dist,
 	normalize     = normalize,
 	rotate        = rotate,
