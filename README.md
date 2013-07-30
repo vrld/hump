@@ -1643,7 +1643,7 @@ to table `b` (see second example).
 	-- make Spaceship collidable
 	Spaceship:include(Collidable)
 	
-	function Spaceship:collision_handler["Spaceship"](other, dx, dy)
+	Spaceship.collision_handler["Spaceship"] = function(self, other, dx, dy)
 		-- ...
 	end
 
