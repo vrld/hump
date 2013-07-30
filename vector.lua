@@ -25,7 +25,7 @@ THE SOFTWARE.
 ]]--
 
 local assert = assert
-local sqrt, cos, sin = math.sqrt, math.cos, math.sin
+local sqrt, cos, sin, atan2 = math.sqrt, math.cos, math.sin, math.atan2
 
 local vector = {}
 vector.__index = vector
@@ -33,6 +33,7 @@ vector.__index = vector
 local function new(x,y)
 	return setmetatable({x = x or 0, y = y or 0}, vector)
 end
+local zero = new(0,0)
 
 local function isvector(v)
 	return getmetatable(v) == vector
@@ -135,16 +136,6 @@ function vector:rotated(phi)
 	return new(c * self.x - s * self.y, s * self.x + c * self.y)
 end
 
-function vector:angle()
-    local a = new(1,0)
-    local angle = math.acos((a*self)/(a:len()*self:len()))
-    if self.y < 0 then
-      return -angle
-    else
-      return angle
-     end
-end
-
 function vector:perpendicular()
 	return new(-self.y, self.x)
 end
@@ -176,11 +167,16 @@ function vector:trim_inplace(maxLen)
 	return self
 end
 
+function vector:angleTo(other)
+	other = other or zero
+	return atan2(self.y - other.y, self.x - other.x)
+end
+
 function vector:trimmed(maxLen)
 	return self:clone():trim_inplace(maxLen)
 end
 
 
 -- the module
-return setmetatable({new = new, isvector = isvector},
+return setmetatable({new = new, isvector = isvector, zero = zero},
 {__call = function(_, ...) return new(...) end})
