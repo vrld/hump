@@ -413,7 +413,7 @@ end
     player.position = player.position + player.velocity * dt
 end
 </code></pre>
-</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.vectorOperators ">Operators </a></dt><dd>Arithmetics and relations.</dd><dt><a href="#hump.vectornew">new()</a></dt><dd>Create a new vector.</dd><dt><a href="#hump.vectorisvector">isvector()</a></dt><dd>Test if value is a vector.</dd><dt><a href="#hump.vectorvector:clone">vector:clone()</a></dt><dd>Copy a vector.</dd><dt><a href="#hump.vectorvector:unpack">vector:unpack()</a></dt><dd>Extract coordinates.</dd><dt><a href="#hump.vectorvector:permul">vector:permul()</a></dt><dd>Per element multiplication.</dd><dt><a href="#hump.vectorvector:len">vector:len()</a></dt><dd>Get length.</dd><dt><a href="#hump.vectorvector:len2">vector:len2()</a></dt><dd>Get squared length.</dd><dt><a href="#hump.vectorvector:dist">vector:dist()</a></dt><dd>Distance to other vector.</dd><dt><a href="#hump.vectorvector:normalized">vector:normalized()</a></dt><dd>Get normalized vector.</dd><dt><a href="#hump.vectorvector:normalize_inplace">vector:normalize_inplace()</a></dt><dd>Normalize vector in-place.</dd><dt><a href="#hump.vectorvector:rotated">vector:rotated()</a></dt><dd>Get rotated vector.</dd><dt><a href="#hump.vectorvector:rotate_inplace">vector:rotate_inplace()</a></dt><dd>Rotate vector in-place.</dd><dt><a href="#hump.vectorvector:perpendicular">vector:perpendicular()</a></dt><dd>Get perpendicular vector.</dd><dt><a href="#hump.vectorvector:projectOn">vector:projectOn()</a></dt><dd>Get projection onto another vector.</dd><dt><a href="#hump.vectorvector:mirrorOn">vector:mirrorOn()</a></dt><dd>Mirrors vector on other vector</dd><dt><a href="#hump.vectorvector:cross">vector:cross()</a></dt><dd>Cross product of two vectors.</dd></dl></div><div class="section-block" id="hump.vectorOperators "><h4>Operators <a class="top" href="#hump.vector">^top</a></h4><p>Vector arithmetic is implemented by using <code class="lua">__add</code>, <code class="lua">__mul</code> and other
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.vectorOperators ">Operators </a></dt><dd>Arithmetics and relations.</dd><dt><a href="#hump.vectornew">new()</a></dt><dd>Create a new vector.</dd><dt><a href="#hump.vectorisvector">isvector()</a></dt><dd>Test if value is a vector.</dd><dt><a href="#hump.vectorvector:clone">vector:clone()</a></dt><dd>Copy a vector.</dd><dt><a href="#hump.vectorvector:unpack">vector:unpack()</a></dt><dd>Extract coordinates.</dd><dt><a href="#hump.vectorvector:permul">vector:permul()</a></dt><dd>Per element multiplication.</dd><dt><a href="#hump.vectorvector:len">vector:len()</a></dt><dd>Get length.</dd><dt><a href="#hump.vectorvector:len2">vector:len2()</a></dt><dd>Get squared length.</dd><dt><a href="#hump.vectorvector:dist">vector:dist()</a></dt><dd>Distance to other vector.</dd><dt><a href="#hump.vectorvector:normalized">vector:normalized()</a></dt><dd>Get normalized vector.</dd><dt><a href="#hump.vectorvector:normalize_inplace">vector:normalize_inplace()</a></dt><dd>Normalize vector in-place.</dd><dt><a href="#hump.vectorvector:rotated">vector:rotated()</a></dt><dd>Get rotated vector.</dd><dt><a href="#hump.vectorvector:rotate_inplace">vector:rotate_inplace()</a></dt><dd>Rotate vector in-place.</dd><dt><a href="#hump.vectorvector:perpendicular">vector:perpendicular()</a></dt><dd>Get perpendicular vector.</dd><dt><a href="#hump.vectorvector:projectOn">vector:projectOn()</a></dt><dd>Get projection onto another vector.</dd><dt><a href="#hump.vectorvector:mirrorOn">vector:mirrorOn()</a></dt><dd>Mirrors vector on other vector</dd><dt><a href="#hump.vectorvector:cross">vector:cross()</a></dt><dd>Cross product of two vectors.</dd><dt><a href="#hump.vectorvector:angleTo">vector:angleTo()</a></dt><dd>Measure angle between two vectors.</dd></dl></div><div class="section-block" id="hump.vectorOperators "><h4>Operators <a class="top" href="#hump.vector">^top</a></h4><p>Vector arithmetic is implemented by using <code class="lua">__add</code>, <code class="lua">__mul</code> and other
 metamethods:</p>
 
 <dl>
@@ -622,6 +622,18 @@ by both vectors.</p>
 <dd>Cross product of both vectors.</dd></dl>
 </div><div class="example">Example:<pre><code class="lua">parallelogram_area = a:cross(b)
 </code></pre>
+</div></div><div class="ref-block" id="hump.vectorvector:angleTo"><h4>function <span class="name">vector:angleTo</span><span class="arglist">(other)</span><a class="top" href="#hump.vector">^top</a></h4><p>Measures the angle between two vectors. If <code class="lua">other</code> is omitted it defaults
+to the vector <code class="lua">(0,0)</code>, i.e. the function returns the angle to the coordinate
+system.</p>
+<div class="arguments">Parameters:<dl>
+<dt>vector <code class="lua">other</code> (optional)</dt>
+<dd>Vector to measure the angle to.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>number</dt>
+<dd>Angle in radians.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">lean = self.upvector:angleTo(vector(0,1))
+if lean &gt; .1 then self:fallOver() end
+</code></pre>
 </div></div></div><div class="outer-block" id="hump.vector-light"><h3>hump.vector-light<a class="top" href="#top">^top</a></h3><div class="preamble"><pre><code class="lua">vector = require "hump.vector-light"
 </code></pre>
 
@@ -661,7 +673,7 @@ are sure that it causes a significant performance penalty, I recommend using
     player.y = player.y + dt * player.vely
 end
 </code></pre>
-</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.vector-lightstr">str()</a></dt><dd>String representation.</dd><dt><a href="#hump.vector-lightmul">mul()</a></dt><dd>Product of a vector and a scalar.</dd><dt><a href="#hump.vector-lightdiv">div()</a></dt><dd>Product of a vector and the inverse of a scalar.</dd><dt><a href="#hump.vector-lightadd">add()</a></dt><dd>Sum of two vectors.</dd><dt><a href="#hump.vector-lightsub">sub()</a></dt><dd>Difference of two vectors.</dd><dt><a href="#hump.vector-lightpermul">permul()</a></dt><dd>Per element multiplication.</dd><dt><a href="#hump.vector-lightdot">dot()</a></dt><dd>Dot product.</dd><dt><a href="#hump.vector-lightcross">cross()</a></dt><dd>Cross product.</dd><dt><a href="#hump.vector-lighteq">eq()</a></dt><dd>Equality.</dd><dt><a href="#hump.vector-lightle">le()</a></dt><dd>Partial lexical order.</dd><dt><a href="#hump.vector-lightlt">lt()</a></dt><dd>Strict lexical order.</dd><dt><a href="#hump.vector-lightlen">len()</a></dt><dd>Get length.</dd><dt><a href="#hump.vector-lightlen2">len2()</a></dt><dd>Get squared length.</dd><dt><a href="#hump.vector-lightdist">dist()</a></dt><dd>Distance of two points.</dd><dt><a href="#hump.vector-lightnormalize">normalize()</a></dt><dd>Normalize vector.</dd><dt><a href="#hump.vector-lightrotate">rotate()</a></dt><dd>Rotate vector.</dd><dt><a href="#hump.vector-lightperpendicular">perpendicular()</a></dt><dd>Get perpendicular vector.</dd><dt><a href="#hump.vector-lightproject">project()</a></dt><dd>Project vector onto another vector.</dd><dt><a href="#hump.vector-lightmirror">mirror()</a></dt><dd>Mirror vector on other vector.</dd></dl></div><div class="ref-block" id="hump.vector-lightstr"><h4>function <span class="name">str</span><span class="arglist">(x,y)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Transforms a vector to a string of the form <code class="lua">(x,y)</code>.</p>
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.vector-lightstr">str()</a></dt><dd>String representation.</dd><dt><a href="#hump.vector-lightmul">mul()</a></dt><dd>Product of a vector and a scalar.</dd><dt><a href="#hump.vector-lightdiv">div()</a></dt><dd>Product of a vector and the inverse of a scalar.</dd><dt><a href="#hump.vector-lightadd">add()</a></dt><dd>Sum of two vectors.</dd><dt><a href="#hump.vector-lightsub">sub()</a></dt><dd>Difference of two vectors.</dd><dt><a href="#hump.vector-lightpermul">permul()</a></dt><dd>Per element multiplication.</dd><dt><a href="#hump.vector-lightdot">dot()</a></dt><dd>Dot product.</dd><dt><a href="#hump.vector-lightcross">cross()</a></dt><dd>Cross product.</dd><dt><a href="#hump.vector-lighteq">eq()</a></dt><dd>Equality.</dd><dt><a href="#hump.vector-lightle">le()</a></dt><dd>Partial lexical order.</dd><dt><a href="#hump.vector-lightlt">lt()</a></dt><dd>Strict lexical order.</dd><dt><a href="#hump.vector-lightlen">len()</a></dt><dd>Get length.</dd><dt><a href="#hump.vector-lightlen2">len2()</a></dt><dd>Get squared length.</dd><dt><a href="#hump.vector-lightdist">dist()</a></dt><dd>Distance of two points.</dd><dt><a href="#hump.vector-lightdist2">dist2()</a></dt><dd>Squared distance of two points.</dd><dt><a href="#hump.vector-lightnormalize">normalize()</a></dt><dd>Normalize vector.</dd><dt><a href="#hump.vector-lightrotate">rotate()</a></dt><dd>Rotate vector.</dd><dt><a href="#hump.vector-lightperpendicular">perpendicular()</a></dt><dd>Get perpendicular vector.</dd><dt><a href="#hump.vector-lightproject">project()</a></dt><dd>Project vector onto another vector.</dd><dt><a href="#hump.vector-lightmirror">mirror()</a></dt><dd>Mirror vector on other vector.</dd><dt><a href="#hump.vector-lightangleTo">angleTo()</a></dt><dd>Measure angle between two vectors.</dd></dl></div><div class="ref-block" id="hump.vector-lightstr"><h4>function <span class="name">str</span><span class="arglist">(x,y)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Transforms a vector to a string of the form <code class="lua">(x,y)</code>.</p>
 <div class="arguments">Parameters:<dl>
 <dt>numbers <code class="lua">x,y</code></dt>
 <dd>The vector</dd></dl>
@@ -830,6 +842,23 @@ for i = 2,#vertices do
     end
 end
 </code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightdist2"><h4>function <span class="name">dist2</span><span class="arglist">(x1,y1, x2,y2)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Get squared distance of two points. The same as <code class="lua">vector.len2(x1-x2, y1-y2)</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x1,y1</code></dt>
+<dd>First vector.</dd><dt>numbers <code class="lua">x2,y2</code></dt>
+<dd>Second vector.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>number</dt>
+<dd>The squared distance of two points.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">-- get closest vertex to a given vector
+closest, dist2 = vertices[1], vector.dist2(px,py, vertices[1].x,vertices[1].y)
+for i = 2,#vertices do
+    local temp = vector.dist2(px,py, vertices[i].x,vertices[i].y)
+    if temp &lt; dist2 then
+        closest, dist2 = vertices[i], temp
+    end
+end
+</code></pre>
 </div></div><div class="ref-block" id="hump.vector-lightnormalize"><h4>function <span class="name">normalize</span><span class="arglist">(x,y)</span><a class="top" href="#hump.vector-light">^top</a></h4><pre><code class="lua">Get normalized vector, i.e. a vector with the same direction as the input
 vector, but with length 1.
 </code></pre>
@@ -884,6 +913,18 @@ end
 <dt>numbers</dt>
 <dd>The mirrored vector.</dd></dl>
 </div><div class="example">Example:<pre><code class="lua">vx,vy = vector.mirror(vx,vy, surface.x,surface.y)
+</code></pre>
+</div></div><div class="ref-block" id="hump.vector-lightangleTo"><h4>function <span class="name">angleTo</span><span class="arglist">(ox,y, u,v)</span><a class="top" href="#hump.vector-light">^top</a></h4><p>Measures the angle between two vectors. <code class="lua">u</code> and <code class="lua">v</code> default to <code class="lua">0</code> if omitted,
+i.e. the function returns the angle to the coordinate system.</p>
+<div class="arguments">Parameters:<dl>
+<dt>numbers <code class="lua">x,y</code></dt>
+<dd>Vector to measure the angle.</dd><dt>numbers <code class="lua">u,v</code> (optional)</dt>
+<dd>Reference vector.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>number</dt>
+<dd>Angle in radians.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">lean = vector.angleTo(self.upx, self.upy, 0,1)
+if lean &gt; .1 then self:fallOver() end
 </code></pre>
 </div></div></div><div class="outer-block" id="hump.class"><h3>hump.class<a class="top" href="#top">^top</a></h3><div class="preamble"><pre><code class="lua">Class = require "hump.class"
 </code></pre>
@@ -1087,7 +1128,7 @@ Spaceship = Class{
 -- make Spaceship collidable
 Spaceship:include(Collidable)
 
-function Spaceship:collision_handler["Spaceship"](other, dx, dy)
+Spaceship.collision_handler["Spaceship"] = function(self, other, dx, dy)
     -- ...
 end
 </code></pre>

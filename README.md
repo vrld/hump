@@ -904,6 +904,27 @@ by both vectors.
 	parallelogram_area = a:cross(b)
 
 
+### function vector:angleTo(other) [Measure angle between two vectors.]
+
+Measures the angle between two vectors. If `other` is omitted it defaults
+to the vector `(0,0)`, i.e. the function returns the angle to the coordinate
+system.
+
+#### Parameters:
+
+=vector other (optional)=
+	Vector to measure the angle to.
+
+#### Returns:
+
+=number=
+	Angle in radians.
+
+#### Example:
+
+	lean = self.upvector:angleTo(vector(0,1))
+	if lean > .1 then self:fallOver() end
+
 
 ## Module hump.vector-light [Lightweight 2D vector math.]
 
@@ -1281,7 +1302,7 @@ Get squared distance of two points. The same as `vector.len2(x1-x2, y1-y2)`.
 #### Returns:
 
 =number=
-	The squared distance of the points.
+	The squared distance of two points.
 
 #### Example:
 
@@ -1400,6 +1421,29 @@ Mirrors vector on the axis defined by the other vector.
 #### Example:
 
 	vx,vy = vector.mirror(vx,vy, surface.x,surface.y)
+
+
+### function angleTo(ox,y, u,v) [Measure angle between two vectors.]
+
+Measures the angle between two vectors. `u` and `v` default to `0` if omitted,
+i.e. the function returns the angle to the coordinate system.
+
+#### Parameters:
+
+=numbers x,y=
+	Vector to measure the angle.
+=numbers u,v (optional)=
+	Reference vector.
+
+#### Returns:
+
+=number=
+	Angle in radians.
+
+#### Example:
+
+	lean = vector.angleTo(self.upx, self.upy, 0,1)
+	if lean > .1 then self:fallOver() end
 
 
 ## Module hump.class [Object oriented programming for Lua.]
