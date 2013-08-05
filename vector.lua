@@ -113,6 +113,13 @@ function vector.dist(a, b)
 	return sqrt(dx * dx + dy * dy)
 end
 
+function vector.dist2(a, b)
+	assert(isvector(a) and isvector(b), "dist: wrong argument types (<vector> expected)")
+	local dx = a.x - b.x
+	local dy = a.y - b.y
+	return (dx * dx + dy * dy)
+end
+
 function vector:normalize_inplace()
 	local l = self:len()
 	if l > 0 then
