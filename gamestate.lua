@@ -26,21 +26,38 @@ THE SOFTWARE.
 
 local function __NULL__() end
 
--- default gamestate produces error on every callback
-local function __ERROR__() error("Gamestate not initialized. Use Gamestate.switch()") end
-local current = {leave = __NULL__}
+ -- default gamestate produces error on every callback
+local state_init = setmetatable({leave = __NULL__},
+		{__index = function() error("Gamestate not initialized. Use Gamestate.switch()") end})
+local stack = {state_init}
 
 local GS = {}
 function GS.new(t) return t or {} end -- constructor - deprecated!
 
 function GS.switch(to, ...)
 	assert(to, "Missing argument: Gamestate to switch to")
-	local pre = current
-	;(current.leave or __NULL__)(current)
+	local pre = stack[#stack]
+	;(pre.leave or __NULL__)(pre)
 	;(to.init or __NULL__)(to)
 	to.init = nil
-	current = to
-	return (current.enter or __NULL__)(current, pre, ...)
+	stack[#stack] = to
+	return (to.enter or __NULL__)(to, pre, ...)
+end
+
+function GS.push(...)
+	stack[#stack+1] = state_init -- hackety hack
+	return GS.switch(...)
+end
+
+function GS.pop()
+	assert(#stack > 1, "No more states to pop!")
+	local pre = stack[#stack]
+	stack[#stack] = nil
+	return (pre.leave or __NULL__)(pre)
+end
+
+function GS.current()
+	return stack[#stack]
 end
 
 -- holds all defined love callbacks after GS.registerEvents is called
@@ -65,7 +82,7 @@ end
 setmetatable(GS, {__index = function(_, func)
 	return function(...)
 		registry[func](...)
-		return (current[func] or __NULL__)(current, ...)
+		return (stack[#stack][func] or __NULL__)(stack[#stack], ...)
 	end
 end})
 
