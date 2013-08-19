@@ -60,10 +60,6 @@ function GS.current()
 	return stack[#stack]
 end
 
--- holds all defined love callbacks after GS.registerEvents is called
--- returns empty function on undefined callback
-local registry = setmetatable({}, {__index = function() return __NULL__ end})
-
 local all_callbacks = {
 	'update', 'draw', 'focus', 'keypressed', 'keyreleased',
 	'mousepressed', 'mousereleased', 'joystickpressed',
@@ -71,17 +67,20 @@ local all_callbacks = {
 }
 
 function GS.registerEvents(callbacks)
+	local registry = {}
 	callbacks = callbacks or all_callbacks
 	for _, f in ipairs(callbacks) do
-		registry[f] = love[f]
-		love[f] = function(...) return GS[f](...) end
+		registry[f] = love[f] or __NULL__
+		love[f] = function(...)
+			registry[f](...)
+			return GS[f](...)
+		end
 	end
 end
 
 -- forward any undefined functions
 setmetatable(GS, {__index = function(_, func)
 	return function(...)
-		registry[func](...)
 		return (stack[#stack][func] or __NULL__)(stack[#stack], ...)
 	end
 end})
