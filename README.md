@@ -177,6 +177,96 @@ the new gamestate.
     Gamestate.switch(game, level_two)
 
 
+
+### function current() [Get current gamestate.]
+
+Returns the currently activated gamestate.
+
+
+#### Returns:
+
+=table=
+    The active gamestate.
+
+
+#### Example:
+
+    function love.keypressed(key)
+        if Gamestate.current() ~= menu and key == 'p' then
+            Gamestate.push(pause)
+        end
+    end
+
+
+### function push(to, ...) [Push state on top of the stack.]
+
+Pushes the `to` on top of the state stack, i.e. makes it the active state.
+Semantics are the same as `switch(to, ...)`, except that `leave()` is *not*
+called on the previously active state.
+
+Useful for pause screens, menus, etc.
+
+
+#### Parameters:
+
+=Gamestate to=
+    Target gamestate.
+=mixed ...=
+    Additional arguments to pass to `to:enter(current, ...)`.
+
+
+#### Returns:
+
+=mixed=
+    The results of `to:enter(current, ...)`
+
+#### Example:
+
+    -- pause gamestate
+    Pause = Gamestate.new()
+    function Pause:enter(from)
+        self.from = from -- record previous state
+    end
+
+    function Pause:draw()
+        local W, H = love.graphics.getWidth(), love.graphics.getHeight()
+        -- draw previous screen
+        self.from:draw()
+        -- overlay with pause message
+        love.graphics.setColor(0,0,0, 100)
+        love.graphics.rectangle('fill', 0,0, W,H)
+        love.graphics.setColor(255,255,255)
+        love.graphics.printf('PAUSE', 0, H/2, W, 'center')
+    end
+
+    -- [...]
+    function love.keypressed(key)
+        if Gamestate.current() ~= menu and key == 'p' then
+            Gamestate.push(pause)
+        end
+    end
+
+
+### function pop() [Pops state from the stack.]
+
+Calls `leave()` on the current state and then removes it from the stack, making
+the state below the current state. Does *not* call `enter()` on the activated
+state.
+
+#### Returns:
+
+=mixed=
+    The results of `state:leave()`
+
+#### Example:
+
+    -- extending the example of Gamestate.push() above
+    function Pause:keypressed(key)
+        if key == 'p' then
+            Gamestate.pop() -- return to previous state
+        end
+    end
+
 ### function &lt;callback&gt;(...) [Call function on active gamestate.]
 
 Calls a function on the current gamestate. Can be any function, but is intended to
