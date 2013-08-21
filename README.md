@@ -821,6 +821,33 @@ Get distance of two vectors. The same as `(a - b):len()`.
 	end
 
 
+### function vector:dist2(other) [Squared distance to other vector.]
+
+Get squared distance of two vectors. The same as `(a - b):len2()`.
+
+#### Parameters:
+
+=vector other=
+	Other vector to measure the distance to.
+
+#### Returns:
+
+=number=
+	The squared distance of the vectors.
+
+#### Example:
+
+	-- get closest vertex to a given vector
+	-- slightly faster than the example using len2()
+	closest, dsq = vertices[1], pos:dist2(vertices[1])
+	for i = 2,#vertices do
+		local temp = pos:dist2(vertices[i])
+		if temp < dsq then
+			closest, dsq = vertices[i], temp
+		end
+	end
+
+
 ### function vector:normalized() [Get normalized vector.]
 
 Get normalized vector, i.e. a vector with the same direction as the input
@@ -1397,11 +1424,11 @@ Get squared distance of two points. The same as `vector.len2(x1-x2, y1-y2)`.
 #### Example:
 
 	-- get closest vertex to a given vector
-	closest, dist2 = vertices[1], vector.dist2(px,py, vertices[1].x,vertices[1].y)
+	closest, dsq = vertices[1], vector.dist2(px,py, vertices[1].x,vertices[1].y)
 	for i = 2,#vertices do
 		local temp = vector.dist2(px,py, vertices[i].x,vertices[i].y)
-		if temp < dist2 then
-			closest, dist2 = vertices[i], temp
+		if temp < dsq then
+			closest, dsq = vertices[i], temp
 		end
 	end
 
