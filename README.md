@@ -351,6 +351,10 @@ is possible to run functions *after* and *for* some amount of time. For
 example, a timer could be set to move critters every 5 seconds or to make the
 player invincible for a short amount of time.
 
+In addition to that, `hump.timer` offers various
+[tweening](http://en.wikipedia.org/wiki/Inbetweening) functions that make it
+easier to produce [juicy games](http://www.youtube.com/watch?v=Fy0aCDmgnxg).
+
 #### Example:
 
 	function love.keypressed(key)
@@ -542,6 +546,16 @@ Prevent a timer from being executed in the future.
 	-- later
 	Timer.cancel(handle) -- NOT: Timer.cancel(tick)
 
+#### Example:
+
+	-- using a timer instance
+	function tick()
+		print('tick... tock...')
+	end
+	handle = menuTimer:addPeriodic(1, tick)
+	-- later
+	menuTimer:cancel(handle)
+
 
 ### function clear() [Remove all timed and periodic functions.]
 
@@ -580,6 +594,91 @@ Update timers and execute functions if the deadline is reached. Use this in
 	function menuState:update(dt)
 	    self.timer:update(dt)
 	end
+
+
+### function tween(duration, subject, target, method, after, ...) [Add a tween.]
+
+Effectively a frontend to `timer:do_for()`.
+See tweening methods.
+Tweens can stack.
+
+#### Parameters:
+
+=number duration=
+	Duration of the tween.
+=table subject=
+	Object to be tweened.
+=table target=
+	Target values.
+=string method (optional)=
+	Tweening method, defaults to 'linear'.
+=function after (optiona)=
+	Function to execute after the tween has finished.
+=mixed ...=
+	Additional arguments to the *tweening* function.
+
+#### Returns:
+
+=table=
+	A timer handle.
+
+#### Example:
+
+	function love.load()
+		color = {0, 0, 0}
+		Timer.tween(10, color, {255, 255, 255}, 'in-out-quad')
+	end
+
+	function love.update(dt)
+		Timer.update(dt)
+	end
+
+	function love.draw()
+		love.graphics.setBackgroundColor(color)
+	end
+
+#### Example:
+
+	function love.load()
+		circle = {rad = 10, x = 100, y = 100}
+		local grow, shrink, move_down, move_up
+		grow = function()
+			Timer.tween(1, circle, {rad = 50}, 'in-out-quad', shrink)
+		end
+		shrink = function()
+			Timer.tween(2, circle, {rad = 10}, 'in-out-quad', grow)
+		end
+
+		move_down = function()
+			Timer.tween(3, circle, {x = 700, y = 500}, 'bounce', move_up)
+		end
+		move_up = function()
+			Timer.tween(5, circle, {x = 200, y = 200}, 'out-elastic', move_down)
+		end
+
+		grow()
+		move_down()
+	end
+
+	function love.update(dt)
+		Timer.update(dt)
+	end
+
+	function love.draw()
+		love.graphics.circle('fill', circle.x, circle.y, circle.rad)
+	end
+
+
+### Defining the tweening method. [Tweening methods.]
+
+method name, e.g. linear, quad
+
+prefix: in-, out-, in-out-, out-in-, e.g. in-linear (=linear), out-quad
+
+methods: linear, quad, cubic, quart, quint, sine, expo, circ, back (bounciness), bounce, elastic(amp, period)
+
+advanced: mirroring, chaining methods, adding custom methods
+
 
 
 
