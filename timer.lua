@@ -60,15 +60,16 @@ function Timer:add(delay, func)
 end
 
 function Timer:addPeriodic(delay, func, count)
-	local count = count or math.huge -- exploit below: math.huge - 1 = math.huge
+	local count, handle = count or math.huge -- exploit below: math.huge - 1 = math.huge
 
-	return self:add(delay, function(f)
+	handle = self:add(delay, function(f)
 		if func(func) == false then return end
 		count = count - 1
 		if count > 0 then
-			self:add(delay, f)
+			self.functions[handle] = delay
 		end
 	end)
+	return handle
 end
 
 function Timer:cancel(handle)

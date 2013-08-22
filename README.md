@@ -7,7 +7,7 @@ Contents:
 ------------
 
 *   *gamestate.lua*: Easy gamestate management.
-*   *timer.lua*: Delayed and time-limited function calls.
+*   *timer.lua*: Delayed and time-limited function calls and tweening functionality.
 *   *vector.lua*: 2D vector math.
 *   *vector-light.lua*: Lightweight 2D vector math (for optimisation purposes - leads to potentially ugly code).
 *   *class.lua*: Lightweight object orientation (class or prototype based).
