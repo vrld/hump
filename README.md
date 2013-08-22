@@ -598,9 +598,19 @@ Update timers and execute functions if the deadline is reached. Use this in
 
 ### function tween(duration, subject, target, method, after, ...) [Add a tween.]
 
-Effectively a frontend to `timer:do_for()`.
-See tweening methods.
-Tweens can stack.
+[Tweening](http://en.wikipedia.org/wiki/Inbetweening) (short for in-betweening)
+is the process that happens between two defined states. For example, a tween
+can be used to gradually fade out a graphic or move a text message to the
+center of the screen. For more information why tweening should be important to
+you, check out this great talk on [juicy
+games](http://www.youtube.com/watch?v=Fy0aCDmgnxg).
+
+`hump.timer` offers two interfaces for tweening: the low-level
+[`timer.to_for()`](#hump.timerdofor) and the higher level interface
+[`timer.tween()`](#hump.timertween).
+
+To see which tweening methods hump offers, [see
+below](#hump.timerTweening%20methods).
 
 #### Parameters:
 
@@ -611,7 +621,7 @@ Tweens can stack.
 =table target=
 	Target values.
 =string method (optional)=
-	Tweening method, defaults to 'linear'.
+	Tweening method, defaults to 'linear' ([see here](#hump.timerTweening%20methods)).
 =function after (optiona)=
 	Function to execute after the tween has finished.
 =mixed ...=
@@ -640,6 +650,26 @@ Tweens can stack.
 #### Example:
 
 	function love.load()
+		circle = {rad = 10, pos = {x = 400, y = 300}}
+		-- multiple tweens can work on the same subject
+		-- and nested values can be tweened, too
+		Timer.tween(5, circle, {rad = 50}, 'in-out-quad')
+		Timer.tween(2, circle, {pos = {y = 550}}, 'out-bounce')
+	end
+
+	function love.update(dt)
+		Timer.update(dt)
+	end
+
+	function love.draw()
+		love.graphics.circle('fill', circle.pos.x, circle.pos.y, circle.rad)
+	end
+
+#### Example:
+
+	function love.load()
+		-- repeated tweening
+
 		circle = {rad = 10, x = 100, y = 100}
 		local grow, shrink, move_down, move_up
 		grow = function()
@@ -669,17 +699,120 @@ Tweens can stack.
 	end
 
 
-### Defining the tweening method. [Tweening methods.]
+### Tweening methods [Predefined tweening methods.]
 
-method name, e.g. linear, quad
+At the core of tweening lie interpolation methods. These methods define how the
+output should look depending on how much time has passed. For example, consider
+the following tween:
 
-prefix: in-, out-, in-out-, out-in-, e.g. in-linear (=linear), out-quad
+	-- now: player.x = 0, player.y = 0
+	Timer.tween(2, player, {x = 2})
+	Timer.tween(4, player, {y = 8})
 
-methods: linear, quad, cubic, quart, quint, sine, expo, circ, back (bounciness), bounce, elastic(amp, period)
+At the beginning of the tweens (no time passed), the interpolation method would
+place the player at `x = 0, y = 0`. After one second, the player should be at
+`x = 1, y = 2`, and after two seconds the output is `x = 2, y = 4`.
 
-advanced: mirroring, chaining methods, adding custom methods
+The actual duration of and time since starting the tween is not important, only
+the fraction of the two. Similarly, the starting value and output are not
+important to the interpolation method, since it can be calculated from the
+start and end point. Thus an interpolation method can be fully characterized by
+a function that takes a number between 0 and 1 and returns a number that
+defines the output (usually also between 0 and 1). The interpolation function
+must hold that the output is 0 for input 0 and 1 for input 1.
+
+`hump` predefines several commonly used interpolation methods, which are
+generalized versions of [Robert Penner's easing
+functions](http://www.robertpenner.com/easing/). Those are:
+
+`'linear'`, `'quad'`, `'cubic'`, `'quart'`, `'quint'`, `'sine'`,
+`'expo'`, `'circ'`, `'back'`, `'bounce'`, and `'elastic'`.
+
+Here are their respective graphs:
+
+![Graph of interpolation functions](interpolators.png)
 
 
+All methods can be 'inverted' by prefixing the keyword `out-`, for example
+`'out-quad'`, `'out-sine'`, `'out-bounce'`, etc:
+
+![Graph of inverted interpolation functions](inv-interpolators.png)
+
+
+The `in-out-` and `out-in-` prefix chain the interpolators:
+
+![Graph of chained interpolation functions](in-out-interpolators.png)
+
+Of course these graphs cannot show how the different methods compare, so here's
+an example script that highlights the different tweens:
+
+	Timer = require 'hump.timer'
+	function love.load()
+		methods = {'linear', 'quad', 'cubic', 'quart', 'quint', 'sine', 'expo', 'circ', 'back', 'bounce', 'elastic'}
+		method = methods[#methods]
+	
+		next_method = {} -- next_method.linear = 'quad', etc
+		for i = 1,#methods do
+			next_method[methods[i]] = methods[(i%#methods)+1]
+		end
+	
+		target = {x = 700, brightness = 200, radius = 50}
+		local function reset()
+			circle = {
+				{x = 100, y = 100, brightness = 100, radius = 20},
+				{x = 100, y = 233, brightness = 100, radius = 20},
+				{x = 100, y = 367, brightness = 100, radius = 20},
+				{x = 100, y = 500, brightness = 100, radius = 20},
+			}
+	
+			method = next_method[method]
+	
+			Timer.tween(3, circle[1], target, 'in-'..method)
+			Timer.tween(3, circle[2], target, 'out-'..method)
+			Timer.tween(3, circle[3], target, 'in-out-'..method)
+			Timer.tween(3, circle[4], target, 'out-in-'..method,
+				function() Timer.add(.5, reset) end)
+		end
+	
+		reset()
+	end
+	
+	function love.update(dt)
+		Timer.update(dt)
+	end
+	
+	function love.draw()
+		love.graphics.setColor(255,255,255)
+		love.graphics.print('in-' .. method, 50, 100-50)
+		love.graphics.print('out-' .. method, 50, 233-50)
+		love.graphics.print('in-out-' .. method, 50, 367-50)
+		love.graphics.print('out-in-' .. method, 50, 500-50)
+	
+		for i = 1,#circle do
+			love.graphics.setColor(255,255,255, circle[i].brightness)
+			love.graphics.circle('fill', circle[i].x, circle[i].y,
+				circle[i].radius)
+		end
+	end
+
+### Custom interpolators [Advanced: Adding custom tweening methods.]
+
+**This is a stub**
+
+You can add custom interpolation methods by adding them to the `tween` table:
+
+	Timer.tween.sqrt = function(t) return math.sqrt(t) end
+	-- or just Timer.tween.sqrt = math.sqrt
+
+Access the your method like you would the predefined ones. You can even use the
+modyfing prefixes:
+
+	Timer.tween(5, 'in-out-sqrt', circle, {radius = 50})
+
+You can also invert and chain functions:
+
+	outsqrt = Timer.tween.out(math.sqrt)
+	inoutsqrt = Timer.tween.chain(math.sqrt, outsqrt)
 
 
 ## Module hump.vector [2D vector math.]

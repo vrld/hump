@@ -78,7 +78,7 @@ function love.load()
     Gamestate.switch(menu)
 end
 </code></pre>
-</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.gamestateCallbacks ">Callbacks </a></dt><dd>Gamestate Callbacks.</dd><dt><a href="#hump.gamestatenew">new()</a></dt><dd>Create a new gamestate.</dd><dt><a href="#hump.gamestateswitch">switch()</a></dt><dd>Switch to gamestate.</dd><dt><a href="#hump.gamestate&lt;callback&gt;">&lt;callback&gt;()</a></dt><dd>Call function on active gamestate.</dd><dt><a href="#hump.gamestateregisterEvents">registerEvents()</a></dt><dd>Automatically do all of the above when needed.</dd></dl></div><div class="section-block" id="hump.gamestateCallbacks "><h4>Callbacks <a class="top" href="#hump.gamestate">^top</a></h4><p>A gamestate can define all callbacks that LÖVE defines. In addition, there are
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.gamestateCallbacks ">Callbacks </a></dt><dd>Gamestate Callbacks.</dd><dt><a href="#hump.gamestatenew">new()</a></dt><dd>Create a new gamestate.</dd><dt><a href="#hump.gamestateswitch">switch()</a></dt><dd>Switch to gamestate.</dd><dt><a href="#hump.gamestatecurrent">current()</a></dt><dd>Get current gamestate.</dd><dt><a href="#hump.gamestatepush">push()</a></dt><dd>Push state on top of the stack.</dd><dt><a href="#hump.gamestatepop">pop()</a></dt><dd>Pops state from the stack.</dd><dt><a href="#hump.gamestate&lt;callback&gt;">&lt;callback&gt;()</a></dt><dd>Call function on active gamestate.</dd><dt><a href="#hump.gamestateregisterEvents">registerEvents()</a></dt><dd>Automatically do all of the above when needed.</dd></dl></div><div class="section-block" id="hump.gamestateCallbacks "><h4>Callbacks <a class="top" href="#hump.gamestate">^top</a></h4><p>A gamestate can define all callbacks that LÖVE defines. In addition, there are
 callbacks for initalizing, entering and leaving a state:</p>
 
 <dl>
@@ -169,6 +169,65 @@ the new gamestate.</p>
 <dd>The results of <code class="lua">to:enter(current, ...)</code></dd></dl>
 </div><div class="example">Example:<pre><code class="lua">Gamestate.switch(game, level_two)
 </code></pre>
+</div></div><div class="ref-block" id="hump.gamestatecurrent"><h4>function <span class="name">current</span><span class="arglist">()</span><a class="top" href="#hump.gamestate">^top</a></h4><p>Returns the currently activated gamestate.</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>table</dt>
+<dd>The active gamestate.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">function love.keypressed(key)
+    if Gamestate.current() ~= menu and key == 'p' then
+        Gamestate.push(pause)
+    end
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.gamestatepush"><h4>function <span class="name">push</span><span class="arglist">(to, ...)</span><a class="top" href="#hump.gamestate">^top</a></h4><p>Pushes the <code class="lua">to</code> on top of the state stack, i.e. makes it the active state.
+Semantics are the same as <code class="lua">switch(to, ...)</code>, except that <code class="lua">leave()</code> is <em>not</em>
+called on the previously active state.</p>
+
+<p>Useful for pause screens, menus, etc.</p>
+<div class="arguments">Parameters:<dl>
+<dt>Gamestate <code class="lua">to</code></dt>
+<dd>Target gamestate.</dd><dt>mixed <code class="lua">...</code></dt>
+<dd>Additional arguments to pass to <code class="lua">to:enter(current, ...)</code>.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>mixed</dt>
+<dd>The results of <code class="lua">to:enter(current, ...)</code></dd></dl>
+</div><div class="example">Example:<pre><code class="lua">-- pause gamestate
+Pause = Gamestate.new()
+function Pause:enter(from)
+    self.from = from -- record previous state
+end
+
+function Pause:draw()
+    local W, H = love.graphics.getWidth(), love.graphics.getHeight()
+    -- draw previous screen
+    self.from:draw()
+    -- overlay with pause message
+    love.graphics.setColor(0,0,0, 100)
+    love.graphics.rectangle('fill', 0,0, W,H)
+    love.graphics.setColor(255,255,255)
+    love.graphics.printf('PAUSE', 0, H/2, W, 'center')
+end
+
+-- [...]
+function love.keypressed(key)
+    if Gamestate.current() ~= menu and key == 'p' then
+        Gamestate.push(pause)
+    end
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.gamestatepop"><h4>function <span class="name">pop</span><span class="arglist">()</span><a class="top" href="#hump.gamestate">^top</a></h4><p>Calls <code class="lua">leave()</code> on the current state and then removes it from the stack, making
+the state below the current state. Does <em>not</em> call <code class="lua">enter()</code> on the activated
+state.</p>
+<div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
+<dt>mixed</dt>
+<dd>The results of <code class="lua">state:leave()</code></dd></dl>
+</div><div class="example">Example:<pre><code class="lua">-- extending the example of Gamestate.push() above
+function Pause:keypressed(key)
+    if key == 'p' then
+        Gamestate.pop() -- return to previous state
+    end
+end
+</code></pre>
 </div></div><div class="ref-block" id="hump.gamestate&lt;callback&gt;"><h4>function <span class="name">&lt;callback&gt;</span><span class="arglist">(...)</span><a class="top" href="#hump.gamestate">^top</a></h4><p>Calls a function on the current gamestate. Can be any function, but is intended to
 be one of the <a href="#hump.gamestateCallbacks">callbacks</a>. Mostly useful when not using
 <a href="#hump.gamestateregisterEvents"><code class="lua">registerEvents()</code></a>.</p>
@@ -232,6 +291,10 @@ is possible to run functions <em>after</em> and <em>for</em> some amount of time
 example, a timer could be set to move critters every 5 seconds or to make the
 player invincible for a short amount of time.</p>
 
+<p>In addition to that, <code class="lua">hump.timer</code> offers various
+<a href="http://en.wikipedia.org/wiki/Inbetweening">tweening</a> functions that make it
+easier to produce <a href="http://www.youtube.com/watch?v=Fy0aCDmgnxg">juicy games</a>.</p>
+
 <h4>Example:</h4>
 
 <pre><code class="lua">function love.keypressed(key)
@@ -244,7 +307,7 @@ function love.update(dt)
     Timer.update(dt)
 end
 </code></pre>
-</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.timernew">new()</a></dt><dd>Create new timer instance.</dd><dt><a href="#hump.timeradd">add()</a></dt><dd>Schedule a function.</dd><dt><a href="#hump.timeraddPeriodic">addPeriodic()</a></dt><dd>Add a periodic function.</dd><dt><a href="#hump.timerdo_for">do_for()</a></dt><dd>Run a function for the next few seconds.</dd><dt><a href="#hump.timercancel">cancel()</a></dt><dd>Cancel a scheduled function.</dd><dt><a href="#hump.timerclear">clear()</a></dt><dd>Remove all timed and periodic functions.</dd><dt><a href="#hump.timerupdate">update()</a></dt><dd>Update scheduled functions.</dd></dl></div><div class="ref-block" id="hump.timernew"><h4>function <span class="name">new</span><span class="arglist">()</span><a class="top" href="#hump.timer">^top</a></h4><p><strong>If you don't need multiple independent schedulers, you can use the
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.timernew">new()</a></dt><dd>Create new timer instance.</dd><dt><a href="#hump.timeradd">add()</a></dt><dd>Schedule a function.</dd><dt><a href="#hump.timeraddPeriodic">addPeriodic()</a></dt><dd>Add a periodic function.</dd><dt><a href="#hump.timerdo_for">do_for()</a></dt><dd>Run a function for the next few seconds.</dd><dt><a href="#hump.timercancel">cancel()</a></dt><dd>Cancel a scheduled function.</dd><dt><a href="#hump.timerclear">clear()</a></dt><dd>Remove all timed and periodic functions.</dd><dt><a href="#hump.timerupdate">update()</a></dt><dd>Update scheduled functions.</dd><dt><a href="#hump.timertween">tween()</a></dt><dd>Add a tween.</dd><dt><a href="#hump.timerTweening methods ">Tweening methods </a></dt><dd>Predefined tweening methods.</dd><dt><a href="#hump.timerCustom interpolators ">Custom interpolators </a></dt><dd>Advanced: Adding custom tweening methods.</dd></dl></div><div class="ref-block" id="hump.timernew"><h4>function <span class="name">new</span><span class="arglist">()</span><a class="top" href="#hump.timer">^top</a></h4><p><strong>If you don't need multiple independent schedulers, you can use the
 global/default timer (see examples).</strong></p>
 
 <p>Creates a new timer instance that is independent of the global timer: It will
@@ -353,12 +416,20 @@ end)
 <div class="arguments">Parameters:<dl>
 <dt>table <code class="lua">handle</code></dt>
 <dd>The function to be canceled.</dd></dl>
-</div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Example:<pre><code class="lua">function tick()
+</div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Examples:<pre><code class="lua">function tick()
     print('tick... tock...')
 end
 handle = Timer.addPeriodic(1, tick)
 -- later
 Timer.cancel(handle) -- NOT: Timer.cancel(tick)
+</code></pre>
+<pre><code class="lua">-- using a timer instance
+function tick()
+    print('tick... tock...')
+end
+handle = menuTimer:addPeriodic(1, tick)
+-- later
+menuTimer:cancel(handle)
 </code></pre>
 </div></div><div class="ref-block" id="hump.timerclear"><h4>function <span class="name">clear</span><span class="arglist">()</span><a class="top" href="#hump.timer">^top</a></h4><p>Remove all timed and periodic functions. Functions that have not yet been
 executed will discarded.</p>
@@ -381,7 +452,203 @@ function menuState:update(dt)
     self.timer:update(dt)
 end
 </code></pre>
-</div></div></div><div class="outer-block" id="hump.vector"><h3>hump.vector<a class="top" href="#top">^top</a></h3><div class="preamble"><pre><code class="lua">vector = require "hump.vector"
+</div></div><div class="ref-block" id="hump.timertween"><h4>function <span class="name">tween</span><span class="arglist">(duration, subject, target, method, after, ...)</span><a class="top" href="#hump.timer">^top</a></h4><p><a href="http://en.wikipedia.org/wiki/Inbetweening">Tweening</a> (short for in-betweening)
+is the process that happens between two defined states. For example, a tween
+can be used to gradually fade out a graphic or move a text message to the
+center of the screen. For more information why tweening should be important to
+you, check out this great talk on <a href="http://www.youtube.com/watch?v=Fy0aCDmgnxg">juicy
+games</a>.</p>
+
+<p><code class="lua">hump.timer</code> offers two interfaces for tweening: the low-level
+<a href="#hump.timerdofor"><code class="lua">timer.to_for()</code></a> and the higher level interface
+<a href="#hump.timertween"><code class="lua">timer.tween()</code></a>.</p>
+
+<p>To see which tweening methods hump offers, <a href="#hump.timerTweening%2520methods">see
+below</a>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>number <code class="lua">duration</code></dt>
+<dd>Duration of the tween.</dd><dt>table <code class="lua">subject</code></dt>
+<dd>Object to be tweened.</dd><dt>table <code class="lua">target</code></dt>
+<dd>Target values.</dd><dt>string <code class="lua">method</code> (optional)</dt>
+<dd>Tweening method, defaults to 'linear' (<a href="#hump.timerTweening%2520methods">see here</a>).</dd><dt>function <code class="lua">after</code> (optiona)</dt>
+<dd>Function to execute after the tween has finished.</dd><dt>mixed <code class="lua">...</code></dt>
+<dd>Additional arguments to the <em>tweening</em> function.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>table</dt>
+<dd>A timer handle.</dd></dl>
+</div><div class="example">Examples:<pre><code class="lua">function love.load()
+    color = {0, 0, 0}
+    Timer.tween(10, color, {255, 255, 255}, 'in-out-quad')
+end
+
+function love.update(dt)
+    Timer.update(dt)
+end
+
+function love.draw()
+    love.graphics.setBackgroundColor(color)
+end
+</code></pre>
+<pre><code class="lua">function love.load()
+    circle = {rad = 10, pos = {x = 400, y = 300}}
+    -- multiple tweens can work on the same subject
+    -- and nested values can be tweened, too
+    Timer.tween(5, circle, {rad = 50}, 'in-out-quad')
+    Timer.tween(2, circle, {pos = {y = 550}}, 'out-bounce')
+end
+
+function love.update(dt)
+    Timer.update(dt)
+end
+
+function love.draw()
+    love.graphics.circle('fill', circle.pos.x, circle.pos.y, circle.rad)
+end
+</code></pre>
+<pre><code class="lua">function love.load()
+    -- repeated tweening
+
+    circle = {rad = 10, x = 100, y = 100}
+    local grow, shrink, move_down, move_up
+    grow = function()
+        Timer.tween(1, circle, {rad = 50}, 'in-out-quad', shrink)
+    end
+    shrink = function()
+        Timer.tween(2, circle, {rad = 10}, 'in-out-quad', grow)
+    end
+
+    move_down = function()
+        Timer.tween(3, circle, {x = 700, y = 500}, 'bounce', move_up)
+    end
+    move_up = function()
+        Timer.tween(5, circle, {x = 200, y = 200}, 'out-elastic', move_down)
+    end
+
+    grow()
+    move_down()
+end
+
+function love.update(dt)
+    Timer.update(dt)
+end
+
+function love.draw()
+    love.graphics.circle('fill', circle.x, circle.y, circle.rad)
+end
+</code></pre>
+</div></div><div class="section-block" id="hump.timerTweening methods "><h4>Tweening methods <a class="top" href="#hump.timer">^top</a></h4><p>At the core of tweening lie interpolation methods. These methods define how the
+output should look depending on how much time has passed. For example, consider
+the following tween:</p>
+
+<pre><code class="lua">-- now: player.x = 0, player.y = 0
+Timer.tween(2, player, {x = 2})
+Timer.tween(4, player, {y = 8})
+</code></pre>
+
+<p>At the beginning of the tweens (no time passed), the interpolation method would
+place the player at <code class="lua">x = 0, y = 0</code>. After one second, the player should be at
+<code class="lua">x = 1, y = 2</code>, and after two seconds the output is <code class="lua">x = 2, y = 4</code>.</p>
+
+<p>The actual duration of and time since starting the tween is not important, only
+the fraction of the two. Similarly, the starting value and output are not
+important to the interpolation method, since it can be calculated from the
+start and end point. Thus an interpolation method can be fully characterized by
+a function that takes a number between 0 and 1 and returns a number that
+defines the output (usually also between 0 and 1). The interpolation function
+must hold that the output is 0 for input 0 and 1 for input 1.</p>
+
+<p><code class="lua">hump</code> predefines several commonly used interpolation methods, which are
+generalized versions of <a href="http://www.robertpenner.com/easing/">Robert Penner's easing
+functions</a>. Those are:</p>
+
+<p><code class="lua">'linear'</code>, <code class="lua">'quad'</code>, <code class="lua">'cubic'</code>, <code class="lua">'quart'</code>, <code class="lua">'quint'</code>, <code class="lua">'sine'</code>,
+<code class="lua">'expo'</code>, <code class="lua">'circ'</code>, <code class="lua">'back'</code>, <code class="lua">'bounce'</code>, and <code class="lua">'elastic'</code>.</p>
+
+<p>Here are their respective graphs:</p>
+
+<p><img src="interpolators.png" alt="Graph of interpolation functions" /></p>
+
+<p>All methods can be 'inverted' by prefixing the keyword <code class="lua">out-</code>, for example
+<code class="lua">'out-quad'</code>, <code class="lua">'out-sine'</code>, <code class="lua">'out-bounce'</code>, etc:</p>
+
+<p><img src="inv-interpolators.png" alt="Graph of inverted interpolation functions" /></p>
+
+<p>The <code class="lua">in-out-</code> and <code class="lua">out-in-</code> prefix chain the interpolators:</p>
+
+<p><img src="in-out-interpolators.png" alt="Graph of chained interpolation functions" /></p>
+
+<p>Of course these graphs cannot show how the different methods compare, so here's
+an example script that highlights the different tweens:</p>
+
+<pre><code class="lua">Timer = require 'hump.timer'
+function love.load()
+    methods = {'linear', 'quad', 'cubic', 'quart', 'quint', 'sine', 'expo', 'circ', 'back', 'bounce', 'elastic'}
+    method = methods[#methods]
+
+    next_method = {} -- next_method.linear = 'quad', etc
+    for i = 1,#methods do
+        next_method[methods[i]] = methods[(i%#methods)+1]
+    end
+
+    target = {x = 700, brightness = 200, radius = 50}
+    local function reset()
+        circle = {
+            {x = 100, y = 100, brightness = 100, radius = 20},
+            {x = 100, y = 233, brightness = 100, radius = 20},
+            {x = 100, y = 367, brightness = 100, radius = 20},
+            {x = 100, y = 500, brightness = 100, radius = 20},
+        }
+
+        method = next_method[method]
+
+        Timer.tween(3, circle[1], target, 'in-'..method)
+        Timer.tween(3, circle[2], target, 'out-'..method)
+        Timer.tween(3, circle[3], target, 'in-out-'..method)
+        Timer.tween(3, circle[4], target, 'out-in-'..method,
+            function() Timer.add(.5, reset) end)
+    end
+
+    reset()
+end
+
+function love.update(dt)
+    Timer.update(dt)
+end
+
+function love.draw()
+    love.graphics.setColor(255,255,255)
+    love.graphics.print('in-' .. method, 50, 100-50)
+    love.graphics.print('out-' .. method, 50, 233-50)
+    love.graphics.print('in-out-' .. method, 50, 367-50)
+    love.graphics.print('out-in-' .. method, 50, 500-50)
+
+    for i = 1,#circle do
+        love.graphics.setColor(255,255,255, circle[i].brightness)
+        love.graphics.circle('fill', circle[i].x, circle[i].y,
+            circle[i].radius)
+    end
+end
+</code></pre>
+</div><div class="section-block" id="hump.timerCustom interpolators "><h4>Custom interpolators <a class="top" href="#hump.timer">^top</a></h4><p><strong>This is a stub</strong></p>
+
+<p>You can add custom interpolation methods by adding them to the <code class="lua">tween</code> table:</p>
+
+<pre><code class="lua">Timer.tween.sqrt = function(t) return math.sqrt(t) end
+-- or just Timer.tween.sqrt = math.sqrt
+</code></pre>
+
+<p>Access the your method like you would the predefined ones. You can even use the
+modyfing prefixes:</p>
+
+<pre><code class="lua">Timer.tween(5, 'in-out-sqrt', circle, {radius = 50})
+</code></pre>
+
+<p>You can also invert and chain functions:</p>
+
+<pre><code class="lua">outsqrt = Timer.tween.out(math.sqrt)
+inoutsqrt = Timer.tween.chain(math.sqrt, outsqrt)
+</code></pre>
+</div></div><div class="outer-block" id="hump.vector"><h3>hump.vector<a class="top" href="#top">^top</a></h3><div class="preamble"><pre><code class="lua">vector = require "hump.vector"
 </code></pre>
 
 <p>A handy 2D vector class providing most of the things you do with vectors.</p>
@@ -413,7 +680,7 @@ end
     player.position = player.position + player.velocity * dt
 end
 </code></pre>
-</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.vectorOperators ">Operators </a></dt><dd>Arithmetics and relations.</dd><dt><a href="#hump.vectornew">new()</a></dt><dd>Create a new vector.</dd><dt><a href="#hump.vectorisvector">isvector()</a></dt><dd>Test if value is a vector.</dd><dt><a href="#hump.vectorvector:clone">vector:clone()</a></dt><dd>Copy a vector.</dd><dt><a href="#hump.vectorvector:unpack">vector:unpack()</a></dt><dd>Extract coordinates.</dd><dt><a href="#hump.vectorvector:permul">vector:permul()</a></dt><dd>Per element multiplication.</dd><dt><a href="#hump.vectorvector:len">vector:len()</a></dt><dd>Get length.</dd><dt><a href="#hump.vectorvector:len2">vector:len2()</a></dt><dd>Get squared length.</dd><dt><a href="#hump.vectorvector:dist">vector:dist()</a></dt><dd>Distance to other vector.</dd><dt><a href="#hump.vectorvector:normalized">vector:normalized()</a></dt><dd>Get normalized vector.</dd><dt><a href="#hump.vectorvector:normalize_inplace">vector:normalize_inplace()</a></dt><dd>Normalize vector in-place.</dd><dt><a href="#hump.vectorvector:rotated">vector:rotated()</a></dt><dd>Get rotated vector.</dd><dt><a href="#hump.vectorvector:rotate_inplace">vector:rotate_inplace()</a></dt><dd>Rotate vector in-place.</dd><dt><a href="#hump.vectorvector:perpendicular">vector:perpendicular()</a></dt><dd>Get perpendicular vector.</dd><dt><a href="#hump.vectorvector:projectOn">vector:projectOn()</a></dt><dd>Get projection onto another vector.</dd><dt><a href="#hump.vectorvector:mirrorOn">vector:mirrorOn()</a></dt><dd>Mirrors vector on other vector</dd><dt><a href="#hump.vectorvector:cross">vector:cross()</a></dt><dd>Cross product of two vectors.</dd><dt><a href="#hump.vectorvector:angleTo">vector:angleTo()</a></dt><dd>Measure angle between two vectors.</dd></dl></div><div class="section-block" id="hump.vectorOperators "><h4>Operators <a class="top" href="#hump.vector">^top</a></h4><p>Vector arithmetic is implemented by using <code class="lua">__add</code>, <code class="lua">__mul</code> and other
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.vectorOperators ">Operators </a></dt><dd>Arithmetics and relations.</dd><dt><a href="#hump.vectornew">new()</a></dt><dd>Create a new vector.</dd><dt><a href="#hump.vectorisvector">isvector()</a></dt><dd>Test if value is a vector.</dd><dt><a href="#hump.vectorvector:clone">vector:clone()</a></dt><dd>Copy a vector.</dd><dt><a href="#hump.vectorvector:unpack">vector:unpack()</a></dt><dd>Extract coordinates.</dd><dt><a href="#hump.vectorvector:permul">vector:permul()</a></dt><dd>Per element multiplication.</dd><dt><a href="#hump.vectorvector:len">vector:len()</a></dt><dd>Get length.</dd><dt><a href="#hump.vectorvector:len2">vector:len2()</a></dt><dd>Get squared length.</dd><dt><a href="#hump.vectorvector:dist">vector:dist()</a></dt><dd>Distance to other vector.</dd><dt><a href="#hump.vectorvector:dist2">vector:dist2()</a></dt><dd>Squared distance to other vector.</dd><dt><a href="#hump.vectorvector:normalized">vector:normalized()</a></dt><dd>Get normalized vector.</dd><dt><a href="#hump.vectorvector:normalize_inplace">vector:normalize_inplace()</a></dt><dd>Normalize vector in-place.</dd><dt><a href="#hump.vectorvector:rotated">vector:rotated()</a></dt><dd>Get rotated vector.</dd><dt><a href="#hump.vectorvector:rotate_inplace">vector:rotate_inplace()</a></dt><dd>Rotate vector in-place.</dd><dt><a href="#hump.vectorvector:perpendicular">vector:perpendicular()</a></dt><dd>Get perpendicular vector.</dd><dt><a href="#hump.vectorvector:projectOn">vector:projectOn()</a></dt><dd>Get projection onto another vector.</dd><dt><a href="#hump.vectorvector:mirrorOn">vector:mirrorOn()</a></dt><dd>Mirrors vector on other vector</dd><dt><a href="#hump.vectorvector:cross">vector:cross()</a></dt><dd>Cross product of two vectors.</dd><dt><a href="#hump.vectorvector:angleTo">vector:angleTo()</a></dt><dd>Measure angle between two vectors.</dd></dl></div><div class="section-block" id="hump.vectorOperators "><h4>Operators <a class="top" href="#hump.vector">^top</a></h4><p>Vector arithmetic is implemented by using <code class="lua">__add</code>, <code class="lua">__mul</code> and other
 metamethods:</p>
 
 <dl>
@@ -532,6 +799,23 @@ for i = 2,#vertices do
     local temp = pos:dist(vertices[i])
     if temp &lt; dist then
         closest, dist = vertices[i], temp
+    end
+end
+</code></pre>
+</div></div><div class="ref-block" id="hump.vectorvector:dist2"><h4>function <span class="name">vector:dist2</span><span class="arglist">(other)</span><a class="top" href="#hump.vector">^top</a></h4><p>Get squared distance of two vectors. The same as <code class="lua">(a - b):len2()</code>.</p>
+<div class="arguments">Parameters:<dl>
+<dt>vector <code class="lua">other</code></dt>
+<dd>Other vector to measure the distance to.</dd></dl>
+</div><div class="returns">Returns:<dl>
+<dt>number</dt>
+<dd>The squared distance of the vectors.</dd></dl>
+</div><div class="example">Example:<pre><code class="lua">-- get closest vertex to a given vector
+-- slightly faster than the example using len2()
+closest, dsq = vertices[1], pos:dist2(vertices[1])
+for i = 2,#vertices do
+    local temp = pos:dist2(vertices[i])
+    if temp &lt; dsq then
+        closest, dsq = vertices[i], temp
     end
 end
 </code></pre>
@@ -851,11 +1135,11 @@ end
 <dt>number</dt>
 <dd>The squared distance of two points.</dd></dl>
 </div><div class="example">Example:<pre><code class="lua">-- get closest vertex to a given vector
-closest, dist2 = vertices[1], vector.dist2(px,py, vertices[1].x,vertices[1].y)
+closest, dsq = vertices[1], vector.dist2(px,py, vertices[1].x,vertices[1].y)
 for i = 2,#vertices do
     local temp = vector.dist2(px,py, vertices[i].x,vertices[i].y)
-    if temp &lt; dist2 then
-        closest, dist2 = vertices[i], temp
+    if temp &lt; dsq then
+        closest, dsq = vertices[i], temp
     end
 end
 </code></pre>
