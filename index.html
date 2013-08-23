@@ -36,7 +36,7 @@ for the awesome LÖVE Engine.</p>
 <p>hump differs from other libraries in that every component is independent of the
 remaining ones. hump's footprint is very small and thus should fit nicely into
 your projects.</p>
-</div></div><div class="outer-block" id="Modules"><h3>Modules<a class="top" href="#top">^top</a></h3><div class="preamble"><dl><dt><a href="#hump.gamestate">hump.gamestate</a></dt><dd>A gamestate system.</dd><dt><a href="#hump.timer">hump.timer</a></dt><dd>Delayed and time-limited function calls.</dd><dt><a href="#hump.vector">hump.vector</a></dt><dd>2D vector math.</dd><dt><a href="#hump.vector-light">hump.vector-light</a></dt><dd>Lightweight 2D vector math.</dd><dt><a href="#hump.class">hump.class</a></dt><dd>Object oriented programming for Lua.</dd><dt><a href="#hump.signal">hump.signal</a></dt><dd>Simple Signal/Slot (aka. Observer) implementation.</dd><dt><a href="#hump.camera">hump.camera</a></dt><dd>A camera for LÖVE.</dd></dl>
+</div></div><div class="outer-block" id="Modules"><h3>Modules<a class="top" href="#top">^top</a></h3><div class="preamble"><dl><dt><a href="#hump.gamestate">hump.gamestate</a></dt><dd>A gamestate system.</dd><dt><a href="#hump.timer">hump.timer</a></dt><dd>Delayed and time-limited function calls, and tweening support.</dd><dt><a href="#hump.vector">hump.vector</a></dt><dd>2D vector math.</dd><dt><a href="#hump.vector-light">hump.vector-light</a></dt><dd>Lightweight 2D vector math.</dd><dt><a href="#hump.class">hump.class</a></dt><dd>Object oriented programming for Lua.</dd><dt><a href="#hump.signal">hump.signal</a></dt><dd>Simple Signal/Slot (aka. Observer) implementation.</dd><dt><a href="#hump.camera">hump.camera</a></dt><dd>A camera for LÖVE.</dd></dl>
 
 </div></div><div class="outer-block" id="hump.gamestate"><h3>hump.gamestate<a class="top" href="#top">^top</a></h3><div class="preamble"><pre><code class="lua">Gamestate = require "hump.gamestate"
 </code></pre>
@@ -78,7 +78,7 @@ function love.load()
     Gamestate.switch(menu)
 end
 </code></pre>
-</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.gamestateCallbacks ">Callbacks </a></dt><dd>Gamestate Callbacks.</dd><dt><a href="#hump.gamestatenew">new()</a></dt><dd>Create a new gamestate.</dd><dt><a href="#hump.gamestateswitch">switch()</a></dt><dd>Switch to gamestate.</dd><dt><a href="#hump.gamestatecurrent">current()</a></dt><dd>Get current gamestate.</dd><dt><a href="#hump.gamestatepush">push()</a></dt><dd>Push state on top of the stack.</dd><dt><a href="#hump.gamestatepop">pop()</a></dt><dd>Pops state from the stack.</dd><dt><a href="#hump.gamestate&lt;callback&gt;">&lt;callback&gt;()</a></dt><dd>Call function on active gamestate.</dd><dt><a href="#hump.gamestateregisterEvents">registerEvents()</a></dt><dd>Automatically do all of the above when needed.</dd></dl></div><div class="section-block" id="hump.gamestateCallbacks "><h4>Callbacks <a class="top" href="#hump.gamestate">^top</a></h4><p>A gamestate can define all callbacks that LÖVE defines. In addition, there are
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.gamestateCallbacks">Callbacks </a></dt><dd>Gamestate Callbacks.</dd><dt><a href="#hump.gamestatenew">new()</a></dt><dd>Create a new gamestate.</dd><dt><a href="#hump.gamestateswitch">switch()</a></dt><dd>Switch to gamestate.</dd><dt><a href="#hump.gamestatecurrent">current()</a></dt><dd>Get current gamestate.</dd><dt><a href="#hump.gamestatepush">push()</a></dt><dd>Push state on top of the stack.</dd><dt><a href="#hump.gamestatepop">pop()</a></dt><dd>Pops state from the stack.</dd><dt><a href="#hump.gamestate&lt;callback&gt;">&lt;callback&gt;()</a></dt><dd>Call function on active gamestate.</dd><dt><a href="#hump.gamestateregisterEvents">registerEvents()</a></dt><dd>Automatically do all of the above when needed.</dd></dl></div><div class="section-block" id="hump.gamestateCallbacks"><h4>Callbacks <a class="top" href="#hump.gamestate">^top</a></h4><p>A gamestate can define all callbacks that LÖVE defines. In addition, there are
 callbacks for initalizing, entering and leaving a state:</p>
 
 <dl>
@@ -307,7 +307,7 @@ function love.update(dt)
     Timer.update(dt)
 end
 </code></pre>
-</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.timernew">new()</a></dt><dd>Create new timer instance.</dd><dt><a href="#hump.timeradd">add()</a></dt><dd>Schedule a function.</dd><dt><a href="#hump.timeraddPeriodic">addPeriodic()</a></dt><dd>Add a periodic function.</dd><dt><a href="#hump.timerdo_for">do_for()</a></dt><dd>Run a function for the next few seconds.</dd><dt><a href="#hump.timercancel">cancel()</a></dt><dd>Cancel a scheduled function.</dd><dt><a href="#hump.timerclear">clear()</a></dt><dd>Remove all timed and periodic functions.</dd><dt><a href="#hump.timerupdate">update()</a></dt><dd>Update scheduled functions.</dd><dt><a href="#hump.timertween">tween()</a></dt><dd>Add a tween.</dd><dt><a href="#hump.timerTweening methods ">Tweening methods </a></dt><dd>Predefined tweening methods.</dd><dt><a href="#hump.timerCustom interpolators ">Custom interpolators </a></dt><dd>Advanced: Adding custom tweening methods.</dd></dl></div><div class="ref-block" id="hump.timernew"><h4>function <span class="name">new</span><span class="arglist">()</span><a class="top" href="#hump.timer">^top</a></h4><p><strong>If you don't need multiple independent schedulers, you can use the
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.timernew">new()</a></dt><dd>Create new timer instance.</dd><dt><a href="#hump.timeradd">add()</a></dt><dd>Schedule a function.</dd><dt><a href="#hump.timeraddPeriodic">addPeriodic()</a></dt><dd>Add a periodic function.</dd><dt><a href="#hump.timerdo_for">do_for()</a></dt><dd>Run a function for the next few seconds.</dd><dt><a href="#hump.timercancel">cancel()</a></dt><dd>Cancel a scheduled function.</dd><dt><a href="#hump.timerclear">clear()</a></dt><dd>Remove all timed and periodic functions.</dd><dt><a href="#hump.timerupdate">update()</a></dt><dd>Update scheduled functions.</dd><dt><a href="#hump.timertween">tween()</a></dt><dd>Add a tween.</dd><dt><a href="#hump.timerTweening_methods">Tweening methods </a></dt><dd>Predefined tweening methods.</dd><dt><a href="#hump.timerCustom_interpolators">Custom interpolators </a></dt><dd>Advanced: Adding custom tweening methods.</dd></dl></div><div class="ref-block" id="hump.timernew"><h4>function <span class="name">new</span><span class="arglist">()</span><a class="top" href="#hump.timer">^top</a></h4><p><strong>If you don't need multiple independent schedulers, you can use the
 global/default timer (see examples).</strong></p>
 
 <p>Creates a new timer instance that is independent of the global timer: It will
@@ -463,14 +463,14 @@ games</a>.</p>
 <a href="#hump.timerdofor"><code class="lua">timer.to_for()</code></a> and the higher level interface
 <a href="#hump.timertween"><code class="lua">timer.tween()</code></a>.</p>
 
-<p>To see which tweening methods hump offers, <a href="#hump.timerTweening%2520methods">see
+<p>To see which tweening methods hump offers, <a href="#hump.timerTweening_methods">see
 below</a>.</p>
 <div class="arguments">Parameters:<dl>
 <dt>number <code class="lua">duration</code></dt>
 <dd>Duration of the tween.</dd><dt>table <code class="lua">subject</code></dt>
 <dd>Object to be tweened.</dd><dt>table <code class="lua">target</code></dt>
 <dd>Target values.</dd><dt>string <code class="lua">method</code> (optional)</dt>
-<dd>Tweening method, defaults to 'linear' (<a href="#hump.timerTweening%2520methods">see here</a>).</dd><dt>function <code class="lua">after</code> (optiona)</dt>
+<dd>Tweening method, defaults to 'linear' (<a href="#hump.timerTweening_methods">see here</a>).</dd><dt>function <code class="lua">after</code> (optiona)</dt>
 <dd>Function to execute after the tween has finished.</dd><dt>mixed <code class="lua">...</code></dt>
 <dd>Additional arguments to the <em>tweening</em> function.</dd></dl>
 </div><div class="returns">Returns:<dl>
@@ -536,7 +536,7 @@ function love.draw()
     love.graphics.circle('fill', circle.x, circle.y, circle.rad)
 end
 </code></pre>
-</div></div><div class="section-block" id="hump.timerTweening methods "><h4>Tweening methods <a class="top" href="#hump.timer">^top</a></h4><p>At the core of tweening lie interpolation methods. These methods define how the
+</div></div><div class="section-block" id="hump.timerTweening_methods"><h4>Tweening methods <a class="top" href="#hump.timer">^top</a></h4><p>At the core of tweening lie interpolation methods. These methods define how the
 output should look depending on how much time has passed. For example, consider
 the following tween:</p>
 
@@ -629,7 +629,7 @@ function love.draw()
     end
 end
 </code></pre>
-</div><div class="section-block" id="hump.timerCustom interpolators "><h4>Custom interpolators <a class="top" href="#hump.timer">^top</a></h4><p><strong>This is a stub</strong></p>
+</div><div class="section-block" id="hump.timerCustom_interpolators"><h4>Custom interpolators <a class="top" href="#hump.timer">^top</a></h4><p><strong>This is a stub</strong></p>
 
 <p>You can add custom interpolation methods by adding them to the <code class="lua">tween</code> table:</p>
 
@@ -680,7 +680,7 @@ inoutsqrt = Timer.tween.chain(math.sqrt, outsqrt)
     player.position = player.position + player.velocity * dt
 end
 </code></pre>
-</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.vectorOperators ">Operators </a></dt><dd>Arithmetics and relations.</dd><dt><a href="#hump.vectornew">new()</a></dt><dd>Create a new vector.</dd><dt><a href="#hump.vectorisvector">isvector()</a></dt><dd>Test if value is a vector.</dd><dt><a href="#hump.vectorvector:clone">vector:clone()</a></dt><dd>Copy a vector.</dd><dt><a href="#hump.vectorvector:unpack">vector:unpack()</a></dt><dd>Extract coordinates.</dd><dt><a href="#hump.vectorvector:permul">vector:permul()</a></dt><dd>Per element multiplication.</dd><dt><a href="#hump.vectorvector:len">vector:len()</a></dt><dd>Get length.</dd><dt><a href="#hump.vectorvector:len2">vector:len2()</a></dt><dd>Get squared length.</dd><dt><a href="#hump.vectorvector:dist">vector:dist()</a></dt><dd>Distance to other vector.</dd><dt><a href="#hump.vectorvector:dist2">vector:dist2()</a></dt><dd>Squared distance to other vector.</dd><dt><a href="#hump.vectorvector:normalized">vector:normalized()</a></dt><dd>Get normalized vector.</dd><dt><a href="#hump.vectorvector:normalize_inplace">vector:normalize_inplace()</a></dt><dd>Normalize vector in-place.</dd><dt><a href="#hump.vectorvector:rotated">vector:rotated()</a></dt><dd>Get rotated vector.</dd><dt><a href="#hump.vectorvector:rotate_inplace">vector:rotate_inplace()</a></dt><dd>Rotate vector in-place.</dd><dt><a href="#hump.vectorvector:perpendicular">vector:perpendicular()</a></dt><dd>Get perpendicular vector.</dd><dt><a href="#hump.vectorvector:projectOn">vector:projectOn()</a></dt><dd>Get projection onto another vector.</dd><dt><a href="#hump.vectorvector:mirrorOn">vector:mirrorOn()</a></dt><dd>Mirrors vector on other vector</dd><dt><a href="#hump.vectorvector:cross">vector:cross()</a></dt><dd>Cross product of two vectors.</dd><dt><a href="#hump.vectorvector:angleTo">vector:angleTo()</a></dt><dd>Measure angle between two vectors.</dd></dl></div><div class="section-block" id="hump.vectorOperators "><h4>Operators <a class="top" href="#hump.vector">^top</a></h4><p>Vector arithmetic is implemented by using <code class="lua">__add</code>, <code class="lua">__mul</code> and other
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.vectorOperators">Operators </a></dt><dd>Arithmetics and relations.</dd><dt><a href="#hump.vectornew">new()</a></dt><dd>Create a new vector.</dd><dt><a href="#hump.vectorisvector">isvector()</a></dt><dd>Test if value is a vector.</dd><dt><a href="#hump.vectorvector:clone">vector:clone()</a></dt><dd>Copy a vector.</dd><dt><a href="#hump.vectorvector:unpack">vector:unpack()</a></dt><dd>Extract coordinates.</dd><dt><a href="#hump.vectorvector:permul">vector:permul()</a></dt><dd>Per element multiplication.</dd><dt><a href="#hump.vectorvector:len">vector:len()</a></dt><dd>Get length.</dd><dt><a href="#hump.vectorvector:len2">vector:len2()</a></dt><dd>Get squared length.</dd><dt><a href="#hump.vectorvector:dist">vector:dist()</a></dt><dd>Distance to other vector.</dd><dt><a href="#hump.vectorvector:dist2">vector:dist2()</a></dt><dd>Squared distance to other vector.</dd><dt><a href="#hump.vectorvector:normalized">vector:normalized()</a></dt><dd>Get normalized vector.</dd><dt><a href="#hump.vectorvector:normalize_inplace">vector:normalize_inplace()</a></dt><dd>Normalize vector in-place.</dd><dt><a href="#hump.vectorvector:rotated">vector:rotated()</a></dt><dd>Get rotated vector.</dd><dt><a href="#hump.vectorvector:rotate_inplace">vector:rotate_inplace()</a></dt><dd>Rotate vector in-place.</dd><dt><a href="#hump.vectorvector:perpendicular">vector:perpendicular()</a></dt><dd>Get perpendicular vector.</dd><dt><a href="#hump.vectorvector:projectOn">vector:projectOn()</a></dt><dd>Get projection onto another vector.</dd><dt><a href="#hump.vectorvector:mirrorOn">vector:mirrorOn()</a></dt><dd>Mirrors vector on other vector</dd><dt><a href="#hump.vectorvector:cross">vector:cross()</a></dt><dd>Cross product of two vectors.</dd><dt><a href="#hump.vectorvector:angleTo">vector:angleTo()</a></dt><dd>Measure angle between two vectors.</dd></dl></div><div class="section-block" id="hump.vectorOperators"><h4>Operators <a class="top" href="#hump.vector">^top</a></h4><p>Vector arithmetic is implemented by using <code class="lua">__add</code>, <code class="lua">__mul</code> and other
 metamethods:</p>
 
 <dl>
@@ -1237,7 +1237,7 @@ function Critter:draw()
     love.graphics.draw(self.img, self.pos.x, self.pos.y)
 end
 </code></pre>
-</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.classnew">new()</a></dt><dd>Declare a new class.</dd><dt><a href="#hump.classclass.init">class.init()</a></dt><dd>Call class constructor.</dd><dt><a href="#hump.classclass:include">class:include()</a></dt><dd>Explicit class inheritance/mixin support.</dd><dt><a href="#hump.classclass:clone">class:clone()</a></dt><dd>Clone class/prototype support.</dd><dt><a href="#hump.classCaveats ">Caveats </a></dt><dd>Common gotchas.</dd></dl></div><div class="ref-block" id="hump.classnew"><h4>function <span class="name">new</span><span class="arglist">{init = constructor, __includes = parents, ...}</span><a class="top" href="#hump.class">^top</a></h4><p>Declare a new class.</p>
+</div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.classnew">new()</a></dt><dd>Declare a new class.</dd><dt><a href="#hump.classclass.init">class.init()</a></dt><dd>Call class constructor.</dd><dt><a href="#hump.classclass:include">class:include()</a></dt><dd>Explicit class inheritance/mixin support.</dd><dt><a href="#hump.classclass:clone">class:clone()</a></dt><dd>Clone class/prototype support.</dd><dt><a href="#hump.classCaveats">Caveats </a></dt><dd>Common gotchas.</dd></dl></div><div class="ref-block" id="hump.classnew"><h4>function <span class="name">new</span><span class="arglist">{init = constructor, __includes = parents, ...}</span><a class="top" href="#hump.class">^top</a></h4><p>Declare a new class.</p>
 
 <p><code class="lua">init()</code> will receive the new object instance as first argument. Any other
 arguments will also be forwarded (see examples), i.e. <code class="lua">init()</code> has the
@@ -1468,7 +1468,7 @@ b.baz() -- prints 'baz'
 b.bar.one = 10
 print(a.bar.one, b.bar.one) -- prints '1    10'
 </code></pre>
-</div></div><div class="section-block" id="hump.classCaveats "><h4>Caveats <a class="top" href="#hump.class">^top</a></h4><p>Be careful when using metamethods like <code class="lua">__add</code> or <code class="lua">__mul</code>: If subclass inherits
+</div></div><div class="section-block" id="hump.classCaveats"><h4>Caveats <a class="top" href="#hump.class">^top</a></h4><p>Be careful when using metamethods like <code class="lua">__add</code> or <code class="lua">__mul</code>: If subclass inherits
 those methods from a superclass, but does not overwrite them, the result of the
 operation may be of the type superclass. Consider the following:</p>
 

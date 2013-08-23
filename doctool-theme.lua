@@ -9,6 +9,10 @@ local function filter(t, p)
 	return r
 end
 
+local function anchorname(s)
+	return s:gsub('%s$', ''):gsub('%s','_')
+end
+
 -- generic
 function actions.textblock(info)
 	return discount(info[1])
@@ -18,14 +22,14 @@ function actions.section(info)
 	local htype = 'h'..(info[3]+1)
 	if info[3] >= 3 then
 		return table.concat{
-			'<div class="section-block" id="{{MODULE}}', info[1], '">',
+			'<div class="section-block" id="{{MODULE}}', anchorname(info[1]), '">',
 				'<',htype,'>', info[1], '<a class="top" href="#{{MODULE}}">^top</a></',htype,'>',
 				 discount(info[4]),
 			'</div>'
 		}
 	end
 	return table.concat{
-		'<div class="outer-block" id="{{MODULE}}', info[1], '">',
+		'<div class="outer-block" id="{{MODULE}}', anchorname(info[1]), '">',
 			'<',htype,'>', info[1], '<a class="top" href="#top">^top</a></',htype,'>',
 			'<div class="preamble">', discount(info[4]), '</div>',
 		'</div>'
@@ -59,7 +63,7 @@ end
 actions['function'] = function(info)
 	local arg_delim = info.has_table_args and {'{','}'} or {'(',')'}
 	local out = {
-		'<div class="ref-block" id="{{MODULE}}', info[1], '">',
+		'<div class="ref-block" id="{{MODULE}}', anchorname(info[1]), '">',
 		'<h4>',
 		'function <span class="name">', info[1], '</span>',
 		'<span class="arglist">', arg_delim[1], info[2], arg_delim[2], '</span>',
@@ -122,7 +126,7 @@ end
 function actions.module(info)
 	local modname = info[1]
 	local out = {
-		'<div class="outer-block" id="', modname, '">',
+		'<div class="outer-block" id="', anchorname(modname), '">',
 		'<h3>', modname, '<a class="top" href="#top">^top</a></h3>',
 		'<div class="preamble">', discount(info[3]), '</div>'
 	}
@@ -135,7 +139,7 @@ function actions.module(info)
 		if info.type == 'function' then
 			out[#out+1] = table.concat{
 				'<dt>',
-					'<a href="#', modname, info[1], '">',
+					'<a href="#', anchorname(modname), anchorname(info[1]), '">',
 						info[1], '()',
 					'</a>',
 				'</dt><dd>',
@@ -145,7 +149,7 @@ function actions.module(info)
 		elseif info.type == 'section' then
 			out[#out+1] = table.concat{
 				'<dt>',
-					'<a href="#', modname, info[1], '">',
+					'<a href="#', anchorname(modname), anchorname(info[1]), '">',
 						info[1],
 					'</a>',
 				'</dt><dd>',
@@ -182,7 +186,7 @@ function actions.preprocess(doctree)
 	out[#out+1] = '<dl>'
 	for _, info in ipairs(filter(doctree, function(v) return v.type == 'module' end)) do
 		out[#out+1] = table.concat{
-			'<dt><a href="#', info[1], '">', info[1], '</a></dt>',
+			'<dt><a href="#', anchorname(info[1]), '">', info[1], '</a></dt>',
 			'<dd>', info[2], '</dd>',
 		}
 	end

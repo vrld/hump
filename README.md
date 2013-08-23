@@ -342,7 +342,7 @@ executed *after* the whole file is loaded.
 
 
 
-## Module hump.timer [Delayed and time-limited function calls.]
+## Module hump.timer [Delayed and time-limited function calls, and tweening support.]
 
     Timer = require "hump.timer"
 
@@ -610,7 +610,7 @@ games](http://www.youtube.com/watch?v=Fy0aCDmgnxg).
 [`timer.tween()`](#hump.timertween).
 
 To see which tweening methods hump offers, [see
-below](#hump.timerTweening%20methods).
+below](#hump.timerTweening_methods).
 
 #### Parameters:
 
@@ -621,7 +621,7 @@ below](#hump.timerTweening%20methods).
 =table target=
 	Target values.
 =string method (optional)=
-	Tweening method, defaults to 'linear' ([see here](#hump.timerTweening%20methods)).
+	Tweening method, defaults to 'linear' ([see here](#hump.timerTweening_methods)).
 =function after (optiona)=
 	Function to execute after the tween has finished.
 =mixed ...=
