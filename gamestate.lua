@@ -44,9 +44,13 @@ function GS.switch(to, ...)
 	return (to.enter or __NULL__)(to, pre, ...)
 end
 
-function GS.push(...)
-	stack[#stack+1] = state_init -- hackety hack
-	return GS.switch(...)
+function GS.push(to, ...)
+	assert(to, "Missing argument: Gamestate to switch to")
+	local pre = stack[#stack]
+	;(to.init or __NULL__)(to)
+	to.init = nil
+	stack[#stack+1] = to
+	return (to.enter or __NULL__)(to, pre, ...)
 end
 
 function GS.pop()
