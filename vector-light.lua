@@ -121,7 +121,10 @@ local function trim(maxLen, x, y)
 end
 
 local function angleTo(x,y, u,v)
-	return atan2(y - (v or 0), x - (u or 0))
+	if u and v then
+		return atan2(y, x) - atan2(v, u)
+	end
+	return atan2(y, x)
 end
 
 -- the module

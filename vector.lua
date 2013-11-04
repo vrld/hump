@@ -175,8 +175,10 @@ function vector:trim_inplace(maxLen)
 end
 
 function vector:angleTo(other)
-	other = other or zero
-	return atan2(self.y - other.y, self.x - other.x)
+	if other then
+		return atan2(self.y, self.y) - atan2(other.y, other.x)
+	end
+	return atan2(self.y, self.y)
 end
 
 function vector:trimmed(maxLen)
