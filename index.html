@@ -1453,7 +1453,10 @@ a.x, a.y = 10, 10
 print(a.x, a.y) --&gt; prints '10    10'
 
 b = point:clone()
-print(b.x, b.y) --&gt; prints '10    10'
+print(b.x, b.y) --&gt; prints '0    0'
+
+c = a:clone()
+print(c.x, c.y) --&gt; prints '10    10'
 </code></pre>
 <pre><code class="lua">-- using Class.clone() to copy tables
 Class = require 'hump.class'

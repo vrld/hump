@@ -2087,7 +2087,10 @@ Create a clone/deep copy of the class.
 	print(a.x, a.y) --> prints '10    10'
 	
 	b = point:clone()
-	print(b.x, b.y) --> prints '10    10'
+	print(b.x, b.y) --> prints '0    0'
+	
+	c = a:clone()
+	print(c.x, c.y) --> prints '10    10'
 
 #### Example:
 
