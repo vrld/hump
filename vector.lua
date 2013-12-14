@@ -36,7 +36,7 @@ end
 local zero = new(0,0)
 
 local function isvector(v)
-	return (v.x ~= nil) and (v.y ~= nil)
+	return (v ~= nil) and (v.x ~= nil) and (v.y ~= nil)
 end
 
 function vector:clone()
