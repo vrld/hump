@@ -65,9 +65,11 @@ function GS.current()
 end
 
 local all_callbacks = {
-	'update', 'draw', 'focus', 'keypressed', 'keyreleased',
-	'mousepressed', 'mousereleased', 'joystickpressed',
-	'joystickreleased', 'textinput', 'quit', 'textinput'
+	'draw', 'errhand', 'focus', 'keypressed', 'keyreleased', 'mousefocus',
+	'mousepressed', 'mousereleased', 'quit', 'resize', 'textinput',
+	'threaderror', 'update', 'visible', 'gamepadaxis', 'gamepadpressed',
+	'joystickadded', 'joystickaxis', 'joystickhat', 'joystickpressed',
+	'joystickreleased', 'joystickremoved'
 }
 
 function GS.registerEvents(callbacks)
