@@ -83,7 +83,7 @@ local default = new()
 
 return setmetatable({
 	new            = new,
-	register       = function(...) default:register(...) end,
+	register       = function(...) return default:register(...) end,
 	emit           = function(...) default:emit(...) end,
 	remove         = function(...) default:remove(...) end,
 	clear          = function(...) default:clear(...) end,
