@@ -169,7 +169,7 @@ end
 -- ref.: http://blog.signalsondisplay.com/?p=336
 function vector:trim_inplace(maxLen)
 	local s = maxLen * maxLen / self:len2()
-	s = s < 1 and 1 or math.sqrt(s)
+	s = (s > 1 and 1) or math.sqrt(s)
 	self.x, self.y = self.x * s, self.y * s
 	return self
 end
