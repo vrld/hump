@@ -116,7 +116,7 @@ end
 -- ref.: http://blog.signalsondisplay.com/?p=336
 local function trim(maxLen, x, y)
 	local s = maxLen * maxLen / len2(x, y)
-	s = s < 1 and 1 or math.sqrt(s)
+	s = s > 1 and 1 or math.sqrt(s)
 	return x * s, y * s
 end
 
