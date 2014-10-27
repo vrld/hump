@@ -30,11 +30,12 @@ local cos, sin = math.cos, math.sin
 local camera = {}
 camera.__index = camera
 
-local function new(x,y, zoom, rot)
+local function new(x,y, zoom, rot, flip_y)
 	x,y  = x or love.graphics.getWidth()/2, y or love.graphics.getHeight()/2
 	zoom = zoom or 1
 	rot  = rot or 0
-	return setmetatable({x = x, y = y, scale = zoom, rot = rot}, camera)
+	flip_y = flip_y or 0
+	return setmetatable({x = x, y = y, scale = zoom, rot = rot, flip_y = flip_y}, camera)
 end
 
 function camera:lookAt(x,y)
@@ -72,11 +73,12 @@ function camera:zoomTo(zoom)
 end
 
 function camera:attach()
+	local fy = self.flip_y and -1 or 1
 	local cx,cy = love.graphics.getWidth()/(2*self.scale), love.graphics.getHeight()/(2*self.scale)
 	love.graphics.push()
-	love.graphics.scale(self.scale)
-	love.graphics.translate(cx, cy)
-	love.graphics.rotate(self.rot)
+	love.graphics.scale(self.scale, self.scale * fy)
+	love.graphics.translate(cx, cy * fy)
+	love.graphics.rotate(self.rot * fy)
 	love.graphics.translate(-self.x, -self.y)
 end
 
@@ -92,18 +94,20 @@ end
 
 function camera:cameraCoords(x,y)
 	-- x,y = ((x,y) - (self.x, self.y)):rotated(self.rot) * self.scale + center
+	local fy = self.flip_y and -1 or 1
 	local w,h = love.graphics.getWidth(), love.graphics.getHeight()
-	local c,s = cos(self.rot), sin(self.rot)
+	local c,s = cos(self.rot), sin(self.rot*fy)
 	x,y = x - self.x, y - self.y
 	x,y = c*x - s*y, s*x + c*y
-	return x*self.scale + w/2, y*self.scale + h/2
+	return x*self.scale + w/2, y*self.scale*fy + h/2
 end
 
 function camera:worldCoords(x,y)
 	-- x,y = (((x,y) - center) / self.scale):rotated(-self.rot) + (self.x,self.y)
+	local fy = self.flip_y and -1 or 1
 	local w,h = love.graphics.getWidth(), love.graphics.getHeight()
-	local c,s = cos(-self.rot), sin(-self.rot)
-	x,y = (x - w/2) / self.scale, (y - h/2) / self.scale
+	local c,s = cos(-self.rot), sin(-self.rot*fy)
+	x,y = (x - w/2) / self.scale, (y - h/2) / (self.scale*fy)
 	x,y = c*x - s*y, s*x + c*y
 	return x+self.x, y+self.y
 end
