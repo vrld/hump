@@ -34,7 +34,7 @@ local function new(x,y, zoom, rot, flip_y)
 	x,y  = x or love.graphics.getWidth()/2, y or love.graphics.getHeight()/2
 	zoom = zoom or 1
 	rot  = rot or 0
-	flip_y = flip_y or 0
+	flip_y = flip_y or false
 	return setmetatable({x = x, y = y, scale = zoom, rot = rot, flip_y = flip_y}, camera)
 end
 
