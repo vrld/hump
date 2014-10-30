@@ -1,3 +1,3 @@
 [submodule "doctool"]
 	path = doctool
-	url = git://github.com/vrld/doctool.git
+	url = https://github.com/vrld/doctool.git
