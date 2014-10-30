@@ -1150,7 +1150,7 @@ This does not change the input vector, but creates a new vector.
 Rotate a vector in-place. Great to use on intermediate results.
 
 **This modifies the vector. If in doubt, use
-[`vector:rotate()`](#hump.vectorrotate).**
+[`vector:rotated()`](#hump.vectorvector:rotated).**
 
 #### Parameters:
 
