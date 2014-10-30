@@ -85,7 +85,8 @@ callbacks for initalizing, entering and leaving a state:</p>
 <dt><code class="lua">init()</code></dt>
 <dd>Called once before entering the state. See <a href="#hump.gamestateswitch"><code class="lua">switch()</code></a>.</dd><dt><code class="lua">enter(previous, ...)</code></dt>
 <dd>Called when entering the state. See <a href="#hump.gamestateswitch"><code class="lua">switch()</code></a>.</dd><dt><code class="lua">leave()</code></dt>
-<dd>Called when leaving a state. See <a href="#hump.gamestateswitch"><code class="lua">switch()</code></a>.</dd><dt><code class="lua">update()</code></dt>
+<dd>Called when leaving a state. See <a href="#hump.gamestateswitch"><code class="lua">switch()</code></a> and <a href="#hump.gamestatepush"><code class="lua">push()</code></a>.</dd><dt><code class="lua">resume()</code></dt>
+<dd>Called when re-entering a state by <a href="#hump.gamestatepop"><code class="lua">pop()</code></a>ing another state.</dd><dt><code class="lua">update()</code></dt>
 <dd>Update the game state. Called every frame.</dd><dt><code class="lua">draw()</code></dt>
 <dd>Draw on the screen. Called every frame.</dd><dt><code class="lua">focus()</code></dt>
 <dd>Called if the window gets or looses focus.</dd><dt><code class="lua">keypressed()</code></dt>
@@ -215,12 +216,12 @@ function love.keypressed(key)
     end
 end
 </code></pre>
-</div></div><div class="ref-block" id="hump.gamestatepop"><h4>function <span class="name">pop</span><span class="arglist">()</span><a class="top" href="#hump.gamestate">^top</a></h4><p>Calls <code class="lua">leave()</code> on the current state and then removes it from the stack, making
-the state below the current state. Does <em>not</em> call <code class="lua">enter()</code> on the activated
-state.</p>
+</div></div><div class="ref-block" id="hump.gamestatepop"><h4>function <span class="name">pop</span><span class="arglist">(...)</span><a class="top" href="#hump.gamestate">^top</a></h4><p>Calls <code class="lua">leave()</code> on the current state and then removes it from the stack, making
+the state below the current state and calls <code class="lua">resume(...)</code> on the activated state.
+Does <em>not</em> call <code class="lua">enter()</code> on the activated state.</p>
 <div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
 <dt>mixed</dt>
-<dd>The results of <code class="lua">state:leave()</code></dd></dl>
+<dd>The results of <code class="lua">new_state:resume(...)</code></dd></dl>
 </div><div class="example">Example:<pre><code class="lua">-- extending the example of Gamestate.push() above
 function Pause:keypressed(key)
     if key == 'p' then

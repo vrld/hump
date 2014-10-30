@@ -62,7 +62,9 @@ callbacks for initalizing, entering and leaving a state:
 =`enter(previous, ...)`=
 	Called when entering the state. See [`switch()`](#hump.gamestateswitch).
 =`leave()`=
-	Called when leaving a state. See [`switch()`](#hump.gamestateswitch).
+	Called when leaving a state. See [`switch()`](#hump.gamestateswitch) and [`push()`](#hump.gamestatepush).
+=`resume()`=
+	Called when re-entering a state by [`pop()`](#hump.gamestatepop)ing another state.
 =`update()`=
 	Update the game state. Called every frame.
 =`draw()`=
@@ -247,16 +249,16 @@ Useful for pause screens, menus, etc.
     end
 
 
-### function pop() [Pops state from the stack.]
+### function pop(...) [Pops state from the stack.]
 
 Calls `leave()` on the current state and then removes it from the stack, making
-the state below the current state. Does *not* call `enter()` on the activated
-state.
+the state below the current state and calls `resume(...)` on the activated state.
+Does *not* call `enter()` on the activated state.
 
 #### Returns:
 
 =mixed=
-    The results of `state:leave()`
+    The results of `new_state:resume(...)`
 
 #### Example:
 
