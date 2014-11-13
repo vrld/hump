@@ -51,7 +51,7 @@ end
 
 -- returns a deep copy of `other'
 local function clone(other)
-	return include({}, other)
+	return setmetatable(include({}, other), getmetatable(other))
 end
 
 local function new(class)

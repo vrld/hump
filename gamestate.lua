@@ -36,6 +36,7 @@ function GS.new(t) return t or {} end -- constructor - deprecated!
 
 function GS.switch(to, ...)
 	assert(to, "Missing argument: Gamestate to switch to")
+	assert(to ~= GS, "Can't call switch with colon operator")
 	local pre = stack[#stack]
 	;(pre.leave or __NULL__)(pre)
 	;(to.init or __NULL__)(to)
@@ -46,6 +47,7 @@ end
 
 function GS.push(to, ...)
 	assert(to, "Missing argument: Gamestate to switch to")
+	assert(to ~= GS, "Can't call push with colon operator")
 	local pre = stack[#stack]
 	;(to.init or __NULL__)(to)
 	to.init = nil
@@ -53,11 +55,12 @@ function GS.push(to, ...)
 	return (to.enter or __NULL__)(to, pre, ...)
 end
 
-function GS.pop()
+function GS.pop(...)
 	assert(#stack > 1, "No more states to pop!")
 	local pre = stack[#stack]
 	stack[#stack] = nil
-	return (pre.leave or __NULL__)(pre)
+	;(pre.leave or __NULL__)(pre)
+	return (stack[#stack].resume or __NULL__)(pre, ...)
 end
 
 function GS.current()
