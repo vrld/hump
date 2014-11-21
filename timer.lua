@@ -30,7 +30,21 @@ Timer.__index = Timer
 local function _nothing_() end
 
 local function new()
-	return setmetatable({functions = {}, tween = Timer.tween}, Timer)
+	local timer = setmetatable({functions = {}, tween = Timer.tween}, Timer)
+	return setmetatable({
+		new         = new,
+		update      = function(...) return timer:update(...) end,
+		do_for      = function(...) return timer:do_for(...) end,
+		add         = function(...) return timer:add(...) end,
+		addPeriodic = function(...) return timer:addPeriodic(...) end,
+		cancel      = function(...) return timer:cancel(...) end,
+		clear       = function(...) return timer:clear(...) end,
+		tween       = setmetatable({}, {
+			__index    = Timer.tween,
+			__newindex = function(_,k,v) Timer.tween[k] = v end,
+			__call     = function(t,...) return timer:tween(...) end,
+		})
+	}, {__call = new})
 end
 
 function Timer:update(dt)
@@ -174,17 +188,4 @@ end})
 local default = new()
 
 -- the module
-return setmetatable({
-	new         = new,
-	update      = function(...) return default:update(...) end,
-	do_for      = function(...) return default:do_for(...) end,
-	add         = function(...) return default:add(...) end,
-	addPeriodic = function(...) return default:addPeriodic(...) end,
-	cancel      = function(...) return default:cancel(...) end,
-	clear       = function(...) return default:clear(...) end,
-	tween       = setmetatable({}, {
-		__index    = Timer.tween,
-		__newindex = function(_,k,v) Timer.tween[k] = v end,
-		__call     = function(t,...) return default:tween(...) end,
-	})
-}, {__call = new})
+return default
