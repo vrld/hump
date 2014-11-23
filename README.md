@@ -379,9 +379,6 @@ Creates a new timer instance that is independent of the global timer: It will
 manage it's own list of scheduled functions and does not in any way affect the
 the global timer. Likewise, the global timer does not affect timer instances.
 
-**Note:** Timer instances use the colon-notation (e.g. `instance:update(dt)`),
-while the global timer uses the dot-notation (e.g. `Timer.update(dt)`).
-
 #### Returns:
 
 =Timer=
@@ -430,7 +427,7 @@ periodic behavior (see the example).
 #### Example:
 
 	--Using a timer instance:
-	menuTimer:add(1, finishAnimation)
+	menuTimer.add(1, finishAnimation)
 
 
 ### function addPeriodic(delay, func) [Add a periodic function.]
@@ -463,7 +460,7 @@ called.
 #### Example:
 
 	-- launch 5 fighters in quick succession (using a timer instance)
-	mothership_timer:addPeriodic(0.3, function() self:launchFighter() end, 5)
+	mothership_timer.addPeriodic(0.3, function() self:launchFighter() end, 5)
 
 #### Example:
 
@@ -520,7 +517,7 @@ crashes.
 	player.isInvincible = true
 	-- flash player for 3 seconds
 	local t = 0
-	player.timer:do_for(3, function(dt)
+	player.timer.do_for(3, function(dt)
 	    t = t + dt
 	    player.visible = (t % .2) < .1
 	end, function()
@@ -554,9 +551,9 @@ Prevent a timer from being executed in the future.
 	function tick()
 		print('tick... tock...')
 	end
-	handle = menuTimer:addPeriodic(1, tick)
+	handle = menuTimer.addPeriodic(1, tick)
 	-- later
-	menuTimer:cancel(handle)
+	menuTimer.cancel(handle)
 
 
 ### function clear() [Remove all timed and periodic functions.]
@@ -570,7 +567,7 @@ executed will discarded.
 
 #### Example:
 
-	menu_timer:clear()
+	menu_timer.clear()
 
 
 ### function update(dt)  [Update scheduled functions.]
@@ -594,7 +591,7 @@ Update timers and execute functions if the deadline is reached. Use this in
 
 	-- using hump.gamestate and a timer instance
 	function menuState:update(dt)
-	    self.timer:update(dt)
+	    self.timer.update(dt)
 	end
 
 
@@ -2203,10 +2200,6 @@ Creates a new signal registry that is independent of the default registry: It
 will manage it's own list of signals and does not in any way affect the the
 global registry. Likewise, the global registry does not affect the instance.
 
-**Note:** Independent registries use the colon-notation (e.g.
-`instance:emit("foo")`), while the global registry uses the dot-notation (e.g.
-`Signal.emit("foo")`).
-
 #### Returns:
 
 =Registry=
@@ -2243,7 +2236,7 @@ Registers a function `f` to be called when signal `s` is emitted.
 
 #### Example:
 
-	menu:register('key-left', select_previous_item)
+	menu.register('key-left', select_previous_item)
 
 
 ### function emit(s, ...) [Call all functions bound to a signal.]
@@ -2712,7 +2705,7 @@ Shortcut to `camera:worldCoords(love.mouse.getPosition())`.
 
 Yay, *free software*
 
-> Copyright (c) 2010-2012 Matthias Richter
+> Copyright (c) 2010-2014 Matthias Richter
 >
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 > of this software and associated documentation files (the "Software"), to deal

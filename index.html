@@ -314,9 +314,6 @@ global/default timer (see examples).</strong></p>
 <p>Creates a new timer instance that is independent of the global timer: It will
 manage it's own list of scheduled functions and does not in any way affect the
 the global timer. Likewise, the global timer does not affect timer instances.</p>
-
-<p><strong>Note:</strong> Timer instances use the colon-notation (e.g. <code class="lua">instance:update(dt)</code>),
-while the global timer uses the dot-notation (e.g. <code class="lua">Timer.update(dt)</code>).</p>
 <div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
 <dt>Timer</dt>
 <dd>A timer instance.</dd></dl>
@@ -346,7 +343,7 @@ Timer.add(5, function() player.isInvincible = false end)
 Timer.add(1, function(func) print("foo") Timer.add(1, func) end)
 </code></pre>
 <pre><code class="lua">--Using a timer instance:
-menuTimer:add(1, finishAnimation)
+menuTimer.add(1, finishAnimation)
 </code></pre>
 </div></div><div class="ref-block" id="hump.timeraddPeriodic"><h4>function <span class="name">addPeriodic</span><span class="arglist">(delay, func)</span><a class="top" href="#hump.timer">^top</a></h4><p>Add a function that will be called <code class="lua">count</code> times every <code class="lua">delay</code> seconds.</p>
 
@@ -365,7 +362,7 @@ called.</p>
 Timer.addPeriodic(1, function() lamp:toggleLight() end)
 </code></pre>
 <pre><code class="lua">-- launch 5 fighters in quick succession (using a timer instance)
-mothership_timer:addPeriodic(0.3, function() self:launchFighter() end, 5)
+mothership_timer.addPeriodic(0.3, function() self:launchFighter() end, 5)
 </code></pre>
 <pre><code class="lua">-- flicker player's image as long as he is invincible
 Timer.addPeriodic(0.1, function()
@@ -404,7 +401,7 @@ end)
 <pre><code class="lua">player.isInvincible = true
 -- flash player for 3 seconds
 local t = 0
-player.timer:do_for(3, function(dt)
+player.timer.do_for(3, function(dt)
     t = t + dt
     player.visible = (t % .2) &lt; .1
 end, function()
@@ -428,15 +425,15 @@ Timer.cancel(handle) -- NOT: Timer.cancel(tick)
 function tick()
     print('tick... tock...')
 end
-handle = menuTimer:addPeriodic(1, tick)
+handle = menuTimer.addPeriodic(1, tick)
 -- later
-menuTimer:cancel(handle)
+menuTimer.cancel(handle)
 </code></pre>
 </div></div><div class="ref-block" id="hump.timerclear"><h4>function <span class="name">clear</span><span class="arglist">()</span><a class="top" href="#hump.timer">^top</a></h4><p>Remove all timed and periodic functions. Functions that have not yet been
 executed will discarded.</p>
 <div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl><dt>Nothing</dt></dl></div><div class="example">Examples:<pre><code class="lua">Timer.clear()
 </code></pre>
-<pre><code class="lua">menu_timer:clear()
+<pre><code class="lua">menu_timer.clear()
 </code></pre>
 </div></div><div class="ref-block" id="hump.timerupdate"><h4>function <span class="name">update</span><span class="arglist">(dt)</span><a class="top" href="#hump.timer">^top</a></h4><p>Update timers and execute functions if the deadline is reached. Use this in
 <code class="lua">love.update(dt)</code>.</p>
@@ -450,7 +447,7 @@ end
 </code></pre>
 <pre><code class="lua">-- using hump.gamestate and a timer instance
 function menuState:update(dt)
-    self.timer:update(dt)
+    self.timer.update(dt)
 end
 </code></pre>
 </div></div><div class="ref-block" id="hump.timertween"><h4>function <span class="name">tween</span><span class="arglist">(duration, subject, target, method, after, ...)</span><a class="top" href="#hump.timer">^top</a></h4><p><a href="http://en.wikipedia.org/wiki/Inbetweening">Tweening</a> (short for in-betweening)
@@ -1560,10 +1557,6 @@ global/default registry (see examples).</strong></p>
 <p>Creates a new signal registry that is independent of the default registry: It
 will manage it's own list of signals and does not in any way affect the the
 global registry. Likewise, the global registry does not affect the instance.</p>
-
-<p><strong>Note:</strong> Independent registries use the colon-notation (e.g.
-<code class="lua">instance:emit("foo")</code>), while the global registry uses the dot-notation (e.g.
-<code class="lua">Signal.emit("foo")</code>).</p>
 <div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
 <dt>Registry</dt>
 <dd>A new signal registry.</dd></dl>
@@ -1581,7 +1574,7 @@ global registry. Likewise, the global registry does not affect the instance.</p>
 </code></pre>
 <pre><code class="lua">handle = Signal.register('level-load', function(level) level.show_help() end)
 </code></pre>
-<pre><code class="lua">menu:register('key-left', select_previous_item)
+<pre><code class="lua">menu.register('key-left', select_previous_item)
 </code></pre>
 </div></div><div class="ref-block" id="hump.signalemit"><h4>function <span class="name">emit</span><span class="arglist">(s, ...)</span><a class="top" href="#hump.signal">^top</a></h4><p>Calls all functions bound to signal <code class="lua">s</code> with the supplied arguments.</p>
 <div class="arguments">Parameters:<dl>
@@ -1852,7 +1845,7 @@ selectedUnit:plotPath(x,y)
 </code></pre>
 </div></div></div><div class="outer-block" id="License"><h3>License<a class="top" href="#top">^top</a></h3><div class="preamble"><p>Yay, <em>free software</em></p>
 
-<blockquote><p>Copyright (c) 2010-2012 Matthias Richter</p>
+<blockquote><p>Copyright (c) 2010-2014 Matthias Richter</p>
 
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
