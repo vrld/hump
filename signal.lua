@@ -76,18 +76,20 @@ function Registry:clear_pattern(p)
 	end
 end
 
+-- the module
 local function new()
-	return setmetatable({}, Registry)
-end
-local default = new()
+	local registry = setmetatable({}, Registry)
 
-return setmetatable({
-	new            = new,
-	register       = function(...) return default:register(...) end,
-	emit           = function(...) default:emit(...) end,
-	remove         = function(...) default:remove(...) end,
-	clear          = function(...) default:clear(...) end,
-	emit_pattern   = function(...) default:emit_pattern(...) end,
-	remove_pattern = function(...) default:remove_pattern(...) end,
-	clear_pattern  = function(...) default:clear_pattern(...) end,
-}, {__call = new})
+	return setmetatable({
+		new            = new,
+		register       = function(...) return registry:register(...) end,
+		emit           = function(...) registry:emit(...) end,
+		remove         = function(...) registry:remove(...) end,
+		clear          = function(...) registry:clear(...) end,
+		emit_pattern   = function(...) registry:emit_pattern(...) end,
+		remove_pattern = function(...) registry:remove_pattern(...) end,
+		clear_pattern  = function(...) registry:clear_pattern(...) end,
+	}, {__call = new})
+end
+
+return new()
