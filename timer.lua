@@ -29,24 +29,6 @@ Timer.__index = Timer
 
 local function _nothing_() end
 
-local function new()
-	local timer = setmetatable({functions = {}, tween = Timer.tween}, Timer)
-	return setmetatable({
-		new         = new,
-		update      = function(...) return timer:update(...) end,
-		do_for      = function(...) return timer:do_for(...) end,
-		add         = function(...) return timer:add(...) end,
-		addPeriodic = function(...) return timer:addPeriodic(...) end,
-		cancel      = function(...) return timer:cancel(...) end,
-		clear       = function(...) return timer:clear(...) end,
-		tween       = setmetatable({}, {
-			__index    = Timer.tween,
-			__newindex = function(_,k,v) Timer.tween[k] = v end,
-			__call     = function(t,...) return timer:tween(...) end,
-		})
-	}, {__call = new})
-end
-
 function Timer:update(dt)
 	local to_remove = {}
 	for handle, delay in pairs(self.functions) do
@@ -184,8 +166,23 @@ __index = function(tweens, key)
 	       or error('Unknown interpolation method: ' .. key)
 end})
 
--- default timer
-local default = new()
-
 -- the module
-return default
+local function new()
+	local timer = setmetatable({functions = {}, tween = Timer.tween}, Timer)
+	return setmetatable({
+		new         = new,
+		update      = function(...) return timer:update(...) end,
+		do_for      = function(...) return timer:do_for(...) end,
+		add         = function(...) return timer:add(...) end,
+		addPeriodic = function(...) return timer:addPeriodic(...) end,
+		cancel      = function(...) return timer:cancel(...) end,
+		clear       = function(...) return timer:clear(...) end,
+		tween       = setmetatable({}, {
+			__index    = Timer.tween,
+			__newindex = function(_,k,v) Timer.tween[k] = v end,
+			__call     = function(t,...) return timer:tween(...) end,
+		})
+	}, {__call = new})
+end
+
+return new()
