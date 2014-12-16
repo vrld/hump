@@ -57,10 +57,10 @@ end
 
 function GS.pop(...)
 	assert(#stack > 1, "No more states to pop!")
-	local pre = stack[#stack]
+	local pre, to = stack[#stack], stack[#stack-1] 
 	stack[#stack] = nil
 	;(pre.leave or __NULL__)(pre)
-	return (stack[#stack].resume or __NULL__)(pre, ...)
+	return (to.resume or __NULL__)(to, ...)
 end
 
 function GS.current()
