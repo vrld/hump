@@ -60,7 +60,7 @@ function GS.pop(...)
 	local pre, to = stack[#stack], stack[#stack-1] 
 	stack[#stack] = nil
 	;(pre.leave or __NULL__)(pre)
-	return (to.resume or __NULL__)(to, ...)
+	return (to.resume or __NULL__)(to, pre, ...)
 end
 
 function GS.current()
