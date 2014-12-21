@@ -200,3 +200,17 @@ pre code .function {
 	padding: 0;
 	margin: 0;
 }
+
+#tween-graph {
+	text-align: center;
+}
+
+#tween-graph-ui {
+	margin-right: 7px;
+	text-align: right;
+	margin-bottom: 2px;
+}
+
+#tween-graph-ui strong {
+	color: black;
+}

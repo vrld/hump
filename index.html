@@ -8,6 +8,7 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 <link rel="stylesheet" type="text/css" href="highlight.css" />
 <script type="text/javascript" src="highlight.pack.js"></script>
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script type="text/javascript">
 	window.onload = function() {
 		var examples = document.getElementsByTagName("code");
@@ -557,76 +558,18 @@ must hold that the output is 0 for input 0 and 1 for input 1.</p>
 
 <p><code class="lua">hump</code> predefines several commonly used interpolation methods, which are
 generalized versions of <a href="http://www.robertpenner.com/easing/">Robert Penner's easing
-functions</a>. Those are:</p>
-
-<p><code class="lua">'linear'</code>, <code class="lua">'quad'</code>, <code class="lua">'cubic'</code>, <code class="lua">'quart'</code>, <code class="lua">'quint'</code>, <code class="lua">'sine'</code>,
+functions</a>. Those are:
+<code class="lua">'linear'</code>, <code class="lua">'quad'</code>, <code class="lua">'cubic'</code>, <code class="lua">'quart'</code>, <code class="lua">'quint'</code>, <code class="lua">'sine'</code>,
 <code class="lua">'expo'</code>, <code class="lua">'circ'</code>, <code class="lua">'back'</code>, <code class="lua">'bounce'</code>, and <code class="lua">'elastic'</code>.</p>
 
-<p>Here are their respective graphs:</p>
+<p>It's hard to understand how these functions behave by staring at a graph,
+so below are some animation examples. You can change the type of the tween by
+changing the selections.</p>
 
-<p><img src="interpolators.png" alt="Graph of interpolation functions" /></p>
+<div id="tween-graph"></div>
 
-<p>All methods can be 'inverted' by prefixing the keyword <code class="lua">out-</code>, for example
-<code class="lua">'out-quad'</code>, <code class="lua">'out-sine'</code>, <code class="lua">'out-bounce'</code>, etc:</p>
-
-<p><img src="inv-interpolators.png" alt="Graph of inverted interpolation functions" /></p>
-
-<p>The <code class="lua">in-out-</code> and <code class="lua">out-in-</code> prefix chain the interpolators:</p>
-
-<p><img src="in-out-interpolators.png" alt="Graph of chained interpolation functions" /></p>
-
-<p>Of course these graphs cannot show how the different methods compare, so here's
-an example script that highlights the different tweens:</p>
-
-<pre><code class="lua">Timer = require 'hump.timer'
-function love.load()
-    methods = {'linear', 'quad', 'cubic', 'quart', 'quint', 'sine', 'expo', 'circ', 'back', 'bounce', 'elastic'}
-    method = methods[#methods]
-
-    next_method = {} -- next_method.linear = 'quad', etc
-    for i = 1,#methods do
-        next_method[methods[i]] = methods[(i%#methods)+1]
-    end
-
-    target = {x = 700, brightness = 200, radius = 50}
-    local function reset()
-        circle = {
-            {x = 100, y = 100, brightness = 100, radius = 20},
-            {x = 100, y = 233, brightness = 100, radius = 20},
-            {x = 100, y = 367, brightness = 100, radius = 20},
-            {x = 100, y = 500, brightness = 100, radius = 20},
-        }
-
-        method = next_method[method]
-
-        Timer.tween(3, circle[1], target, 'in-'..method)
-        Timer.tween(3, circle[2], target, 'out-'..method)
-        Timer.tween(3, circle[3], target, 'in-out-'..method)
-        Timer.tween(3, circle[4], target, 'out-in-'..method,
-            function() Timer.add(.5, reset) end)
-    end
-
-    reset()
-end
-
-function love.update(dt)
-    Timer.update(dt)
-end
-
-function love.draw()
-    love.graphics.setColor(255,255,255)
-    love.graphics.print('in-' .. method, 50, 100-50)
-    love.graphics.print('out-' .. method, 50, 233-50)
-    love.graphics.print('in-out-' .. method, 50, 367-50)
-    love.graphics.print('out-in-' .. method, 50, 500-50)
-
-    for i = 1,#circle do
-        love.graphics.setColor(255,255,255, circle[i].brightness)
-        love.graphics.circle('fill', circle[i].x, circle[i].y,
-            circle[i].radius)
-    end
-end
-</code></pre>
+<script src="graph-tweens.js"></script><p>Note that while the animations above show tweening of shapes, other attributes
+(color, opacity, volume of a sound, ...) can be changed as well.</p>
 </div><div class="section-block" id="hump.timerCustom_interpolators"><h4>Custom interpolators <a class="top" href="#hump.timer">^top</a></h4><p><strong>This is a stub</strong></p>
 
 <p>You can add custom interpolation methods by adding them to the <code class="lua">tween</code> table:</p>

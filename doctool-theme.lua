@@ -1,5 +1,16 @@
-local discount = function(s) return (require 'discount')(s, "nopants") end
+local discount_ = function(s) return (require 'discount')(s, "nopants") end
 local actions = {}
+
+-- keep <script>...</script> blocks intact
+local function discount(str)
+	local p,out = 0, {}
+	for plain, script in str:gmatch("(.-)(<script.-</script>)") do
+		out[#out+1], out[#out+2] = discount_(plain), script
+		p = p + #plain + #script
+	end
+	out[#out+1] = discount_(str:sub(p+1))
+	return table.concat(out)
+end
 
 local function filter(t, p)
 	local r = {}
@@ -214,6 +225,7 @@ function actions.postprocess(out)
 <link rel="stylesheet" type="text/css" href="style.css" />
 <link rel="stylesheet" type="text/css" href="highlight.css" />
 <script type="text/javascript" src="highlight.pack.js"></script>
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script type="text/javascript">
 	window.onload = function() {
 		var examples = document.getElementsByTagName("code");
