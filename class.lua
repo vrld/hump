@@ -36,7 +36,7 @@ local function include_helper(to, from, seen)
 	seen[from] = to
 	for k,v in pairs(from) do
 		k = include_helper({}, k, seen) -- keys might also be tables
-		if not to[k] then
+		if to[k] == nil then
 			to[k] = include_helper({}, v, seen)
 		end
 	end
