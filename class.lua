@@ -60,6 +60,9 @@ local function new(class)
 	if getmetatable(inc) then inc = {inc} end
 
 	for _, other in ipairs(inc) do
+		if type(other) == "string" then
+			other = import(other)
+		end
 		include(class, other)
 	end
 
