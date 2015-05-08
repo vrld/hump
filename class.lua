@@ -61,7 +61,7 @@ local function new(class)
 
 	for _, other in ipairs(inc) do
 		if type(other) == "string" then
-			other = import(other)
+			other = _G[other]
 		end
 		include(class, other)
 	end
