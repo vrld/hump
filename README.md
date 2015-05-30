@@ -160,6 +160,11 @@ gamestate, replace the current gamestate with `to`, call the `init()` function
 if the state was not yet inialized and finally call `enter(old_state, ...)` on
 the new gamestate.
 
+**Note:** Processing of callbacks is suspended until `update()` is called on
+the new gamestate, but the function calling `GS.switch()` can still continue -
+it is your job to make sure this is handled correctly. See also the examples
+below.
+
 
 #### Parameters:
 
@@ -177,6 +182,16 @@ the new gamestate.
 #### Example:
 
     Gamestate.switch(game, level_two)
+
+#### Example:
+
+    -- stop execution of the current state by using return
+    if player.has_died then
+        return Gamestate.switch(game, level_two)
+    end
+
+    -- this will not be called when the state is switched
+    player:update()
 
 
 
@@ -207,6 +222,11 @@ Semantics are the same as `switch(to, ...)`, except that `leave()` is *not*
 called on the previously active state.
 
 Useful for pause screens, menus, etc.
+
+**Note:** Processing of callbacks is suspended until `update()` is called on
+the new gamestate, but the function calling `GS.push()` can still continue -
+it is your job to make sure this is handled correctly. See also the examples
+below.
 
 
 #### Parameters:
@@ -244,7 +264,7 @@ Useful for pause screens, menus, etc.
     -- [...]
     function love.keypressed(key)
         if Gamestate.current() ~= menu and key == 'p' then
-            Gamestate.push(pause)
+            return Gamestate.push(pause)
         end
     end
 
@@ -254,6 +274,12 @@ Useful for pause screens, menus, etc.
 Calls `leave()` on the current state and then removes it from the stack, making
 the state below the current state and calls `resume(...)` on the activated state.
 Does *not* call `enter()` on the activated state.
+
+**Note:** Processing of callbacks is suspended until `update()` is called on
+the new gamestate, but the function calling `GS.pop()` can still continue -
+it is your job to make sure this is handled correctly. See also the examples
+below.
+
 
 #### Returns:
 
@@ -265,7 +291,7 @@ Does *not* call `enter()` on the activated state.
     -- extending the example of Gamestate.push() above
     function Pause:keypressed(key)
         if key == 'p' then
-            Gamestate.pop() -- return to previous state
+            return Gamestate.pop() -- return to previous state
         end
     end
 
