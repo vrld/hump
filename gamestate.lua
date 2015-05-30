@@ -30,29 +30,31 @@ local function __NULL__() end
 local state_init = setmetatable({leave = __NULL__},
 		{__index = function() error("Gamestate not initialized. Use Gamestate.switch()") end})
 local stack = {state_init}
+local state_is_dirty = true
 
 local GS = {}
 function GS.new(t) return t or {} end -- constructor - deprecated!
 
+local function change_state(stack_offset, to, ...)
+	local pre = stack[#stack]
+	;(to.init or __NULL__)(to)
+	to.init = nil
+	stack[#stack+stack_offset] = to
+	state_is_dirty = true
+	return (to.enter or __NULL__)(to, pre, ...)
+end
+
 function GS.switch(to, ...)
 	assert(to, "Missing argument: Gamestate to switch to")
 	assert(to ~= GS, "Can't call switch with colon operator")
-	local pre = stack[#stack]
-	;(pre.leave or __NULL__)(pre)
-	;(to.init or __NULL__)(to)
-	to.init = nil
-	stack[#stack] = to
-	return (to.enter or __NULL__)(to, pre, ...)
+	;(stack[#stack].leave or __NULL__)(stack[#stack])
+	return change_state(0, to, ...)
 end
 
 function GS.push(to, ...)
 	assert(to, "Missing argument: Gamestate to switch to")
 	assert(to ~= GS, "Can't call push with colon operator")
-	local pre = stack[#stack]
-	;(to.init or __NULL__)(to)
-	to.init = nil
-	stack[#stack+1] = to
-	return (to.enter or __NULL__)(to, pre, ...)
+	return change_state(1, to, ...)
 end
 
 function GS.pop(...)
@@ -60,6 +62,7 @@ function GS.pop(...)
 	local pre, to = stack[#stack], stack[#stack-1]
 	stack[#stack] = nil
 	;(pre.leave or __NULL__)(pre)
+	state_is_dirty = true
 	return (to.resume or __NULL__)(to, pre, ...)
 end
 
@@ -87,9 +90,15 @@ end
 
 -- forward any undefined functions
 setmetatable(GS, {__index = function(_, func)
-	return function(...)
-		return (stack[#stack][func] or __NULL__)(stack[#stack], ...)
+	-- call function only if at least one 'update' was called beforehand
+	-- (see issue #46)
+	if not state_is_dirty or func == 'update' then
+		state_is_dirty = false
+		return function(...)
+			return (stack[#stack][func] or __NULL__)(stack[#stack], ...)
+		end
 	end
+	return __NULL__
 end})
 
 return GS
