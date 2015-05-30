@@ -162,6 +162,11 @@ menu = Gamestate.new()
 gamestate, replace the current gamestate with <code class="lua">to</code>, call the <code class="lua">init()</code> function
 if the state was not yet inialized and finally call <code class="lua">enter(old_state, ...)</code> on
 the new gamestate.</p>
+
+<p><strong>Note:</strong> Processing of callbacks is suspended until <code class="lua">update()</code> is called on
+the new gamestate, but the function calling <code class="lua">GS.switch()</code> can still continue -
+it is your job to make sure this is handled correctly. See also the examples
+below.</p>
 <div class="arguments">Parameters:<dl>
 <dt>Gamestate <code class="lua">to</code></dt>
 <dd>Target gamestate.</dd><dt>mixed <code class="lua">...</code></dt>
@@ -169,7 +174,15 @@ the new gamestate.</p>
 </div><div class="returns">Returns:<dl>
 <dt>mixed</dt>
 <dd>The results of <code class="lua">to:enter(current, ...)</code></dd></dl>
-</div><div class="example">Example:<pre><code class="lua">Gamestate.switch(game, level_two)
+</div><div class="example">Examples:<pre><code class="lua">Gamestate.switch(game, level_two)
+</code></pre>
+<pre><code class="lua">-- stop execution of the current state by using return
+if player.has_died then
+    return Gamestate.switch(game, level_two)
+end
+
+-- this will not be called when the state is switched
+player:update()
 </code></pre>
 </div></div><div class="ref-block" id="hump.gamestatecurrent"><h4>function <span class="name">current</span><span class="arglist">()</span><a class="top" href="#hump.gamestate">^top</a></h4><p>Returns the currently activated gamestate.</p>
 <div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
@@ -186,6 +199,11 @@ Semantics are the same as <code class="lua">switch(to, ...)</code>, except that 
 called on the previously active state.</p>
 
 <p>Useful for pause screens, menus, etc.</p>
+
+<p><strong>Note:</strong> Processing of callbacks is suspended until <code class="lua">update()</code> is called on
+the new gamestate, but the function calling <code class="lua">GS.push()</code> can still continue -
+it is your job to make sure this is handled correctly. See also the examples
+below.</p>
 <div class="arguments">Parameters:<dl>
 <dt>Gamestate <code class="lua">to</code></dt>
 <dd>Target gamestate.</dd><dt>mixed <code class="lua">...</code></dt>
@@ -213,20 +231,25 @@ end
 -- [...]
 function love.keypressed(key)
     if Gamestate.current() ~= menu and key == 'p' then
-        Gamestate.push(pause)
+        return Gamestate.push(pause)
     end
 end
 </code></pre>
 </div></div><div class="ref-block" id="hump.gamestatepop"><h4>function <span class="name">pop</span><span class="arglist">(...)</span><a class="top" href="#hump.gamestate">^top</a></h4><p>Calls <code class="lua">leave()</code> on the current state and then removes it from the stack, making
 the state below the current state and calls <code class="lua">resume(...)</code> on the activated state.
 Does <em>not</em> call <code class="lua">enter()</code> on the activated state.</p>
+
+<p><strong>Note:</strong> Processing of callbacks is suspended until <code class="lua">update()</code> is called on
+the new gamestate, but the function calling <code class="lua">GS.pop()</code> can still continue -
+it is your job to make sure this is handled correctly. See also the examples
+below.</p>
 <div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
 <dt>mixed</dt>
 <dd>The results of <code class="lua">new_state:resume(...)</code></dd></dl>
 </div><div class="example">Example:<pre><code class="lua">-- extending the example of Gamestate.push() above
 function Pause:keypressed(key)
     if key == 'p' then
-        Gamestate.pop() -- return to previous state
+        return Gamestate.pop() -- return to previous state
     end
 end
 </code></pre>
@@ -371,7 +394,7 @@ Timer.addPeriodic(0.1, function()
     return player.isInvincible
 end)
 </code></pre>
-</div></div><div class="ref-block" id="hump.timerdo_for"><h4>function <span class="name">do_for</span><span class="arglist">(delay, func, after)</span><a class="top" href="#hump.timer">^top</a></h4><p>Run <code class="lua">func(dt)</code> for the next <code class="lua">delta</code> seconds. The function is called every time
+</div></div><div class="ref-block" id="hump.timerdo_for"><h4>function <span class="name">do_for</span><span class="arglist">(delay, func, after)</span><a class="top" href="#hump.timer">^top</a></h4><p>Run <code class="lua">func(dt)</code> for the next <code class="lua">delay</code> seconds. The function is called every time
 <code class="lua">update(dt)</code> is called. Optionally run <code class="lua">after()</code> once <code class="lua">delta</code> seconds have
 passed.</p>
 
