@@ -499,7 +499,7 @@ called.
 
 ### function do_for(delay, func, after) [Run a function for the next few seconds.]
 
-Run `func(dt)` for the next `delta` seconds. The function is called every time
+Run `func(dt)` for the next `delay` seconds. The function is called every time
 `update(dt)` is called. Optionally run `after()` once `delta` seconds have
 passed.
 
