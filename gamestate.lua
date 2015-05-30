@@ -57,7 +57,7 @@ end
 
 function GS.pop(...)
 	assert(#stack > 1, "No more states to pop!")
-	local pre, to = stack[#stack], stack[#stack-1] 
+	local pre, to = stack[#stack], stack[#stack-1]
 	stack[#stack] = nil
 	;(pre.leave or __NULL__)(pre)
 	return (to.resume or __NULL__)(to, pre, ...)
@@ -67,13 +67,11 @@ function GS.current()
 	return stack[#stack]
 end
 
-local all_callbacks = {
-	'draw', 'errhand', 'focus', 'keypressed', 'keyreleased', 'mousefocus',
-	'mousemoved', 'mousepressed', 'mousereleased', 'quit', 'resize',
-	'textinput', 'threaderror', 'update', 'visible', 'gamepadaxis',
-	'gamepadpressed', 'gamepadreleased', 'joystickadded', 'joystickaxis',
-	'joystickhat', 'joystickpressed', 'joystickreleased', 'joystickremoved'
-}
+-- fetch event callbacks from love.handlers
+local all_callbacks = { 'draw', 'errhand', 'update' }
+for k in pairs(love.handlers) do
+	all_callbacks[#all_callbacks+1] = k
+end
 
 function GS.registerEvents(callbacks)
 	local registry = {}
