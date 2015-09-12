@@ -42,7 +42,7 @@ your projects.</p>
 </div></div><div class="outer-block" id="hump.gamestate"><h3>hump.gamestate<a class="top" href="#top">^top</a></h3><div class="preamble"><pre><code class="lua">Gamestate = require "hump.gamestate"
 </code></pre>
 
-<p>A gamestate encapsulates independent data an behaviour in a single table.</p>
+<p>A gamestate encapsulates independent data and behaviour in a single table.</p>
 
 <p>A typical game could consist of a menu-state, a level-state and a game-over-state.</p>
 
@@ -80,7 +80,7 @@ function love.load()
 end
 </code></pre>
 </div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.gamestateCallbacks">Callbacks </a></dt><dd>Gamestate Callbacks.</dd><dt><a href="#hump.gamestatenew">new()</a></dt><dd>Create a new gamestate.</dd><dt><a href="#hump.gamestateswitch">switch()</a></dt><dd>Switch to gamestate.</dd><dt><a href="#hump.gamestatecurrent">current()</a></dt><dd>Get current gamestate.</dd><dt><a href="#hump.gamestatepush">push()</a></dt><dd>Push state on top of the stack.</dd><dt><a href="#hump.gamestatepop">pop()</a></dt><dd>Pops state from the stack.</dd><dt><a href="#hump.gamestate&lt;callback&gt;">&lt;callback&gt;()</a></dt><dd>Call function on active gamestate.</dd><dt><a href="#hump.gamestateregisterEvents">registerEvents()</a></dt><dd>Automatically do all of the above when needed.</dd></dl></div><div class="section-block" id="hump.gamestateCallbacks"><h4>Callbacks <a class="top" href="#hump.gamestate">^top</a></h4><p>A gamestate can define all callbacks that LÖVE defines. In addition, there are
-callbacks for initalizing, entering and leaving a state:</p>
+callbacks for initializing, entering and leaving a state:</p>
 
 <dl>
 <dt><code class="lua">init()</code></dt>
@@ -101,7 +101,7 @@ callbacks for initalizing, entering and leaving a state:</p>
 
 <p>When using <a href="#hump.gamestateregisterEvents"><code class="lua">registerEvents()</code></a>, all these
 callbacks will be called by the corresponding LÖVE callbacks and receive
-receive the same arguments (e.g. <code class="lua">state:update(dt)</code> will be called by
+the same arguments (e.g. <code class="lua">state:update(dt)</code> will be called by
 <code class="lua">love.update(dt)</code>).</p>
 
 <h4>Example:</h4>
