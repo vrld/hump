@@ -42,7 +42,7 @@ your projects.</p>
 </div></div><div class="outer-block" id="hump.gamestate"><h3>hump.gamestate<a class="top" href="#top">^top</a></h3><div class="preamble"><pre><code class="lua">Gamestate = require "hump.gamestate"
 </code></pre>
 
-<p>A gamestate encapsulates independent data an behaviour in a single table.</p>
+<p>A gamestate encapsulates independent data and behaviour in a single table.</p>
 
 <p>A typical game could consist of a menu-state, a level-state and a game-over-state.</p>
 
@@ -80,7 +80,7 @@ function love.load()
 end
 </code></pre>
 </div><div class="overview"><h4>Module overview</h4><dl><dt><a href="#hump.gamestateCallbacks">Callbacks </a></dt><dd>Gamestate Callbacks.</dd><dt><a href="#hump.gamestatenew">new()</a></dt><dd>Create a new gamestate.</dd><dt><a href="#hump.gamestateswitch">switch()</a></dt><dd>Switch to gamestate.</dd><dt><a href="#hump.gamestatecurrent">current()</a></dt><dd>Get current gamestate.</dd><dt><a href="#hump.gamestatepush">push()</a></dt><dd>Push state on top of the stack.</dd><dt><a href="#hump.gamestatepop">pop()</a></dt><dd>Pops state from the stack.</dd><dt><a href="#hump.gamestate&lt;callback&gt;">&lt;callback&gt;()</a></dt><dd>Call function on active gamestate.</dd><dt><a href="#hump.gamestateregisterEvents">registerEvents()</a></dt><dd>Automatically do all of the above when needed.</dd></dl></div><div class="section-block" id="hump.gamestateCallbacks"><h4>Callbacks <a class="top" href="#hump.gamestate">^top</a></h4><p>A gamestate can define all callbacks that LÖVE defines. In addition, there are
-callbacks for initalizing, entering and leaving a state:</p>
+callbacks for initializing, entering and leaving a state:</p>
 
 <dl>
 <dt><code class="lua">init()</code></dt>
@@ -90,7 +90,7 @@ callbacks for initalizing, entering and leaving a state:</p>
 <dd>Called when re-entering a state by <a href="#hump.gamestatepop"><code class="lua">pop()</code></a>ing another state.</dd><dt><code class="lua">update()</code></dt>
 <dd>Update the game state. Called every frame.</dd><dt><code class="lua">draw()</code></dt>
 <dd>Draw on the screen. Called every frame.</dd><dt><code class="lua">focus()</code></dt>
-<dd>Called if the window gets or looses focus.</dd><dt><code class="lua">keypressed()</code></dt>
+<dd>Called if the window gets or loses focus.</dd><dt><code class="lua">keypressed()</code></dt>
 <dd>Triggered when a key is pressed.</dd><dt><code class="lua">keyreleased()</code></dt>
 <dd>Triggered when a key is released.</dd><dt><code class="lua">mousepressed()</code></dt>
 <dd>Triggered when a mouse button is pressed.</dd><dt><code class="lua">mousereleased()</code></dt>
@@ -101,7 +101,7 @@ callbacks for initalizing, entering and leaving a state:</p>
 
 <p>When using <a href="#hump.gamestateregisterEvents"><code class="lua">registerEvents()</code></a>, all these
 callbacks will be called by the corresponding LÖVE callbacks and receive
-receive the same arguments (e.g. <code class="lua">state:update(dt)</code> will be called by
+the same arguments (e.g. <code class="lua">state:update(dt)</code> will be called by
 <code class="lua">love.update(dt)</code>).</p>
 
 <h4>Example:</h4>
@@ -336,7 +336,7 @@ end
 global/default timer (see examples).</strong></p>
 
 <p>Creates a new timer instance that is independent of the global timer: It will
-manage it's own list of scheduled functions and does not in any way affect the
+manage its own list of scheduled functions and does not in any way affect the
 the global timer. Likewise, the global timer does not affect timer instances.</p>
 <div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
 <dt>Timer</dt>
@@ -1521,7 +1521,7 @@ end
 global/default registry (see examples).</strong></p>
 
 <p>Creates a new signal registry that is independent of the default registry: It
-will manage it's own list of signals and does not in any way affect the the
+will manage its own list of signals and does not in any way affect the the
 global registry. Likewise, the global registry does not affect the instance.</p>
 <div class="arguments">Parameters:<dl><dt>None</dt></dl></div><div class="returns">Returns:<dl>
 <dt>Registry</dt>
@@ -1596,7 +1596,7 @@ end
 </code></pre>
 
 <p>A camera utility for LÖVE. A camera can "look" at a position. It can zoom in
-and out and it can rotate it's view. In the background, this is done by
+and out and it can rotate its view. In the background, this is done by
 actually moving, scaling and rotating everything in the game world. But don't
 worry about that.</p>
 
