@@ -30,6 +30,7 @@ local function __NULL__() end
 local state_init = setmetatable({leave = __NULL__},
 		{__index = function() error("Gamestate not initialized. Use Gamestate.switch()") end})
 local stack = {state_init}
+local initialized_states = setmetatable({}, {__mode = "k"})
 local state_is_dirty = true
 
 local GS = {}
@@ -37,8 +38,11 @@ function GS.new(t) return t or {} end -- constructor - deprecated!
 
 local function change_state(stack_offset, to, ...)
 	local pre = stack[#stack]
-	;(to.init or __NULL__)(to)
-	to.init = nil
+	
+	-- initialize only on first call
+	;(initialized_states[to] or to.init)(to)
+	initialized_states[to] = __NULL__
+
 	stack[#stack+stack_offset] = to
 	state_is_dirty = true
 	return (to.enter or __NULL__)(to, pre, ...)
