@@ -58,19 +58,19 @@ function Registry:clear(...)
 	end
 end
 
-function Registry:emit_pattern(p, ...)
+function Registry:emitPattern(p, ...)
 	for s in pairs(self) do
 		if s:match(p) then self:emit(s, ...) end
 	end
 end
 
-function Registry:remove_pattern(p, ...)
+function Registry:removePattern(p, ...)
 	for s in pairs(self) do
 		if s:match(p) then self:remove(s, ...) end
 	end
 end
 
-function Registry:clear_pattern(p)
+function Registry:clearPattern(p)
 	for s in pairs(self) do
 		if s:match(p) then self[s] = {} end
 	end
@@ -81,14 +81,14 @@ local function new()
 	local registry = setmetatable({}, Registry)
 
 	return setmetatable({
-		new            = new,
-		register       = function(...) return registry:register(...) end,
-		emit           = function(...) registry:emit(...) end,
-		remove         = function(...) registry:remove(...) end,
-		clear          = function(...) registry:clear(...) end,
-		emit_pattern   = function(...) registry:emit_pattern(...) end,
-		remove_pattern = function(...) registry:remove_pattern(...) end,
-		clear_pattern  = function(...) registry:clear_pattern(...) end,
+		new           = new,
+		register      = function(...) return registry:register(...) end,
+		emit          = function(...) registry:emit(...) end,
+		remove        = function(...) registry:remove(...) end,
+		clear         = function(...) registry:clear(...) end,
+		emitPattern   = function(...) registry:emitPattern(...) end,
+		removePattern = function(...) registry:removePattern(...) end,
+		clearPattern  = function(...) registry:clearPattern(...) end,
 	}, {__call = new})
 end
 

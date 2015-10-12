@@ -45,20 +45,20 @@ function Timer:update(dt)
 	end
 end
 
-function Timer:do_for(delay, func, after)
+function Timer:during(delay, func, after)
 	local handle = {func = func, after = after or _nothing_}
 	self.functions[handle] = delay
 	return handle
 end
 
-function Timer:add(delay, func)
-	return self:do_for(delay, _nothing_, func)
+function Timer:after(delay, func)
+	return self:during(delay, _nothing_, func)
 end
 
-function Timer:addPeriodic(delay, func, count)
+function Timer:every(delay, func, count)
 	local count, handle = count or math.huge -- exploit below: math.huge - 1 = math.huge
 
-	handle = self:add(delay, function(f)
+	handle = self:after(delay, function(f)
 		if func(func) == false then return end
 		count = count - 1
 		if count > 0 then
@@ -133,7 +133,7 @@ __call = function(tween, self, len, subject, target, method, after, ...)
 	local payload, t, args = tween_collect_payload(subject, target, {}), 0, {...}
 
 	local last_s = 0
-	return self:do_for(len, function(dt)
+	return self:during(len, function(dt)
 		t = t + dt
 		local s = method(math.min(1, t/len), unpack(args))
 		local ds = s - last_s
@@ -170,14 +170,14 @@ end})
 local function new()
 	local timer = setmetatable({functions = {}, tween = Timer.tween}, Timer)
 	return setmetatable({
-		new         = new,
-		update      = function(...) return timer:update(...) end,
-		do_for      = function(...) return timer:do_for(...) end,
-		add         = function(...) return timer:add(...) end,
-		addPeriodic = function(...) return timer:addPeriodic(...) end,
-		cancel      = function(...) return timer:cancel(...) end,
-		clear       = function(...) return timer:clear(...) end,
-		tween       = setmetatable({}, {
+		new    = new,
+		update = function(...) return timer:update(...) end,
+		during = function(...) return timer:during(...) end,
+		after  = function(...) return timer:after(...) end,
+		every  = function(...) return timer:every(...) end,
+		cancel = function(...) return timer:cancel(...) end,
+		clear  = function(...) return timer:clear(...) end,
+		tween  = setmetatable({}, {
 			__index    = Timer.tween,
 			__newindex = function(_,k,v) Timer.tween[k] = v end,
 			__call     = function(t,...) return timer:tween(...) end,

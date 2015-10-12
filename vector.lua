@@ -120,7 +120,7 @@ function vector.dist2(a, b)
 	return (dx * dx + dy * dy)
 end
 
-function vector:normalize_inplace()
+function vector:normalizeInplace()
 	local l = self:len()
 	if l > 0 then
 		self.x, self.y = self.x / l, self.y / l
@@ -129,10 +129,10 @@ function vector:normalize_inplace()
 end
 
 function vector:normalized()
-	return self:clone():normalize_inplace()
+	return self:clone():normalizeInplace()
 end
 
-function vector:rotate_inplace(phi)
+function vector:rotateInplace(phi)
 	local c, s = cos(phi), sin(phi)
 	self.x, self.y = c * self.x - s * self.y, s * self.x + c * self.y
 	return self
@@ -167,7 +167,7 @@ function vector:cross(v)
 end
 
 -- ref.: http://blog.signalsondisplay.com/?p=336
-function vector:trim_inplace(maxLen)
+function vector:trimInplace(maxLen)
 	local s = maxLen * maxLen / self:len2()
 	s = (s > 1 and 1) or math.sqrt(s)
 	self.x, self.y = self.x * s, self.y * s
@@ -182,10 +182,10 @@ function vector:angleTo(other)
 end
 
 function vector:trimmed(maxLen)
-	return self:clone():trim_inplace(maxLen)
+	return self:clone():trimInplace(maxLen)
 end
 
 
 -- the module
 return setmetatable({new = new, isvector = isvector, zero = zero},
-{__call = function(_, ...) return new(...) end})
+	{__call = function(_, ...) return new(...) end})
