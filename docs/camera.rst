@@ -279,7 +279,7 @@ between these two coordinate systems.
 
 **Example**::
 
-    x,y = cam:cameraCoords(player.pos)
+    x,y = cam:cameraCoords(player.pos.x, player.pos.y)
     love.graphics.line(x, y, love.mouse.getPosition())
 
 
@@ -386,7 +386,7 @@ screen center, aim 20 pixels *above* it (see examples).
 
 
 
-.. function:: camera:lockPos(x,y, smoother, ...)
+.. function:: camera:lockPosition(x,y, smoother, ...)
 
    :param numbers x,y: Position (in world coordinates) to lock to.
    :param function smoother: Movement smoothing override. (optional)
