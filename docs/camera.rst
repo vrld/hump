@@ -92,7 +92,7 @@ This function is shortcut to ``camera.x,camera.y = x, y``.
         camera:lookAt(player.pos:unpack()):rotation(player.rot)
     end
 
-.. function:: camera:pos()
+.. function:: camera:position()
 
    :returns: ``x,y`` -- Camera position.
 
@@ -283,7 +283,7 @@ between these two coordinate systems.
     love.graphics.line(x, y, love.mouse.getPosition())
 
 
-.. function:: camera:mousepos()
+.. function:: camera:mousePosition()
 
    :returns: Mouse position in world coordinates.
 
@@ -292,7 +292,7 @@ Shortcut to ``camera:worldCoords(love.mouse.getPosition())``.
 
 **Example**::
 
-    x,y = camera:mousepos()
+    x,y = camera:mousePosition()
     selectedUnit:plotPath(x,y)
 
 
