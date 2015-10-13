@@ -78,7 +78,7 @@ function camera:move(dx,dy)
 	return self
 end
 
-function camera:pos()
+function camera:position()
 	return self.x, self.y
 end
 
@@ -139,7 +139,7 @@ function camera:worldCoords(x,y)
 	return x+self.x, y+self.y
 end
 
-function camera:mousePos()
+function camera:mousePosition()
 	return self:worldCoords(love.mouse.getPosition())
 end
 
@@ -162,7 +162,7 @@ function camera:lockY(y, smoother, ...)
 	return self
 end
 
-function camera:lockPos(x,y, smoother, ...)
+function camera:lockPosition(x,y, smoother, ...)
 	return self:move((smoother or self.smoother)(x - self.x, y - self.y, ...))
 end
 
