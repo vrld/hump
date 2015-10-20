@@ -13,30 +13,30 @@ A typical game could consist of a menu-state, a level-state and a game-over-stat
 
     local menu = {} -- previously: Gamestate.new()
     local game = {}
-    
+
     function menu:draw()
         love.graphics.print("Press Enter to continue", 10, 10)
     end
-    
+
     function menu:keyreleased(key, code)
         if key == 'enter' then
             Gamestate.switch(game)
         end
     end
-    
+
     function game:enter()
         Entities.clear()
         -- setup entities here
     end
-    
+
     function game:update(dt)
         Entities.update(dt)
     end
-    
+
     function game:draw()
         Entities.draw()
     end
-    
+
     function love.load()
         Gamestate.registerEvents()
         Gamestate.switch(menu)
@@ -101,6 +101,8 @@ corresponding LÖVE callbacks and receive receive the same arguments (e.g.
 **Example**::
 
     menu = {} -- previously: Gamestate.new()
+
+    function menu:init()
         self.background = love.graphics.newImage('bg.jpg')
         Buttons.initialize()
     end
@@ -295,11 +297,11 @@ to be one of the :ref:`callbacks`. Mostly useful when not using
     function love.draw()
         Gamestate.draw() -- <callback> is `draw'
     end
-    
+
     function love.update(dt)
         Gamestate.update(dt) -- pass dt to currentState:update(dt)
     end
-    
+
     function love.keypressed(key, code)
         Gamestate.keypressed(key, code) -- pass multiple arguments
     end
@@ -332,7 +334,7 @@ This is by done by overwriting the love callbacks, e.g.::
         Gamestate.registerEvents()
         Gamestate.switch(menu)
     end
-    
+
     -- love callback will still be invoked
     function love.update(dt)
         Timer.update(dt)
@@ -346,4 +348,3 @@ This is by done by overwriting the love callbacks, e.g.::
         Gamestate.registerEvents{'draw', 'update', 'quit'}
         Gamestate.switch(menu)
     end
-
