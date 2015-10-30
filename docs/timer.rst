@@ -21,7 +21,7 @@ easier to produce `juicy games <http://www.youtube.com/watch?v=Fy0aCDmgnxg>`_.
             Timer.after(1, function() print("Hello, world!") end)
         end
     end
-    
+
     function love.update(dt)
         Timer.update(dt)
     end
@@ -79,7 +79,7 @@ periodic behavior (see the example).
 ::
 
     --Using a timer instance:
-    menuTimer:after(1, finishAnimation)
+    menuTimer.after(1, finishAnimation)
 
 
 .. function:: Timer.every(delay, func[, count])
@@ -184,9 +184,9 @@ Prevent a timer from being executed in the future.
     function tick()
         print('tick... tock...')
     end
-    handle = menuTimer:every(1, tick)
+    handle = menuTimer.every(1, tick)
     -- later
-    menuTimer:cancel(handle)
+    menuTimer.cancel(handle)
 
 
 .. function:: Timer.clear()
@@ -200,7 +200,7 @@ executed will discarded.
 
 ::
 
-    menu_timer:clear()
+    menuTimer.clear()
 
 
 .. function:: Timer.update(dt)
@@ -393,4 +393,3 @@ You can also invert and chain functions::
 
     outsqrt = Timer.tween.out(math.sqrt)
     inoutsqrt = Timer.tween.chain(math.sqrt, outsqrt)
-
