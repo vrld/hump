@@ -183,7 +183,7 @@ function camera:lockWindow(x, y, x_min, x_max, y_min, y_max, smoother, ...)
 
 	-- transform displacement to movement in world coordinates
 	local c,s = cos(-self.rot), sin(-self.rot)
-	dx,dy = (c*dx - s*dy) * self.scale, (s*dx + c*dy) * self.scale
+	dx,dy = (c*dx - s*dy) / self.scale, (s*dx + c*dy) / self.scale
 
 	-- move
 	self:move((smoother or self.smoother)(dx,dy,...))
