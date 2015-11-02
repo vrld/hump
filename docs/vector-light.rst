@@ -9,10 +9,12 @@ An table-free version of :doc:`hump.vector <vector>`. Instead of a vector type,
 ``hump.vector-light`` provides functions that operate on numbers.
 
 .. note::
-Using this module instead of :doc:`hump.vector <vector>` may result in faster
-code, but does so at the expense of speed of development and code readability.
-Unless you are absolutely sure that your code is significantly slowed down by
-:doc:`hump.vector <vector>`, I recommend using it instead.
+
+    Using this module instead of :doc:`hump.vector <vector>` may result in
+    faster code, but does so at the expense of speed of development and code
+    readability.  Unless you are absolutely sure that your code is
+    significantly slowed down by :doc:`hump.vector <vector>`, I recommend using
+    it instead.
 
 **Example**::
 
