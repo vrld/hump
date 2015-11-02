@@ -81,7 +81,7 @@ Registers a function ``f`` to be called when signal ``s`` is emitted.
 
 ::
 
-    menu:register('key-left', select_previous_item)
+    menu.register('key-left', select_previous_item)
 
 
 .. function:: Signal.emit(s, ...)
@@ -97,7 +97,7 @@ Calls all functions bound to signal ``s`` with the supplied arguments.
 
     function love.keypressed(key)
         -- using a signal instance
-        if key == 'left' then menu:emit('key-left') end
+        if key == 'left' then menu.emit('key-left') end
     end
 
 ::
@@ -176,5 +176,5 @@ Removes **all** functions from all signals that match a `Lua string pattern
 
 ::
 
-    player.signals:clearPattern('.*') -- clear all signals
+    player.signals.clearPattern('.*') -- clear all signals
 
