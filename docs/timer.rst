@@ -39,10 +39,6 @@ manage it's own list of scheduled functions and does not in any way affect the
 the global timer. Likewise, the global timer does not affect timer instances.
 
 .. note::
-    Unlike the global instance, timer instaces need the colon sytax, i.e.
-    ``instance:after()``) instead of ``Timer.after()``.
-
-.. note::
     If you don't need multiple independent schedulers, you can use the
     global/default timer (see examples).
 
@@ -52,8 +48,6 @@ the global timer. Likewise, the global timer does not affect timer instances.
 
 
 .. function:: Timer.after(delay, func)
-
-.. function:: instance:after(delay, func)
 
    :param number delay: Number of seconds the function will be delayed.
    :param function func: The function to be delayed.
@@ -90,8 +84,6 @@ periodic behavior (see the example).
 
 .. function:: Timer.every(delay, func[, count])
 
-.. function:: instance:every(delay, func[, count])
-
    :param number delay: Number of seconds between two consecutive function calls.
    :param function func: The function to be called periodically.
    :param number count:  Number of times the function is to be called (optional).
@@ -123,8 +115,6 @@ or :func:`Timer.cancel` or :func:`Timer.clear` is called on the timer instance.
 
 
 .. function:: Timer.during(delay, func[, after])
-
-.. function:: instance:during(delay, func[, after])
 
    :param number delay: Number of seconds the func will be called.
    :param function func: The function to be called on ``update(dt)``.
@@ -175,8 +165,6 @@ seconds have passed.
 
 .. function:: Timer.cancel(handle)
 
-.. function:: instance:cancel(handle)
-
    :param table handle:  The function to be canceled.
 
 Prevent a timer from being executed in the future.
@@ -203,8 +191,6 @@ Prevent a timer from being executed in the future.
 
 .. function:: Timer.clear()
 
-.. function:: instance:clear()
-
 Remove all timed and periodic functions. Functions that have not yet been
 executed will discarded.
 
@@ -214,7 +200,7 @@ executed will discarded.
 
 ::
 
-    menuTimer:clear()
+    menu_timer:clear()
 
 
 .. function:: Timer.update(dt)
@@ -240,8 +226,6 @@ Update timers and execute functions if the deadline is reached. Call in
 
 
 .. function:: Timer.tween(duration, subject, target, method, after, ...)
-
-.. function:: instance:tween(duration, subject, target, method, after, ...)
 
    :param number duration: Duration of the tween.
    :param table subject: Object to be tweened.
