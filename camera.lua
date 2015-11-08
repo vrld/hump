@@ -143,13 +143,7 @@ function camera:mousePosition()
 	return self:worldCoords(love.mouse.getPosition())
 end
 
--- camera scrolling utilities - adapted from 
-
---- Lock camera's x coordinate.
--- @param x X coordinate (in world coordinates) to lock to.
--- @param smoother Overriding smoothing function (optional).
--- @param ... Additional parameters to the smoothing function (optional).
--- @return The camera.
+-- camera scrolling utilities
 function camera:lockX(x, smoother, ...)
 	local dx, dy = (smoother or self.smoother)(x - self.x, self.y, ...)
 	self.x = self.x + dx

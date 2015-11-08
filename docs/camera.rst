@@ -89,7 +89,7 @@ This function is shortcut to ``camera.x,camera.y = x, y``.
 ::
 
     function love.update(dt)
-        camera:lookAt(player.pos:unpack()):rotation(player.rot)
+        camera:lookAt(player.pos:unpack()):rotate(player.rot)
     end
 
 .. function:: camera:position()
@@ -333,7 +333,7 @@ You can specify a default movement smoother by assigning the variable
    :param mixed ...: Additional parameters to the smoothing function. (optional)
 
 Horizontal camera locking: Keep the camera locked on the defined ``x``-position
-(in *world coordinates*). They ``y``-position is not affected.
+(in *world coordinates*). The ``y``-position is not affected.
 
 You can define an off-center locking position by "aiming" the camera left or
 right of your actual target. For example, to center the player 20 pixels to the
@@ -363,7 +363,7 @@ right of your actual target. For example, to center the player 20 pixels to the
    :param mixed ...: Additional parameters to the smoothing function. (optional)
 
 Vertical camera locking: Keep the camera locked on the defined ``y``-position
-(in *world coordinates*). They ``x``-position is not affected.
+(in *world coordinates*). The ``x``-position is not affected.
 
 You can define an off-center locking position by "aiming" the camera above or
 below your actual target. For example, to center the player 20 pixels *below* the
@@ -430,7 +430,7 @@ camera if the position would be out of the screen-rectangle defined by ``x_min``
    The locking window is defined in camera coordinates, whereas the position to
    lock to is defined in world coordinates!
 
-All of the other locking methods can be implemted by window locking. For
+All of the other locking methods can be implemented by window locking. For
 position locking, set ``x_min = x_max`` and ``y_min = y_max``.
 Off-center locking can be done by defining the locking window accordingly.
 
