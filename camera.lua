@@ -42,7 +42,7 @@ function camera.smooth.linear(speed)
 	return function(dx,dy, s)
 		-- normalize direction
 		local d = math.sqrt(dx*dx+dy*dy)
-		dts = math.min((s or speed) * love.timer.getDelta(), d) -- prevent overshooting the goal
+		local dts = math.min((s or speed) * love.timer.getDelta(), d) -- prevent overshooting the goal
 		if d > 0 then
 			dx,dy = dx/d, dy/d
 		end
