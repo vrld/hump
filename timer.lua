@@ -76,6 +76,14 @@ function Timer:clear()
 	self.functions = {}
 end
 
+function Timer:script(f)
+	local co = coroutine.wrap(f)
+	co(function(t)
+		self:after(t, co)
+		coroutine.yield()
+	end)
+end
+
 Timer.tween = setmetatable({
 	-- helper functions
 	out = function(f) -- 'rotates' a function
@@ -175,6 +183,7 @@ local function new()
 		during = function(...) return timer:during(...) end,
 		after  = function(...) return timer:after(...) end,
 		every  = function(...) return timer:every(...) end,
+		script = function(...) return timer:script(...) end,
 		cancel = function(...) return timer:cancel(...) end,
 		clear  = function(...) return timer:clear(...) end,
 		tween  = setmetatable({}, {
