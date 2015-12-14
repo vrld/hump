@@ -82,6 +82,70 @@ periodic behavior (see the example).
     menuTimer.after(1, finishAnimation)
 
 
+.. function:: Timer.script(func)
+
+   :param function func: Script to execute.
+
+Execute a function that can be paused without causing the rest of the program to
+be suspended. ``func`` will receive a function - ``wait`` - to do that as only
+argument.
+
+**Examples**::
+
+    Timer.script(function(wait)
+        print("Now")
+        wait(1)
+        print("After one second")
+        wait(1)
+        print("Bye!")
+    end)
+
+::
+
+    -- useful for splash screens
+    Timer.script(function(wait)
+        Timer.tween(0.5, splash.pos, {x = 300}, 'in-out-quad')
+        wait(5) -- show the splash for 5 seconds
+        Timer.tween(0.5, slpash.pos, {x = 800}, 'in-out-quad')
+    end)
+
+::
+
+    -- repeat something with a varying delay
+    Timer.script(function(wait)
+        while true do
+            spawn_ship()
+            wait(1 / (1-production_speed))
+        end
+    end)
+
+::
+
+    -- jumping with timer.script
+    timer.script(function(wait)
+        local w = 1/12
+        self.jumping = true
+        Timer.tween(w*2, self, {z = -8}, "out-cubic", function()
+            Timer.tween(w*2, self, {z = 0},"in-cubic")
+        end)
+
+        self.quad = self.quads.jump[1]
+        wait(w)
+
+        self.quad = self.quads.jump[2]
+        wait(w)
+
+        self.quad = self.quads.jump[3]
+        wait(w)
+
+        self.quad = self.quads.jump[4]
+        wait(w)
+
+        self.jumping = false
+        self.z = 0
+    end)
+
+
 .. function:: Timer.every(delay, func[, count])
 
    :param number delay: Number of seconds between two consecutive function calls.
