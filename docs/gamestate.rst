@@ -19,7 +19,7 @@ A typical game could consist of a menu-state, a level-state and a game-over-stat
     end
 
     function menu:keyreleased(key, code)
-        if key == 'enter' then
+        if key == 'return' then
             Gamestate.switch(game)
         end
     end
