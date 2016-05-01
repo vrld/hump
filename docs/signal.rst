@@ -18,7 +18,7 @@ signals that match a `Lua string pattern
 **Example**::
 
     -- in AI.lua
-    signals.register('shoot', function(x,y, dx,dy)
+    Signal.register('shoot', function(x,y, dx,dy)
         -- for every critter in the path of the bullet:
         -- try to avoid being hit
         for critter in pairs(critters) do
@@ -29,7 +29,7 @@ signals that match a `Lua string pattern
     end)
     
     -- in sounds.lua
-    signals.register('shoot', function()
+    Signal.register('shoot', function()
         Sounds.fire_bullet:play()
     end)
     
@@ -38,7 +38,7 @@ signals that match a `Lua string pattern
         if key == ' ' then
             local x,y   = player.pos:unpack()
             local dx,dy = player.direction:unpack()
-            signals.emit('shoot', x,y, dx,dy)
+            Signal.emit('shoot', x,y, dx,dy)
         end
     end
 
@@ -56,6 +56,11 @@ global registry. Likewise, the global registry does not affect the instance.
 .. note::
     If you don't need multiple independent registries, you can use the
     global/default registry (see examples).
+
+.. note::
+    Unlike the default one, signal registry instances use the colon-syntax,
+    i.e., you need to call ``instance:emit('foo', 23)`` instead of
+    ``Signal.mit('foo', 23)``.
 
 **Example**::
 
@@ -81,7 +86,7 @@ Registers a function ``f`` to be called when signal ``s`` is emitted.
 
 ::
 
-    menu.register('key-left', select_previous_item)
+    menu:register('key-left', select_previous_item)
 
 
 .. function:: Signal.emit(s, ...)
@@ -97,7 +102,7 @@ Calls all functions bound to signal ``s`` with the supplied arguments.
 
     function love.keypressed(key)
         -- using a signal instance
-        if key == 'left' then menu.emit('key-left') end
+        if key == 'left' then menu:emit('key-left') end
     end
 
 ::
@@ -176,5 +181,5 @@ Removes **all** functions from all signals that match a `Lua string pattern
 
 ::
 
-    player.signals.clearPattern('.*') -- clear all signals
+    player.signals:clearPattern('.*') -- clear all signals
 
