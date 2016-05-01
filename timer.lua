@@ -174,24 +174,25 @@ __index = function(tweens, key)
 	       or error('Unknown interpolation method: ' .. key)
 end})
 
--- the module
-local function new()
-	local timer = setmetatable({functions = {}, tween = Timer.tween}, Timer)
-	return setmetatable({
-		new    = new,
-		update = function(...) return timer:update(...) end,
-		during = function(...) return timer:during(...) end,
-		after  = function(...) return timer:after(...) end,
-		every  = function(...) return timer:every(...) end,
-		script = function(...) return timer:script(...) end,
-		cancel = function(...) return timer:cancel(...) end,
-		clear  = function(...) return timer:clear(...) end,
-		tween  = setmetatable({}, {
-			__index    = Timer.tween,
-			__newindex = function(_,k,v) Timer.tween[k] = v end,
-			__call     = function(t,...) return timer:tween(...) end,
-		})
-	}, {__call = new})
+-- Timer instancing
+function Timer.new()
+	return setmetatable({functions = {}, tween = Timer.tween}, Timer)
 end
 
-return new()
+-- default instance
+local default = Timer.new()
+
+-- module forwards calls to default instance
+local module = {}
+for k in pairs(Timer) do
+	if k ~= "__index" then
+		module[k] = function(...) return default[k](default, ...) end
+	end
+end
+module.tween = setmetatable({}, {
+	__index = Timer.tween,
+	__newindex = function(k,v) Timer.tween[k] = v end,
+	__call = function(t, ...) return default:tween(...) end,
+})
+
+return setmetatable(module, {__call = Timer.new})

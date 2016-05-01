@@ -76,20 +76,20 @@ function Registry:clearPattern(p)
 	end
 end
 
--- the module
-local function new()
-	local registry = setmetatable({}, Registry)
-
-	return setmetatable({
-		new           = new,
-		register      = function(...) return registry:register(...) end,
-		emit          = function(...) registry:emit(...) end,
-		remove        = function(...) registry:remove(...) end,
-		clear         = function(...) registry:clear(...) end,
-		emitPattern   = function(...) registry:emitPattern(...) end,
-		removePattern = function(...) registry:removePattern(...) end,
-		clearPattern  = function(...) registry:clearPattern(...) end,
-	}, {__call = new})
+-- instancing
+function Registry.new()
+	return setmetatable({}, Registry)
 end
 
-return new()
+-- default instance
+local default = Registry.new()
+
+-- module forwards calls to default instance
+local module = {}
+for k in pairs(Registry) do
+	if k ~= "__index" then
+		module[k] = function(...) return default[k](default, ...) end
+	end
+end
+
+return setmetatable(module, {__call = Registry.new})
