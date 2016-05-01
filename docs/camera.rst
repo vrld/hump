@@ -13,12 +13,12 @@ worry about that.
 **Example**::
 
     function love.load()
-        cam = Camera(player.pos.x, player.pos.y)
+        camera = Camera(player.pos.x, player.pos.y)
     end
     
     function love.update(dt)
         local dx,dy = player.x - cam.x, player.y - cam.y
-        cam:move(dx/2, dy/2)
+        camera:move(dx/2, dy/2)
     end
 
 
@@ -195,7 +195,7 @@ Apply camera transformations, i.e. move, scale and rotate everything until
     function love.draw()
         camera:attach()
         draw_world()
-        cam:detach()
+        camera:detach()
 
         draw_hud()
     end
@@ -210,7 +210,7 @@ Stop looking through the camera.
     function love.draw()
         camera:attach()
         draw_world()
-        cam:detach()
+        camera:detach()
 
         draw_hud()
     end
@@ -223,9 +223,9 @@ Stop looking through the camera.
 Wrap a function between a ``camera:attach()``/``camera:detach()`` pair.
 Equivalent to::
 
-    cam:attach()
+    camera:attach()
     func()
-    cam:detach()
+    camera:detach()
 
 
 **Example**::
@@ -279,7 +279,7 @@ between these two coordinate systems.
 
 **Example**::
 
-    x,y = cam:cameraCoords(player.pos.x, player.pos.y)
+    x,y = camera:cameraCoords(player.pos.x, player.pos.y)
     love.graphics.line(x, y, love.mouse.getPosition())
 
 
@@ -307,13 +307,13 @@ by Itay Keren gives a lot of insight into how to design good camera systems.
 
 **hump.camera** offers functions that help to implement most of the techniques
 discussed in the article. The functions :func:`camera:lockX`,
-:func:`camera:lockY`, :func:`camera:lockPos`, and :func:`camera:lockWindow`
+:func:`camera:lockY`, :func:`camera:lockPosition`, and :func:`camera:lockWindow`
 move the camera so that the interesting content stays in frame.
 Note that the functions must be called every frame::
 
     function love.update()
        -- vertical locking
-       cam:lockX(player.pos.x)
+       camera:lockX(player.pos.x)
     end
 
 
@@ -342,17 +342,17 @@ right of your actual target. For example, to center the player 20 pixels to the
 **Examples**::
 
     -- lock on player vertically
-    cam:lockX(player.x)
+    camera:lockX(player.x)
 
 ::
 
     -- ... with linear smoothing at 25 px/s
-    cam:lockX(player.x, Camera.smooth.linear(25))
+    camera:lockX(player.x, Camera.smooth.linear(25))
 
 ::
 
     -- lock player 20px left of center
-    cam:lockX(player.x + 20)
+    camera:lockX(player.x + 20)
 
 
 
@@ -372,17 +372,17 @@ screen center, aim 20 pixels *above* it (see examples).
 **Examples**::
 
     -- lock on player horizontally
-    cam:lockY(player.y)
+    camera:lockY(player.y)
 
 ::
 
     -- ... with damped smoothing with a stiffness of 10
-    cam:lockY(player.y, Camera.smooth.damped(10))
+    camera:lockY(player.y, Camera.smooth.damped(10))
 
 ::
 
     -- lock player 20px below the screen center
-    cam:lockY(player.y - 20)
+    camera:lockY(player.y - 20)
 
 
 
@@ -403,12 +403,12 @@ the screen center, aim 10 pixels to the *right* and 20 pixels *below*.
 **Examples**::
 
     -- lock on player
-    cam:lock(player.x, player.y)
+    camera:lockPosition(player.x, player.y)
 
 ::
 
     -- lock 50 pixels into player's aiming direction
-    cam:lockY(player.x - player.aiming.x * 50, player.y - player.aiming.y * 50)
+    camera:lockPosition(player.x - player.aiming.x * 50, player.y - player.aiming.y * 50)
 
 
 
@@ -437,7 +437,7 @@ Off-center locking can be done by defining the locking window accordingly.
 **Examples**::
 
     -- lock on player
-    cam:lock(player.x, player.y)
+    camera:lock(player.x, player.y)
 
 .. attribute:: camera.smoother
 
@@ -514,7 +514,7 @@ Smoothly moves the camera towards to snapping goal with constant speed.
 ::
 
     -- warning: creates a function every frame!
-    cam:lockX(player.x, Camera.smooth.linear(25))
+    camera:lockX(player.x, Camera.smooth.linear(25))
 
 
 .. function:: Camera.smooth.damped(stiffness)
@@ -534,4 +534,4 @@ moves more quickly.
 ::
 
     -- warning: creates a function every frame!
-    cam:lockPos(player.x, player.y, Camera.smooth.damped(2))
+    camera:lockPosition(player.x, player.y, Camera.smooth.damped(2))
