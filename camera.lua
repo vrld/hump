@@ -102,45 +102,73 @@ function camera:zoomTo(zoom)
 	return self
 end
 
-function camera:attach()
-	local cx,cy = love.graphics.getWidth()/(2*self.scale), love.graphics.getHeight()/(2*self.scale)
+function camera:attach(x,y,w,h, noclip)
+	x,y = x or 0, y or 0
+	w,h = w or love.graphics.getWidth(), h or love.graphics.getHeight()
+
+	self._sx,self._sy,self._sw,self._sh = love.graphics.getScissor()
+	if not noclip then
+		love.graphics.setScissor(x,y,w,h)
+	end
+
+	local cx,cy = x+w/2, y+h/2
 	love.graphics.push()
-	love.graphics.scale(self.scale)
 	love.graphics.translate(cx, cy)
+	love.graphics.scale(self.scale)
 	love.graphics.rotate(self.rot)
 	love.graphics.translate(-self.x, -self.y)
 end
 
 function camera:detach()
 	love.graphics.pop()
+	love.graphics.setScissor(self._sx,self._sy,self._sw,self._sh)
 end
 
-function camera:draw(func)
-	self:attach()
+function camera:draw(...)
+	local x,y,w,h,noclip,func
+	local nargs = select("#", ...)
+	if nargs == 1 then
+		func = ...
+	elseif nargs == 5 then
+		x,y,w,h,func = ...
+	elseif nargs == 6 then
+		x,y,w,h,noclip,func = ...
+	else
+		error("Invalid arguments to camera:draw()")
+	end
+
+	self:attach(x,y,w,h,noclip)
 	func()
 	self:detach()
 end
 
-function camera:cameraCoords(x,y)
+-- world coordinates to camera coordinates
+function camera:cameraCoords(x,y, ox,oy,w,h)
+	ox, oy = ox or 0, oy or 0
+	w,h = w or love.graphics.getWidth(), h or love.graphics.getHeight()
+
 	-- x,y = ((x,y) - (self.x, self.y)):rotated(self.rot) * self.scale + center
-	local w,h = love.graphics.getWidth(), love.graphics.getHeight()
 	local c,s = cos(self.rot), sin(self.rot)
 	x,y = x - self.x, y - self.y
 	x,y = c*x - s*y, s*x + c*y
-	return x*self.scale + w/2, y*self.scale + h/2
+	return x*self.scale + w/2 + ox, y*self.scale + h/2 + oy
 end
 
-function camera:worldCoords(x,y)
+-- camera coordinates to world coordinates
+function camera:worldCoords(x,y, ox,oy,w,h)
+	ox, oy = ox or 0, oy or 0
+	w,h = w or love.graphics.getWidth(), h or love.graphics.getHeight()
+
 	-- x,y = (((x,y) - center) / self.scale):rotated(-self.rot) + (self.x,self.y)
-	local w,h = love.graphics.getWidth(), love.graphics.getHeight()
 	local c,s = cos(-self.rot), sin(-self.rot)
-	x,y = (x - w/2) / self.scale, (y - h/2) / self.scale
+	x,y = (x - w/2 - ox) / self.scale, (y - h/2 - oy) / self.scale
 	x,y = c*x - s*y, s*x + c*y
 	return x+self.x, y+self.y
 end
 
-function camera:mousePosition()
-	return self:worldCoords(love.mouse.getPosition())
+function camera:mousePosition(ox,oy,w,h)
+	local mx,my = love.mouse.getPosition()
+	return self:worldCoords(mx,my, ox,oy,w,h)
 end
 
 -- camera scrolling utilities
