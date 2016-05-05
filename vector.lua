@@ -56,29 +56,47 @@ function vector.__unm(a)
 end
 
 function vector.__add(a,b)
-	assert(isvector(a) and isvector(b), "Add: wrong argument types (<vector> expected)")
-	return new(a.x+b.x, a.y+b.y)
+  if type(a) == "number" then
+   return new(a+b.x, a+b.y)
+  elseif type(b) == "number" then
+   return new(a.x + b, a.y + b)
+	else
+   assert(isvector(a) and isvector(b), "Mul: wrong argument types (<vector> or <number> expected)")
+   return new(a.x+b.x, a.y+b.y)
+	end
 end
 
 function vector.__sub(a,b)
-	assert(isvector(a) and isvector(b), "Sub: wrong argument types (<vector> expected)")
-	return new(a.x-b.x, a.y-b.y)
+  if type(a) == "number" then
+   return new(a - b.x, a - b.y)
+  elseif type(b) == "number" then
+   return new(b.x - a, b.y - a)
+	else
+   assert(isvector(a) and isvector(b), "Mul: wrong argument types (<vector> or <number> expected)")
+   return new(a.x - b.x, a.y - b.y)
+	end
 end
 
 function vector.__mul(a,b)
 	if type(a) == "number" then
-		return new(a*b.x, a*b.y)
-	elseif type(b) == "number" then
-		return new(b*a.x, b*a.y)
+   return new(a*b.x, a*b.y)
+  elseif type(b) == "number" then
+   return new(a.x * b, a.y * b)
 	else
-		assert(isvector(a) and isvector(b), "Mul: wrong argument types (<vector> or <number> expected)")
-		return a.x*b.x + a.y*b.y
+   assert(isvector(a) and isvector(b), "Mul: wrong argument types (<vector> or <number> expected)")
+   return new(a.x*b.x, a.y*b.y)
 	end
 end
 
 function vector.__div(a,b)
-	assert(isvector(a) and type(b) == "number", "wrong argument types (expected <vector> / <number>)")
-	return new(a.x / b, a.y / b)
+  if type(a) == "number" then
+   return new(a/b.x, a/b.y)
+	elseif type(b) == "number" then
+   return new(a.x/b, a.y/b)
+	else
+   assert(isvector(a) and isvector(b), "Mul: wrong argument types (<vector> or <number> expected)")
+   return new(a.x/b.x, a.y/b.y)
+	end
 end
 
 function vector.__eq(a,b)
