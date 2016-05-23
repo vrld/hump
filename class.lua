@@ -36,7 +36,7 @@ local function include_helper(to, from, seen)
 	seen[from] = to
 	for k,v in pairs(from) do
 		k = include_helper({}, k, seen) -- keys might also be tables
-		if not to[k] then
+		if to[k] == nil then
 			to[k] = include_helper({}, v, seen)
 		end
 	end
@@ -51,7 +51,7 @@ end
 
 -- returns a deep copy of `other'
 local function clone(other)
-	return include({}, other)
+	return setmetatable(include({}, other), getmetatable(other))
 end
 
 local function new(class)
@@ -60,6 +60,9 @@ local function new(class)
 	if getmetatable(inc) then inc = {inc} end
 
 	for _, other in ipairs(inc) do
+		if type(other) == "string" then
+			other = _G[other]
+		end
 		include(class, other)
 	end
 

@@ -58,36 +58,38 @@ function Registry:clear(...)
 	end
 end
 
-function Registry:emit_pattern(p, ...)
+function Registry:emitPattern(p, ...)
 	for s in pairs(self) do
 		if s:match(p) then self:emit(s, ...) end
 	end
 end
 
-function Registry:remove_pattern(p, ...)
+function Registry:removePattern(p, ...)
 	for s in pairs(self) do
 		if s:match(p) then self:remove(s, ...) end
 	end
 end
 
-function Registry:clear_pattern(p)
+function Registry:clearPattern(p)
 	for s in pairs(self) do
 		if s:match(p) then self[s] = {} end
 	end
 end
 
-local function new()
+-- instancing
+function Registry.new()
 	return setmetatable({}, Registry)
 end
-local default = new()
 
-return setmetatable({
-	new            = new,
-	register       = function(...) default:register(...) end,
-	emit           = function(...) default:emit(...) end,
-	remove         = function(...) default:remove(...) end,
-	clear          = function(...) default:clear(...) end,
-	emit_pattern   = function(...) default:emit_pattern(...) end,
-	remove_pattern = function(...) default:remove_pattern(...) end,
-	clear_pattern  = function(...) default:clear_pattern(...) end,
-}, {__call = new})
+-- default instance
+local default = Registry.new()
+
+-- module forwards calls to default instance
+local module = {}
+for k in pairs(Registry) do
+	if k ~= "__index" then
+		module[k] = function(...) return default[k](default, ...) end
+	end
+end
+
+return setmetatable(module, {__call = Registry.new})

@@ -29,10 +29,6 @@ Timer.__index = Timer
 
 local function _nothing_() end
 
-local function new()
-	return setmetatable({functions = {}, tween = Timer.tween}, Timer)
-end
-
 function Timer:update(dt)
 	local to_remove = {}
 	for handle, delay in pairs(self.functions) do
@@ -49,20 +45,20 @@ function Timer:update(dt)
 	end
 end
 
-function Timer:do_for(delay, func, after)
+function Timer:during(delay, func, after)
 	local handle = {func = func, after = after or _nothing_}
 	self.functions[handle] = delay
 	return handle
 end
 
-function Timer:add(delay, func)
-	return self:do_for(delay, _nothing_, func)
+function Timer:after(delay, func)
+	return self:during(delay, _nothing_, func)
 end
 
-function Timer:addPeriodic(delay, func, count)
+function Timer:every(delay, func, count)
 	local count, handle = count or math.huge -- exploit below: math.huge - 1 = math.huge
 
-	handle = self:add(delay, function(f)
+	handle = self:after(delay, function(f)
 		if func(func) == false then return end
 		count = count - 1
 		if count > 0 then
@@ -78,6 +74,14 @@ end
 
 function Timer:clear()
 	self.functions = {}
+end
+
+function Timer:script(f)
+	local co = coroutine.wrap(f)
+	co(function(t)
+		self:after(t, co)
+		coroutine.yield()
+	end)
 end
 
 Timer.tween = setmetatable({
@@ -137,7 +141,7 @@ __call = function(tween, self, len, subject, target, method, after, ...)
 	local payload, t, args = tween_collect_payload(subject, target, {}), 0, {...}
 
 	local last_s = 0
-	return self:do_for(len, function(dt)
+	return self:during(len, function(dt)
 		t = t + dt
 		local s = method(math.min(1, t/len), unpack(args))
 		local ds = s - last_s
@@ -170,21 +174,25 @@ __index = function(tweens, key)
 	       or error('Unknown interpolation method: ' .. key)
 end})
 
--- default timer
-local default = new()
+-- Timer instancing
+function Timer.new()
+	return setmetatable({functions = {}, tween = Timer.tween}, Timer)
+end
 
--- the module
-return setmetatable({
-	new         = new,
-	update      = function(...) return default:update(...) end,
-	do_for      = function(...) return default:do_for(...) end,
-	add         = function(...) return default:add(...) end,
-	addPeriodic = function(...) return default:addPeriodic(...) end,
-	cancel      = function(...) return default:cancel(...) end,
-	clear       = function(...) return default:clear(...) end,
-	tween       = setmetatable({}, {
-		__index    = Timer.tween,
-		__newindex = function(_,k,v) Timer.tween[k] = v end,
-		__call     = function(t,...) return default:tween(...) end,
-	})
-}, {__call = new})
+-- default instance
+local default = Timer.new()
+
+-- module forwards calls to default instance
+local module = {}
+for k in pairs(Timer) do
+	if k ~= "__index" then
+		module[k] = function(...) return default[k](default, ...) end
+	end
+end
+module.tween = setmetatable({}, {
+	__index = Timer.tween,
+	__newindex = function(k,v) Timer.tween[k] = v end,
+	__call = function(t, ...) return default:tween(...) end,
+})
+
+return setmetatable(module, {__call = Timer.new})
