@@ -64,7 +64,7 @@ function Timer:update(dt)
 end
 
 function Timer:during(delay, during, after)
-	local handle = { time = 0, during = during, after = after, limit = delay, count = 1 }
+	local handle = { time = 0, during = during, after = after or _nothing_, limit = delay, count = 1 }
 	self.functions[handle] = true
 	return handle
 end
