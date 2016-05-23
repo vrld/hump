@@ -42,7 +42,7 @@ function Timer:update(dt)
 		-- }
 
 		handle.time = handle.time + dt
-		handle.during(dt, handle.limit - handle.time)
+		handle.during(dt, math.max(handle.limit - handle.time, 0))
 
 		while handle.time >= handle.limit and handle.count > 0 do
 			if handle.after(handle.after) == false then
