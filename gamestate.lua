@@ -38,7 +38,7 @@ function GS.new(t) return t or {} end -- constructor - deprecated!
 
 local function change_state(stack_offset, to, ...)
 	local pre = stack[#stack]
-	
+
 	-- initialize only on first call
 	;(initialized_states[to] or to.init or __NULL__)(to)
 	initialized_states[to] = __NULL__
