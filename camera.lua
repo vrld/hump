@@ -113,9 +113,11 @@ function camera:attach(x,y,w,h, noclip)
 
 	local cx,cy = x+w/2, y+h/2
 	love.graphics.push()
+	-- scale and rotate about the center of the screen
 	love.graphics.translate(cx, cy)
 	love.graphics.scale(self.scale)
 	love.graphics.rotate(self.rot)
+	love.graphics.translate(-cx, -cy)
 	love.graphics.translate(-self.x, -self.y)
 end
 
