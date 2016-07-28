@@ -105,9 +105,13 @@ end
 function camera:attach(clip)
 	-- clip   nil or {x, y, w, h}
 	self.clip = clip
+	local x,y,w,h
 	if clip then
+		x,y,w,h = unpack(clip)
 		self._sx,self._sy,self._sw,self._sh = love.graphics.getScissor()
-		love.graphics.setScissor(unpack(clip))
+		love.graphics.setScissor(x,y,w,h)
+	else
+		x,y,w,h = 0,0,love.graphics.getDimensions()
 	end
 
 	local cx,cy = x+w/2, y+h/2
