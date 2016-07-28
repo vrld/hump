@@ -106,10 +106,6 @@ function camera:attach(clip)
 	-- clip   nil or {x, y, w, h}
 	self.clip = clip
 	if clip then
-		self.clip = true
-		x,y = x or 0, y or 0
-		w,h = w or love.graphics.getWidth(), h or love.graphics.getHeight()
-
 		self._sx,self._sy,self._sw,self._sh = love.graphics.getScissor()
 		love.graphics.setScissor(unpack(clip))
 	end
