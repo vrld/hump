@@ -102,13 +102,16 @@ function camera:zoomTo(zoom)
 	return self
 end
 
-function camera:attach(x,y,w,h, noclip)
-	x,y = x or 0, y or 0
-	w,h = w or love.graphics.getWidth(), h or love.graphics.getHeight()
+function camera:attach(clip)
+	-- clip   nil or {x, y, w, h}
+	self.clip = clip
+	if clip then
+		self.clip = true
+		x,y = x or 0, y or 0
+		w,h = w or love.graphics.getWidth(), h or love.graphics.getHeight()
 
-	self._sx,self._sy,self._sw,self._sh = love.graphics.getScissor()
-	if not noclip then
-		love.graphics.setScissor(x,y,w,h)
+		self._sx,self._sy,self._sw,self._sh = love.graphics.getScissor()
+		love.graphics.setScissor(unpack(clip))
 	end
 
 	local cx,cy = x+w/2, y+h/2
@@ -123,7 +126,9 @@ end
 
 function camera:detach()
 	love.graphics.pop()
-	love.graphics.setScissor(self._sx,self._sy,self._sw,self._sh)
+	if self.clip then
+		love.graphics.setScissor(self._sx,self._sy,self._sw,self._sh)
+	end
 end
 
 function camera:draw(...)
