@@ -132,19 +132,18 @@ function camera:detach()
 end
 
 function camera:draw(...)
-	local x,y,w,h,noclip,func
+	local x,y,w,h,func,clip_region
 	local nargs = select("#", ...)
 	if nargs == 1 then
 		func = ...
 	elseif nargs == 5 then
 		x,y,w,h,func = ...
-	elseif nargs == 6 then
-		x,y,w,h,noclip,func = ...
+		clip_region = {x,y,w,h}
 	else
 		error("Invalid arguments to camera:draw()")
 	end
 
-	self:attach(x,y,w,h,noclip)
+	self:attach(clip_region)
 	func()
 	self:detach()
 end
