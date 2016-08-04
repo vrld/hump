@@ -32,6 +32,7 @@ Implements `class commons <https://github.com/bartbes/Class-Commons>`_.
 Function Reference
 ------------------
 
+.. function:: Class.new()
 .. function:: Class.new({init = constructor, __includes = parents, ...})
 
    :param function constructor:  Class constructor. Can be accessed with ``theclass.init(object, ...)``. (optional)
