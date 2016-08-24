@@ -59,7 +59,7 @@ callbacks for initalizing, entering and leaving a state:
     Called every time when entering the state. See :func:`Gamestate.switch`.
 
 ``leave()``
-    Called when leaving a state. See :func:`Gamestate.switch` and :func:`Gamestate.push`.
+    Called when leaving a state. See :func:`Gamestate.switch` and :func:`Gamestate.pop`.
 
 ``resume()``
     Called when re-entering a state by :func:`Gamestate.pop`-ing another state.

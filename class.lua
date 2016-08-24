@@ -56,7 +56,7 @@ end
 
 local function new(class)
 	-- mixins
-	class = class or {}
+	class = class or {}  -- class can be nil
 	local inc = class.__includes or {}
 	if getmetatable(inc) then inc = {inc} end
 
