@@ -55,8 +55,8 @@ local function clone(other)
 end
 
 local function new(class)
-	-- mixins
 	class = class or {}  -- class can be nil
+	-- mixins
 	local inc = class.__includes or {}
 	if getmetatable(inc) then inc = {inc} end
 
