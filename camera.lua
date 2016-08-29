@@ -62,7 +62,7 @@ end
 
 local function new(x,y, zoom, rot, smoother)
 	-- look at center of screen by default
-	x,y  = x or -love.graphics.getWidth()/2, y or -love.graphics.getHeight()/2
+	x,y  = x or love.graphics.getWidth()/2, y or love.graphics.getHeight()/2
 	zoom = zoom or 1
 	rot  = rot or 0
 	smoother = smoother or camera.smooth.none() -- for locking, see below
