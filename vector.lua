@@ -33,6 +33,10 @@ vector.__index = vector
 local function new(x,y)
 	return setmetatable({x = x or 0, y = y or 0}, vector)
 end
+function vector.polar(d, r)
+	return new(cos(r) * d, sin(r) * d)
+end
+
 local zero = new(0,0)
 
 local function isvector(v)
