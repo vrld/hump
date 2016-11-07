@@ -65,7 +65,8 @@ local function new(x,y, zoom, rot, smoother)
 	zoom = zoom or 1
 	rot  = rot or 0
 	smoother = smoother or camera.smooth.none() -- for locking, see below
-	return setmetatable({x = x, y = y, scale = zoom, rot = rot, smoother = smoother}, camera)
+	local limits = {}
+	return setmetatable({x = x, y = y, scale = zoom, rot = rot, smoother = smoother, limits = limits}, camera)
 end
 
 function camera:lookAt(x,y)
@@ -112,11 +113,15 @@ function camera:attach(x,y,w,h, noclip)
 	end
 
 	local cx,cy = x+w/2, y+h/2
+
+	local offset = {}
+	offset.x, offset.y = self:_getLimitedPosition(cx, cy)
+
 	love.graphics.push()
 	love.graphics.translate(cx, cy)
 	love.graphics.scale(self.scale)
 	love.graphics.rotate(self.rot)
-	love.graphics.translate(-self.x, -self.y)
+	love.graphics.translate(-offset.x, -offset.y)
 end
 
 function camera:detach()
@@ -209,6 +214,55 @@ function camera:lockWindow(x, y, x_min, x_max, y_min, y_max, smoother, ...)
 
 	-- move
 	self:move((smoother or self.smoother)(dx,dy,...))
+end
+
+function camera:setLimits(left, top, width, height)
+	self.limits.left = left
+	self.limits.top = top
+	self.limits.width = width
+	self.limits.height = height
+end
+
+function camera:_getLimitedPosition(cx, cy)
+	local x, y = self.x, self.y
+
+	screen_w, screen_h = love.graphics.getWidth(), love.graphics.getHeight()
+
+	local offset_limits = {}
+
+	if self.limits.left then
+		offset_limits.left = self.limits.left + cx / self.scale
+	end
+
+	if self.limits.top then
+		offset_limits.top = self.limits.top + cy / self.scale
+	end
+
+	if self.limits.width then
+		offset_limits.width = self.limits.width - cx / self.scale
+		offset_limits.right = self.limits.left + offset_limits.width
+	end
+
+	if self.limits.height then
+		offset_limits.height = self.limits.height - cy / self.scale
+		offset_limits.bottom = self.limits.top + offset_limits.height
+	end
+
+	if offset_limits.left and x < offset_limits.left then
+		x = offset_limits.left
+	end
+	if offset_limits.right and  x > offset_limits.right then
+		x = offset_limits.right
+	end
+
+	if offset_limits.top and  y < offset_limits.top then
+		y = offset_limits.top
+	end
+	if offset_limits.bottom and  y > offset_limits.bottom then
+		y = offset_limits.bottom
+	end
+
+	return x, y
 end
 
 -- the module
