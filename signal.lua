@@ -33,28 +33,32 @@ Registry.__index = function(self, key)
 	end)()
 end
 
-function Registry:register(s, f)
-	self[s][f] = f
+function Registry:register(s, f, ...)
+ 	self[s][f] = {f, {...}}
 	return f
 end
 
 function Registry:emit(s, ...)
-	for f in pairs(self[s]) do
-		f(...)
+	for i, f in pairs(self[s]) do
+        if # (f[2]) > 0 then
+            f[1](unpack(f[2]), ...)
+        else
+            f[1](...)
+        end
 	end
 end
 
 function Registry:remove(s, ...)
 	local f = {...}
 	for i = 1,select('#', ...) do
-		self[s][f[i]] = nil
+		self[s][f[i][1]] = nil
 	end
 end
 
 function Registry:clear(...)
 	local s = {...}
 	for i = 1,select('#', ...) do
-		self[s[i]] = {}
+		self[s[i][1]] = {}
 	end
 end
 
