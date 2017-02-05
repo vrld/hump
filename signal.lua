@@ -64,6 +64,13 @@ function Registry:emitPattern(p, ...)
 	end
 end
 
+function Registry:registerPattern(p, f)
+	for s in pairs(self) do
+		if s:match(p) then self:register(s, f) end
+	end
+	return f
+end
+
 function Registry:removePattern(p, ...)
 	for s in pairs(self) do
 		if s:match(p) then self:remove(s, ...) end
