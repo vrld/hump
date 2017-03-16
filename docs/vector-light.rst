@@ -62,6 +62,37 @@ Useful for debugging.
     print(vector.str(love.mouse.getPosition()))
 
 
+.. function:: vector.fromPolar(angle, radius)
+
+   :param number angle: Angle of the vector in radians.
+   :param number radius: Length of the vector.
+   :returns: ``x``, ``y``: The vector in cartesian coordinates.
+
+
+Convert polar coordinates to cartesian coordinates.
+The ``angle`` is measured against the vector (1,0), i.e., the x axis.
+
+**Examples**::
+
+    x,y = vector.polar(math.pi,10)
+
+
+.. function:: vector.toPolar(x, y)
+
+   :param  numbers x,y: A vector.
+   :returns: ``angle``, ``radius``: The vector in polar coordinates.
+
+Convert the vector to polar coordinates, i.e., the angle and the radius/lenth.
+
+**Example**::
+
+   -- complex multiplication
+   phase1, abs1 = vector.toPolar(re1, im1)
+   phase2, abs2 = vector.toPolar(re2, im2)
+
+   vector.fromPolar(phase1+phase2, abs1*abs2)
+
+
 .. function:: vector.mul(s, x,y)
 
    :param number s: A scalar.

@@ -35,6 +35,10 @@ local function new(x,y)
 end
 local zero = new(0,0)
 
+local function fromPolar(angle, radius)
+	return new(cos(angle) * radius, sin(angle) * radius)
+end
+
 local function isvector(v)
 	return type(v) == 'table' and type(v.x) == 'number' and type(v.y) == 'number'
 end
@@ -96,6 +100,10 @@ end
 function vector.permul(a,b)
 	assert(isvector(a) and isvector(b), "permul: wrong argument types (<vector> expected)")
 	return new(a.x*b.x, a.y*b.y)
+end
+
+function vector:toPolar()
+	return new(atan2(self.x, self.y), self:len())
 end
 
 function vector:len2()
@@ -187,5 +195,5 @@ end
 
 
 -- the module
-return setmetatable({new = new, isvector = isvector, zero = zero},
+return setmetatable({new = new, fromPolar = fromPolar, isvector = isvector, zero = zero},
 	{__call = function(_, ...) return new(...) end})

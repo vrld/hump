@@ -100,6 +100,21 @@ Create a new vector.
     a = vector(10,10)
 
 
+.. function:: vector.fromPolar(angle, radius)
+
+   :param number angle: Angle of the vector in radians.
+   :param number radius: Length of the vector.
+   :returns: The vector in cartesian coordinates.
+
+
+Create a new vector from polar coordinates.
+The ``angle`` is measured against the vector (1,0), i.e., the x axis.
+
+**Examples**::
+
+    a = vector.polar(math.pi,10)
+
+
 .. function:: vector.isvector(v)
 
    :param mixed v:  The variable to test.
@@ -176,6 +191,19 @@ Get length of the vector, i.e. ``math.sqrt(vec.x * vec.x + vec.y * vec.y)``.
 **Example**::
 
     distance = (a - b):len()
+
+
+.. function:: vector:toPolar()
+
+   :returns: The vector in polar coordinates (angle, radius).
+
+Convert the vector to polar coordinates, i.e., the angle and the radius/lenth.
+
+**Example**::
+
+   -- complex multiplication
+   p, q = a:toPolar(), b:toPolar()
+   c = vector(p.x+q.x, p.y*q.y)
 
 
 .. function:: vector:len2()

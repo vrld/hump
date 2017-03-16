@@ -78,6 +78,14 @@ local function len(x,y)
 	return sqrt(x*x + y*y)
 end
 
+local function fromPolar(angle, radius)
+	return cos(angle)*radius, sin(angle)*radius
+end
+
+local function toPolar(x, y)
+	return atan2(y,x), len(x,y)
+end
+
 local function dist2(x1,y1, x2,y2)
 	return len2(x1-x2, y1-y2)
 end
@@ -130,6 +138,9 @@ end
 -- the module
 return {
 	str = str,
+
+	fromPolar = fromPolar,
+	toPolar = toPolar,
 
 	-- arithmetic
 	mul    = mul,
