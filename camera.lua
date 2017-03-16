@@ -173,13 +173,13 @@ end
 
 -- camera scrolling utilities
 function camera:lockX(x, smoother, ...)
-	local dx, dy = (smoother or self.smoother)(x - self.x, self.y, ...)
+	local dx, _ = (smoother or self.smoother)(x - self.x, self.y, ...)
 	self.x = self.x + dx
 	return self
 end
 
 function camera:lockY(y, smoother, ...)
-	local dx, dy = (smoother or self.smoother)(self.x, y - self.y, ...)
+	local _, dy = (smoother or self.smoother)(self.x, y - self.y, ...)
 	self.y = self.y + dy
 	return self
 end
