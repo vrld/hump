@@ -15,7 +15,7 @@ worry about that.
     function love.load()
         camera = Camera(player.pos.x, player.pos.y)
     end
-    
+
     function love.update(dt)
         local dx,dy = player.x - cam.x, player.y - cam.y
         camera:move(dx/2, dy/2)
@@ -103,12 +103,12 @@ Returns ``camera.x, camera.y``.
 
     -- let the camera fly!
     local cam_dx, cam_dy = 0, 0
-    
+
     function love.mousereleased(x,y)
         local cx,cy = camera:position()
         dx, dy = x-cx, y-cy
     end
-    
+
     function love.update(dt)
         camera:move(dx * dt, dy * dt)
     end
@@ -452,6 +452,18 @@ prototype::
 where ``dx,dy`` is the offset the camera would move before smoothing and
 ``new_dx, new_dy`` is the offset the camera should move after smoothing.
 
+
+.. function:: camera:setLimits(left, top, width, height)
+
+   :param numbers left, top: Left-top corner of the world.
+   :param numbers width, height: Width and height of the world.
+
+It restricts the movement of your camera by the dimensions of the world.
+
+**Examples**::
+
+    -- lock on the world
+    camera:setLimits(0, 0, world.width, world.height)
 
 .. _movement-smoothers:
 
