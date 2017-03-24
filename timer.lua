@@ -132,7 +132,7 @@ Timer.tween = setmetatable({
 }, {
 
 -- register new tween
-__call = function(tween, self, len, subject, target, method, after, ...)
+__call = function(tween, self, len, subject, target, method, after, boundary, ...)
 	-- recursively collects fields that are defined in both subject and target into a flat list
 	local function tween_collect_payload(subject, target, out)
 		for k,v in pairs(target) do
@@ -161,6 +161,14 @@ __call = function(tween, self, len, subject, target, method, after, ...)
 		for _, info in ipairs(payload) do
 			local ref, key, delta = unpack(info)
 			ref[key] = ref[key] + delta * ds
+			if boundary then
+				if ref[key] < boundary[1] then
+					ref[key] = boundary[1]
+				end
+				if ref[key] > boundary[2] then
+					ref[key] = boundary[2]
+				end
+			end
 		end
 	end, after)
 end,
