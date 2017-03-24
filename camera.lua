@@ -61,7 +61,7 @@ end
 
 
 local function new(x,y, zoom, rot, smoother)
-	x,y  = x or love.graphics.getWidth()/2, y or love.graphics.getHeight()/2
+	x,y  = x or -love.graphics.getWidth()/2, y or -love.graphics.getHeight()/2
 	zoom = zoom or 1
 	rot  = rot or 0
 	smoother = smoother or camera.smooth.none() -- for locking, see below
@@ -102,42 +102,48 @@ function camera:zoomTo(zoom)
 	return self
 end
 
-function camera:attach(x,y,w,h, noclip)
-	x,y = x or 0, y or 0
-	w,h = w or love.graphics.getWidth(), h or love.graphics.getHeight()
-
-	self._sx,self._sy,self._sw,self._sh = love.graphics.getScissor()
-	if not noclip then
+function camera:attach(clip)
+	-- clip   nil or {x, y, w, h}
+	self.clip = clip
+	local x,y,w,h
+	if clip then
+		x,y,w,h = unpack(clip)
+		self._sx,self._sy,self._sw,self._sh = love.graphics.getScissor()
 		love.graphics.setScissor(x,y,w,h)
+	else
+		x,y,w,h = 0,0,love.graphics.getDimensions()
 	end
 
 	local cx,cy = x+w/2, y+h/2
 	love.graphics.push()
+	-- scale and rotate about the center of the screen
 	love.graphics.translate(cx, cy)
 	love.graphics.scale(self.scale)
 	love.graphics.rotate(self.rot)
+	love.graphics.translate(-cx, -cy)
 	love.graphics.translate(-self.x, -self.y)
 end
 
 function camera:detach()
 	love.graphics.pop()
-	love.graphics.setScissor(self._sx,self._sy,self._sw,self._sh)
+	if self.clip then
+		love.graphics.setScissor(self._sx,self._sy,self._sw,self._sh)
+	end
 end
 
 function camera:draw(...)
-	local x,y,w,h,noclip,func
+	local x,y,w,h,func,clip_region
 	local nargs = select("#", ...)
 	if nargs == 1 then
 		func = ...
 	elseif nargs == 5 then
 		x,y,w,h,func = ...
-	elseif nargs == 6 then
-		x,y,w,h,noclip,func = ...
+		clip_region = {x,y,w,h}
 	else
 		error("Invalid arguments to camera:draw()")
 	end
 
-	self:attach(x,y,w,h,noclip)
+	self:attach(clip_region)
 	func()
 	self:detach()
 end
