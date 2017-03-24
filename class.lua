@@ -55,6 +55,7 @@ local function clone(other)
 end
 
 local function new(class)
+	class = class or {}  -- class can be nil
 	-- mixins
 	class = class or {}  -- class can be nil
 	local inc = class.__includes or {}

@@ -61,6 +61,7 @@ end
 
 
 local function new(x,y, zoom, rot, smoother)
+	-- look at center of screen by default
 	x,y  = x or love.graphics.getWidth()/2, y or love.graphics.getHeight()/2
 	zoom = zoom or 1
 	rot  = rot or 0
@@ -113,6 +114,7 @@ function camera:attach(x,y,w,h, noclip)
 
 	local cx,cy = x+w/2, y+h/2
 	love.graphics.push()
+	-- scale and rotate about the center of the screen
 	love.graphics.translate(cx, cy)
 	love.graphics.scale(self.scale)
 	love.graphics.rotate(self.rot)
