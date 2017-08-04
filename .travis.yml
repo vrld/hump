@@ -1,0 +1,29 @@
+language: python
+sudo: false      # Use container-based infrastructure
+
+env:
+  - LUA="lua 5.1"
+  - LUA="lua 5.2"
+  - LUA="lua 5.3"
+  - LUA="luajit 2.0"
+  - LUA="luajit 2.1"
+
+before_install:
+  - pip install hererocks
+  - hererocks lua_install -r^ --$LUA
+  - export PATH=$PATH:$PWD/lua_install/bin # Add directory with all installed binaries to PATH
+
+install:
+  - luarocks install busted
+  - luarocks make # Install the rock, assuming there is a rockspec
+                  # in the root of the repository
+
+script:
+  - busted --verbose --coverage --output=TAP
+  
+ notifications:
+  recipients:
+    - hanathatsme@gmail.com
+  email:
+    on_success: always
+    on_failure: always
