@@ -18,12 +18,12 @@ dependencies = {
 build = {
   type = 'builtin',
   modules = {
-    ['hump.gamestate']                                	= 'gamestate.lua',
-    ['hump.camera']			                            = 'camera.lua',
-    ['hump.src.Engine']                              	= 'class.lua',
-    ['hump.src.Entity']                              	= 'signal.lua',
-    ['hump.src.EventManager']                        	= 'timer.lua',
-    ['hump.lib.middleclass']                         	= 'vector-light.lua',
-    ['hump.src.System']                              	= 'vector.lua',
+    ['hump.gamestate']            = 'gamestate.lua',
+    ['hump.camera']               = 'camera.lua',
+    ['hump.src.Engine']           = 'class.lua',
+    ['hump.src.Entity']           = 'signal.lua',
+    ['hump.src.EventManager']     = 'timer.lua',
+    ['hump.lib.middleclass']      = 'vector-light.lua',
+    ['hump.src.System']           = 'vector.lua',
   }
 }
