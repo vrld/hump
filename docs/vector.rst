@@ -329,7 +329,7 @@ Does not change the input vector, but creates a new vector.
 Rotate a vector in-place. Great to use on intermediate results.
 
 .. warning::
-    Yhis modifies the vector. If in doubt, use :func:`vector:rotated()`.
+    This modifies the vector. If in doubt, use :func:`vector:rotated()`.
 
 **Example**::
 
@@ -442,7 +442,7 @@ direction as the source vector, but has a magnitude smaller or equal to
 ``max_length``.
 
 .. warning::
-    Yhis modifies the vector. If in doubt, use :func:`vector:trimmed()`.
+    This modifies the vector. If in doubt, use :func:`vector:trimmed()`.
 
 
 **Example**::
