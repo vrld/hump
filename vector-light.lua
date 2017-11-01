@@ -79,7 +79,12 @@ local function len(x,y)
 end
 
 local function fromPolar(angle, radius)
+	radius = radius or 1
 	return cos(angle)*radius, sin(angle)*radius
+end
+
+local function random()
+	return fromPolar(math.random()*2*math.pi)
 end
 
 local function toPolar(x, y)
@@ -140,7 +145,8 @@ return {
 	str = str,
 
 	fromPolar = fromPolar,
-	toPolar = toPolar,
+	toPolar   = toPolar,
+	random    = random,
 
 	-- arithmetic
 	mul    = mul,

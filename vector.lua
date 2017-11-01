@@ -36,7 +36,12 @@ end
 local zero = new(0,0)
 
 local function fromPolar(angle, radius)
+	radius = radius or 1
 	return new(cos(angle) * radius, sin(angle) * radius)
+end
+
+local function random()
+	return fromPolar(math.random()*2*math.pi)
 end
 
 local function isvector(v)
@@ -195,5 +200,12 @@ end
 
 
 -- the module
-return setmetatable({new = new, fromPolar = fromPolar, isvector = isvector, zero = zero},
-	{__call = function(_, ...) return new(...) end})
+return setmetatable({
+	new       = new,
+	fromPolar = fromPolar,
+	random    = random,
+	isvector  = isvector,
+	zero      = zero
+}, {
+	__call = function(_, ...) return new(...) end
+})
