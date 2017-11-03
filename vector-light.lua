@@ -83,8 +83,18 @@ local function fromPolar(angle, radius)
 	return cos(angle)*radius, sin(angle)*radius
 end
 
-local function random()
-	return fromPolar(math.random()*2*math.pi)
+local function randomDirection(len_min, len_max)
+	len_min = len_min or 1
+	len_max = len_max or len_min
+
+	assert(len_max > 0, "randomDirection: len_max must be greater than zero")
+	assert(len_max >= len_min, "randomDirection: len_max must be greater than or equal to len_min")
+
+	local range = len_max - len_min
+	local rnd = math.random() * range
+
+	local x,y = fromPolar(math.random()*2*math.pi)
+	return x * (rnd + len_min), y * (rnd + len_min)
 end
 
 local function toPolar(x, y)
@@ -144,9 +154,9 @@ end
 return {
 	str = str,
 
-	fromPolar = fromPolar,
-	toPolar   = toPolar,
-	random    = random,
+	fromPolar       = fromPolar,
+	toPolar         = toPolar,
+	randomDirection = randomDirection,
 
 	-- arithmetic
 	mul    = mul,
