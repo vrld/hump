@@ -92,6 +92,22 @@ Convert the vector to polar coordinates, i.e., the angle and the radius/lenth.
 
    vector.fromPolar(phase1+phase2, abs1*abs2)
 
+.. function:: vector.randomDirection(len_min, len_max)
+
+ :param number len_min: Minimum length of the vector.
+ :param number len_max: Maximum length of the vector.
+ :returns: ``x``, ``y``: A vector pointing in a random direction with a random length between len_min and len_max.
+
+**Examples**::
+   -- length is a random value between 1 and 5
+   x,y = vector.randomDirection(1,5)
+
+   -- length is 1
+   x,y = vector.randomDirection()
+
+   -- length is 100
+   x,y = vector.randomDirection(100)
+
 
 .. function:: vector.mul(s, x,y)
 
