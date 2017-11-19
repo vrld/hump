@@ -44,6 +44,35 @@ An table-free version of :doc:`hump.vector <vector>`. Instead of a vector type,
         player.y = player.y + dt * player.vely
     end
 
+List of Functions
+-----------------
+
+* :func:`vector.str(x,y) <vector.str>`
+* :func:`vector.fromPolar(angle, radius) <vector.fromPolar>`
+* :func:`vector.toPolar(x, y) <vector.toPolar>`
+* :func:`vector.randomDirection(len_min, len_max) <vector.randomDirection>`
+* :func:`vector.mul(s, x,y) <vector.mul>`
+* :func:`vector.div(s, x,y) <vector.div>`
+* :func:`vector.add(x1,y1, x2,y2) <vector.add>`
+* :func:`vector.sub(x1,y1, x2,y2) <vector.sub>`
+* :func:`vector.permul(x1,y1, x2,y2) <vector.permul>`
+* :func:`vector.dot(x1,y1, x2,y2) <vector.dot>`
+* :func:`vector.cross(x1,y1, x2,y2) <vector.cross>`
+* :func:`vector.vector.det(x1,y1, x2,y2) <vector.vector.det>`
+* :func:`vector.eq(x1,y1, x2,y2) <vector.eq>`
+* :func:`vector.le(x1,y1, x2,y2) <vector.le>`
+* :func:`vector.lt(x1,y1, x2,y2) <vector.lt>`
+* :func:`vector.len(x,y) <vector.len>`
+* :func:`vector.len2(x,y) <vector.len2>`
+* :func:`vector.dist(x1,y1, x2,y2) <vector.dist>`
+* :func:`vector.dist2(x1,y1, x2,y2) <vector.dist2>`
+* :func:`vector.normalize(x,y) <vector.normalize>`
+* :func:`vector.rotate(phi, x,y) <vector.rotate>`
+* :func:`vector.perpendicular(x,y) <vector.perpendicular>`
+* :func:`vector.project(x,y, u,v) <vector.project>`
+* :func:`vector.mirror(x,y, u,v) <vector.mirror>`
+* :func:`vector.angleTo(ox,y, u,v) <vector.angleTo>`
+* :func:`vector.trim(max_length, x,y) <vector.trim>`
 
 Function Reference
 ------------------

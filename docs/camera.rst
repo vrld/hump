@@ -21,6 +21,30 @@ worry about that.
         camera:move(dx/2, dy/2)
     end
 
+List of Functions
+-----------------
+
+* :func:`Camera.new(x,y, zoom, rot) <Camera.new>`
+* :func:`camera:move(dx,dy) <camera:move>`
+* :func:`camera:lookAt(x,y) <camera:lookAt>`
+* :func:`camera:position() <camera:position>`
+* :func:`camera:rotate(angle) <camera:rotate>`
+* :func:`camera:rotateTo(angle) <camera:rotateTo>`
+* :func:`camera:zoom(mul) <camera:zoom>`
+* :func:`camera:zoomTo(zoom) <camera:zoomTo>`
+* :func:`camera:attach() <camera:attach>`
+* :func:`camera:detach() <camera:detach>`
+* :func:`camera:draw(func) <camera:draw>`
+* :func:`camera:worldCoords(x, y) <camera:worldCoords>`
+* :func:`camera:cameraCoords(x, y) <camera:cameraCoords>`
+* :func:`camera:mousePosition() <camera:mousePosition>`
+* :func:`camera:lockX(x, smoother, ...) <camera:lockX>`
+* :func:`camera:lockY(y, smoother, ...) <camera:lockY>`
+* :func:`camera:lockPosition(x,y, smoother, ...) <camera:lockPosition>`
+* :func:`camera:lockWindow(x,y, x_min, x_max, y_min, y_max, smoother, ...) <camera:lockWindow>`
+* :func:`Camera.smooth.none() <Camera.smooth.none>`
+* :func:`Camera.smooth.linear(speed) <Camera.smooth.linear>`
+* :func:`Camera.smooth.damped(stiffness) <Camera.smooth.damped>`
 
 Function Reference
 ------------------

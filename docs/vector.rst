@@ -41,6 +41,33 @@ You can access the individual coordinates by ``vec.x`` and ``vec.y``.
         player.position = player.position + player.velocity * dt
     end
 
+List of Functions
+-----------------
+
+* :func:`vector.new(x,y) <vector.new>`
+* :func:`vector.fromPolar(angle, radius) <vector.fromPolar>`
+* :func:`vector.randomDirection(len_min, len_max) <vector.randomDirection>`
+* :func:`vector.isvector(v) <vector.isvector>`
+* :func:`vector:clone() <vector:clone>`
+* :func:`vector:unpack() <vector:unpack>`
+* :func:`vector:permul(other) <vector:permul>`
+* :func:`vector:len() <vector:len>`
+* :func:`vector:toPolar() <vector:toPolar>`
+* :func:`vector:len2() <vector:len2>`
+* :func:`vector:dist(other) <vector:dist>`
+* :func:`vector:dist2(other) <vector:dist2>`
+* :func:`vector:normalized() <vector:normalized>`
+* :func:`vector:normalizeInplace() <vector:normalizeInplace>`
+* :func:`vector:rotated(angle) <vector:rotated>`
+* :func:`vector:rotateInplace(angle) <vector:rotateInplace>`
+* :func:`vector:perpendicular() <vector:perpendicular>`
+* :func:`vector:projectOn(v) <vector:projectOn>`
+* :func:`vector:mirrorOn(v) <vector:mirrorOn>`
+* :func:`vector:cross(other) <vector:cross>`
+* :func:`vector:angleTo(other) <vector:angleTo>`
+* :func:`vector:trimmed(max_length) <vector:trimmed>`
+* :func:`vector:trimInplace(max_length) <vector:trimInplace>`
+
 
 Vector arithmetic
 -----------------

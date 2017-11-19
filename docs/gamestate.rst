@@ -42,6 +42,17 @@ A typical game could consist of a menu-state, a level-state and a game-over-stat
         Gamestate.switch(menu)
     end
 
+List of Functions
+-----------------
+
+* :func:`Gamestate.new() <Gamestate.new>`
+* :func:`Gamestate.switch(to, ...) <Gamestate.switch>`
+* :func:`Gamestate.Gamestate.current() <Gamestate.Gamestate.current>`
+* :func:`Gamestate.push(to, ...) <Gamestate.push>`
+* :func:`Gamestate.pop(...) <Gamestate.pop>`
+* :func:`Gamestate.<callback>(...) <Gamestate.<callback>>`
+* :func:`Gamestate.registerEvents([callbacks]) <Gamestate.registerEvents>`
+
 
 .. _callbacks:
 
