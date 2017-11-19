@@ -65,7 +65,7 @@ Useful for debugging.
 .. function:: vector.fromPolar(angle, radius)
 
    :param number angle: Angle of the vector in radians.
-   :param number radius: Length of the vector.
+   :param number radius: Length of the vector (optional, default = 1).
    :returns: ``x``, ``y``: The vector in cartesian coordinates.
 
 
@@ -94,19 +94,17 @@ Convert the vector to polar coordinates, i.e., the angle and the radius/lenth.
 
 .. function:: vector.randomDirection(len_min, len_max)
 
- :param number len_min: Minimum length of the vector.
- :param number len_max: Maximum length of the vector.
- :returns: ``x``, ``y``: A vector pointing in a random direction with a random length between len_min and len_max.
+   :param number len_min: Minimum length of the vector (optional, default = 1).
+   :param number len_max: Maximum length of the vector (optional, default = ``len_min``).
+   :returns: ``x``, ``y``: A vector pointing in a random direction with a random length between ``len_min`` and ``len_max``.
+
+Sample a vector with random direction and (optional) length.
 
 **Examples**::
-   -- length is a random value between 1 and 5
-   x,y = vector.randomDirection(1,5)
-
-   -- length is 1
-   x,y = vector.randomDirection()
-
-   -- length is 100
-   x,y = vector.randomDirection(100)
+   
+   x,y = vector.randomDirection()    -- length is 1
+   x,y = vector.randomDirection(1,5) -- length is a random value between 1 and 5
+   x,y = vector.randomDirection(100) -- length is 100
 
 
 .. function:: vector.mul(s, x,y)
@@ -433,7 +431,7 @@ i.e. the function returns the angle to the coordinate system.
 .. function:: vector.trim(max_length, x,y)
 
    :param number max_length: Maximum allowed length of the vector.
-   :param numbers x,y:  Vector to trum.
+   :param numbers x,y:  Vector to trim.
    :returns: The trimmed vector.
 
 Trim the vector to ``max_length``, i.e. return a vector that points in the same
