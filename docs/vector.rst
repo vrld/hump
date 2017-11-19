@@ -103,7 +103,7 @@ Create a new vector.
 .. function:: vector.fromPolar(angle, radius)
 
    :param number angle: Angle of the vector in radians.
-   :param number radius: Length of the vector.
+   :param number radius: Length of the vector (optional, default = 1).
    :returns: The vector in cartesian coordinates.
 
 
@@ -116,15 +116,17 @@ The ``angle`` is measured against the vector (1,0), i.e., the x axis.
 
 .. function:: vector.randomDirection(len_min, len_max)
 
-   :param number len_min: Minimum length of the vector.
-   :param number len_max: Maximum length of the vector.
-   :returns: A vector pointing in a random direction with a random length between len_min and len_max.
+   :param number len_min: Minimum length of the vector (optional, default = 1).
+   :param number len_max: Maximum length of the vector (optional, default = ``len_min``).
+   :returns: A vector pointing in a random direction with a random length between ``len_min`` and ``len_max``.
 
 **Examples**::
 
-    rnd = vector.randomDirection(1,5) -- length is a random value between 1 and 5
     rnd = vector.randomDirection()    -- length is 1
     rnd = vector.randomDirection(100) -- length is 100
+    rnd = vector.randomDirection(1,5) -- length is a random value between 1 and 5
+
+Sample a vector with random direction and (optional) length.
 
 .. function:: vector.isvector(v)
 
