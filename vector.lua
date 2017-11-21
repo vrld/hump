@@ -46,7 +46,7 @@ local function randomDirection(len_min, len_max)
 
 	assert(len_max > 0, "len_max must be greater than zero")
 	assert(len_max >= len_min, "len_max must be greater than or equal to len_min")
-	
+
 	return fromPolar(math.random() * 2*math.pi,
 	                 math.random() * (len_max-len_min) + len_min)
 end
@@ -170,20 +170,25 @@ end
 function vector:projectOn(v)
 	assert(isvector(v), "invalid argument: cannot project vector on " .. type(v))
 	-- (self * v) * v / v:len2()
-	local s = (self.x * v.x + self.y * v.y) / (v.x * v.x + v.y * v.y)
+	local s = (self:dot(v)) / (self:len2())
 	return new(s * v.x, s * v.y)
 end
 
 function vector:mirrorOn(v)
 	assert(isvector(v), "invalid argument: cannot mirror vector on " .. type(v))
 	-- 2 * self:projectOn(v) - self
-	local s = 2 * (self.x * v.x + self.y * v.y) / (v.x * v.x + v.y * v.y)
+	local s = 2 * (self:dot(v)) / (self:len2())
 	return new(s * v.x - self.x, s * v.y - self.y)
 end
 
 function vector:cross(v)
 	assert(isvector(v), "cross: wrong argument types (<vector> expected)")
 	return self.x * v.y - self.y * v.x
+end
+
+function vector:dot(v)
+	assert(isvector(v), "dot: wrong argument types (<vector> expected)")
+	return self.x * v.x + self.y * v.y
 end
 
 -- ref.: http://blog.signalsondisplay.com/?p=336
