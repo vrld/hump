@@ -170,14 +170,14 @@ end
 function vector:projectOn(v)
 	assert(isvector(v), "invalid argument: cannot project vector on " .. type(v))
 	-- (self * v) * v / v:len2()
-	local s = (self:dot(v)) / (self:len2())
+	local s = (self:dot(v)) / (v:len2())
 	return new(s * v.x, s * v.y)
 end
 
 function vector:mirrorOn(v)
 	assert(isvector(v), "invalid argument: cannot mirror vector on " .. type(v))
 	-- 2 * self:projectOn(v) - self
-	local s = 2 * (self:dot(v)) / (self:len2())
+	local s = 2 * (self:dot(v)) / (v:len2())
 	return new(s * v.x - self.x, s * v.y - self.y)
 end
 
