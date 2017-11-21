@@ -1,7 +1,8 @@
-HUMP - Helper Utilities for Massive Progression
+hump - Helper Utilities for Massive Progression
 ===============================================
 
-__HUMP__ is a small collection of tools for developing games with L&Ouml;VE.
+**hump** is a small collection of tools for developing games with L&Ouml;VE.
+[![Build Status](https://travis-ci.org/vrld/hump.svg?branch=master)](https://travis-ci.org/vrld/hump)
 
 Contents:
 ------------

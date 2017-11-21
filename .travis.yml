@@ -1,0 +1,38 @@
+dist: precise
+sudo: false      # Use container-based infrastructure
+language: python
+
+git:
+  depth: 4
+
+#Testing with lastest stable version of LUAJIT
+env:
+  - LUA_RUNTIME="luajit"
+    LUA_VERSION="2.0.5"
+  #- LUA_RUNTIME="luajit"
+  #  LUA_VERSION="2.1"
+
+before_install:
+  - pip install hererocks
+  - hererocks lua_installations/$LUA_RUNTIME$LUA_VERSION/ --luarocks ^ --$LUA_RUNTIME $LUA_VERSION
+  - export PATH=$PATH:$PWD/lua_installations/$LUA_RUNTIME$LUA_VERSION/bin
+
+before_script:
+  - luarocks install busted
+  - busted --version
+
+script:
+  - busted --output=TAP  #default utfTerminal
+
+#Checks if Luajit and luarocks are already installed
+#Comment out to reinstall or if changing versions
+cache:
+  directories:
+    - $PWD/lua_installations
+
+# Can add email notification here
+#notifications:
+  #email:
+    #recipients:
+      #- email@here.com
+    #on_failure: always   #default always

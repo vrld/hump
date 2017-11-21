@@ -26,6 +26,19 @@ easier to produce `juicy games <http://www.youtube.com/watch?v=Fy0aCDmgnxg>`_.
         Timer.update(dt)
     end
 
+List of Functions
+-----------------
+
+* :func:`Timer.new() <Timer.new>`
+* :func:`Timer.after(delay, func) <Timer.after>`
+* :func:`Timer.script(func) <Timer.script>`
+* :func:`Timer.every(delay, func, count) <Timer.every>`
+* :func:`Timer.during(delay, func, after) <Timer.during>`
+* :func:`Timer.cancel(handle) <Timer.cancel>`
+* :func:`Timer.clear() <Timer.clear>`
+* :func:`Timer.update(dt) <Timer.update>`
+* :func:`Timer.tween(duration, subject, target, method, after, ...) <Timer.tween>`
+
 Function Reference
 ------------------
 
@@ -152,7 +165,7 @@ wait is: ``wait(delay)``.
     end)
 
 
-.. function:: Timer.every(delay, func[, count])
+.. function:: Timer.every(delay, func, count)
 
    :param number delay: Number of seconds between two consecutive function calls.
    :param function func: The function to be called periodically.
@@ -184,7 +197,7 @@ or :func:`Timer.cancel` or :func:`Timer.clear` is called on the timer instance.
     end)
 
 
-.. function:: Timer.during(delay, func[, after])
+.. function:: Timer.during(delay, func, after)
 
    :param number delay: Number of seconds the func will be called.
    :param function func: The function to be called on ``update(dt)``.
@@ -303,7 +316,7 @@ Update timers and execute functions if the deadline is reached. Call in
    :param string method: Tweening method, defaults to 'linear' (:ref:`see here
                          <tweening-methods>`, optional).
    :param function after: Function to execute after the tween has finished
-                          (optiona).
+                          (optional).
    :param mixed ...:  Additional arguments to the *tweening* function.
    :returns: A timer handle.
 

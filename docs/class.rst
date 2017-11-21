@@ -29,11 +29,19 @@ Implements `class commons <https://github.com/bartbes/Class-Commons>`_.
         love.graphics.draw(self.img, self.pos.x, self.pos.y)
     end
 
+List of Functions
+-----------------
+
+* :func:`Class.new() <Class.new>`
+* :func:`class.init(object, ...) <class.init>`
+* :func:`Class:include(other) <Class:include>`
+* :func:`class:clone() <class:clone>`
+
 Function Reference
 ------------------
 
 .. function:: Class.new()
-.. function:: Class.new({init = constructor, __includes = parents, ...})
+              Class.new({init = constructor, __includes = parents, ...})
 
    :param function constructor:  Class constructor. Can be accessed with ``theclass.init(object, ...)``. (optional)
    :param class or table of classes parents: Classes to inherit from. Can either be a single class or a table of classes. (optional)
