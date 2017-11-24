@@ -72,7 +72,7 @@ global registry. Likewise, the global registry does not affect the instance.
 .. note::
     Unlike the default one, signal registry instances use the colon-syntax,
     i.e., you need to call ``instance:emit('foo', 23)`` instead of
-    ``Signal.mit('foo', 23)``.
+    ``Signal.emit('foo', 23)``.
 
 **Example**::
 
