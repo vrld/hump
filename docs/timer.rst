@@ -470,7 +470,7 @@ You can add custom interpolation methods by adding them to the `tween` table::
 Access the your method like you would the predefined ones. You can even use the
 modyfing prefixes::
 
-    Timer.tween(5, 'in-out-sqrt', circle, {radius = 50})
+    Timer.tween(5, circle, {radius = 50}, 'in-out-sqrt')
 
 You can also invert and chain functions::
 
