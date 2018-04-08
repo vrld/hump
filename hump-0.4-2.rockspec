@@ -1,14 +1,20 @@
 package = "hump"
-version = "scm-1"
+version = "0.4-2"
 source = {
    url = "git://github.com/vrld/hump"
 }
 description = {
    summary = "Lightweight game development utilities",
-   detailed = "hump is a set of lightweight helpers for the awesome LÖVE game framework. It will help to get you over the initial hump when starting to build a new game.",
+   detailed = [[Collection of independent components that implement common task needed in games:
+  - Gamestates that can stack on each other (e.g., for menus)
+  - Timers and Tweens with thread-like scripting support
+  - Cameras with camera movement control (locking, smooth follow, etc)
+  - 2D vector math
+  - Signals and Slots
+  - Prototype-based OOP helper
+  ]],
    homepage = "https://hump.readthedocs.io",
    license = "MIT",
-   --labels={"love","game","statemachine"} -- only since luarocks 3.0
 }
 dependencies = {
   "lua >= 5.1"
@@ -24,5 +30,4 @@ build = {
       ["hump.vector"] = "vector.lua",
       ["hump.vector-light"] = "vector-light.lua"
    },
-   copy_directories = {"docs"}
 }
