@@ -32,7 +32,14 @@ local function _nothing_() end
 function Timer:update(dt)
 	local to_remove = {}
 
+	local handles = {}
+	local len = 0
 	for handle in pairs(self.functions) do
+		len = len + 1
+		handles[len] = handle
+	end
+
+	for _, handle in ipairs(handles) do
 		-- handle: {
 		--   time = <number>,
 		--   after = <function>,
