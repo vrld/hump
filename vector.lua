@@ -201,6 +201,16 @@ function vector:angleTo(other)
 	return atan2(self.y, self.x)
 end
 
+function vector:distTo(v)
+	assert(isvector(v), "distTo: wrong argument types (<vector> expected)")
+	return vector.dist(self, v)
+end
+
+function vector:dist2To(v)
+	assert(isvector(v), "distTo: wrong argument types (<vector> expected)")
+	return vector.dist2(self, v)
+end
+
 function vector:trimmed(maxLen)
 	return self:clone():trimInplace(maxLen)
 end
@@ -212,7 +222,9 @@ return setmetatable({
 	fromPolar       = fromPolar,
 	randomDirection = randomDirection,
 	isvector        = isvector,
-	zero            = zero
+	zero            = zero,
+	dist            = vector.dist,
+	dist2           = vector.dist2
 }, {
 	__call = function(_, ...) return new(...) end
 })
