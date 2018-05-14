@@ -78,7 +78,6 @@ end
 local all_callbacks = { 'draw', 'errorhandler', 'update' }
 for k in pairs(love.handlers) do
 	all_callbacks[#all_callbacks+1] = k
-  print(k)
 end
 
 function GS.registerEvents(callbacks)
