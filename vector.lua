@@ -97,6 +97,11 @@ function vector.__div(a,b)
 	return new(a.x / b, a.y / b)
 end
 
+function vector.__idiv(a,b)
+	assert(isvector(a) and type(b) == "number", "wrong argument types (expected <vector> / <number>)")
+	return new(a.x // b, a.y // b)
+end
+
 function vector.__eq(a,b)
 	return a.x == b.x and a.y == b.y
 end
