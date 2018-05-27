@@ -53,6 +53,7 @@ List of Functions
 * :func:`vector.randomDirection(len_min, len_max) <vector.randomDirection>`
 * :func:`vector.mul(s, x,y) <vector.mul>`
 * :func:`vector.div(s, x,y) <vector.div>`
+* :func:`vector.idiv(s, x,y) <vector.idiv>`
 * :func:`vector.add(x1,y1, x2,y2) <vector.add>`
 * :func:`vector.sub(x1,y1, x2,y2) <vector.sub>`
 * :func:`vector.permul(x1,y1, x2,y2) <vector.permul>`
@@ -163,7 +164,24 @@ chain operations (see example).
 
 **Example**::
 
+    x,y = vec.div(self.zoom, vec.sub(x,y, w/2,h/2))
     x,y = vec.div(self.zoom, x-w/2, y-h/2)
+
+
+.. function:: vector.idiv(s, x,y)
+
+   :param number s: A scalar.
+   :param  numbers x,y: A vector.
+   :returns: ``x//s, y//s``.
+
+
+Computes integer division ``x//s,y//s`` (only Lua 5.3 and up). The order of
+arguments is chosen so that it's possible to chain operations (see example).
+
+**Example**::
+
+    i,k = vec.idiv(grid.cellsize, x,y)
+    i,k = vec.idiv(grid.cellsize, love.mouse.getPosition())
 
 
 .. function:: vector.add(x1,y1, x2,y2)

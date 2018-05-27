@@ -86,7 +86,9 @@ Vector arithmetic
 ``vector * number = vector``
     Scalar multiplication/scaling: \\(s \\cdot  (x,y) = (s\\cdot x, s\\cdot y)\\)
 ``vector / number = vector``
-    Scalar multiplication/scaling: \\((a,b) / s = (a/s, b/s)\\).
+    Scalar division: \\((a,b) / s = (a/s, b/s)\\).
+``vector // number = vector``
+    Scalar integer division (only Lua 5.3 and up): \\((a,b) // s = (a//s, b//s)\\).
 
 Common relations are also defined:
 
