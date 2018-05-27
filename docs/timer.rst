@@ -223,7 +223,7 @@ seconds have passed.
 ::
 
     -- shake the camera for one second
-    local orig_x, orig_y = camera:pos()
+    local orig_x, orig_y = camera:position()
     Timer.during(1, function()
         camera:lookAt(orig_x + math.random(-2,2), orig_y + math.random(-2,2))
     end, function()
