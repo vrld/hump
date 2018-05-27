@@ -47,7 +47,7 @@ List of Functions
 
 * :func:`Gamestate.new() <Gamestate.new>`
 * :func:`Gamestate.switch(to, ...) <Gamestate.switch>`
-* :func:`Gamestate.Gamestate.current() <Gamestate.Gamestate.current>`
+* :func:`Gamestate.current() <Gamestate.current>`
 * :func:`Gamestate.push(to, ...) <Gamestate.push>`
 * :func:`Gamestate.pop(...) <Gamestate.pop>`
 * :func:`Gamestate.<callback>(...) <Gamestate.<callback>>`
@@ -208,7 +208,7 @@ if, and only if, the state was not yet inialized and finally call
 
 
 
-.. function:: Gamestate.Gamestate.current()
+.. function:: Gamestate.current()
 
    :returns: The active gamestate.
 
