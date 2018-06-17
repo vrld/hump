@@ -29,17 +29,7 @@ Timer.__index = Timer
 
 local function _nothing_() end
 
-function Timer:update(dt)
-	local to_remove = {}
-
-	-- timers may create new timers, which leads to undefined behavior
-	-- in pairs() - so we need to put them in a different table first
-	local to_update = {}
-	for handle in pairs(self.functions) do
-		to_update[handle] = handle
-	end
-
-	for handle in pairs(to_update) do
+local function updateTimerHandle(handle, dt)
 		-- handle: {
 		--   time = <number>,
 		--   after = <function>,
@@ -47,7 +37,6 @@ function Timer:update(dt)
 		--   limit = <number>,
 		--   count = <number>,
 		-- }
-
 		handle.time = handle.time + dt
 		handle.during(dt, math.max(handle.limit - handle.time, 0))
 
@@ -59,14 +48,23 @@ function Timer:update(dt)
 			handle.time = handle.time - handle.limit
 			handle.count = handle.count - 1
 		end
+end
 
-		if handle.count == 0 then
-			table.insert(to_remove, handle)
-		end
+function Timer:update(dt)
+	-- timers may create new timers, which leads to undefined behavior
+	-- in pairs() - so we need to put them in a different table first
+	local to_update = {}
+	for handle in pairs(self.functions) do
+		to_update[handle] = handle
 	end
 
-	for i = 1, #to_remove do
-		self.functions[to_remove[i]] = nil
+	for handle in pairs(to_update) do
+		if self.functions[handle] then
+			updateTimerHandle(handle, dt)
+			if handle.count == 0 then
+				self.functions[handle] = nil
+			end
+		end
 	end
 end
 
