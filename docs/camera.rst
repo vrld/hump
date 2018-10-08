@@ -17,7 +17,7 @@ worry about that.
     end
     
     function love.update(dt)
-        local dx,dy = player.x - cam.x, player.y - cam.y
+        local dx,dy = player.x - camera.x, player.y - camera.y
         camera:move(dx/2, dy/2)
     end
 
