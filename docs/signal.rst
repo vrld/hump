@@ -62,7 +62,7 @@ Function Reference
    :returns: A new signal registry.
 
 Creates a new signal registry that is independent of the default registry: It
-will manage it's own list of signals and does not in any way affect the the
+will manage its own list of signals and does not in any way affect the the
 global registry. Likewise, the global registry does not affect the instance.
 
 .. note::
