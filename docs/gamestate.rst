@@ -82,7 +82,7 @@ callbacks for initalizing, entering and leaving a state:
     Draw on the screen. Called every frame.
 
 ``focus()``
-    Called if the window gets or looses focus.
+    Called if the window gets or loses focus.
 
 ``keypressed()``
     Triggered when a key is pressed.
