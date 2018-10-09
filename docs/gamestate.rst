@@ -106,7 +106,7 @@ callbacks for initalizing, entering and leaving a state:
     Called on quitting the game. Only called on the active gamestate.
 
 When using :func:`Gamestate.registerEvents`, all these callbacks will be called by the
-corresponding LÖVE callbacks and receive receive the same arguments (e.g.
+corresponding LÖVE callbacks and receive the same arguments (e.g.
 ``state:update(dt)`` will be called by ``love.update(dt)``).
 
 **Example**::
