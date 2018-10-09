@@ -5,7 +5,7 @@ hump.gamestate
 
     Gamestate = require "hump.gamestate"
 
-A gamestate encapsulates independent data an behaviour in a single table.
+A gamestate encapsulates independent data and behaviour in a single table.
 
 A typical game could consist of a menu-state, a level-state and a game-over-state.
 
