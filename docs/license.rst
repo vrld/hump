@@ -1,7 +1,7 @@
 License
 =======
 
-Copyright (c) 2011-2015 Matthias Richter
+Copyright (c) 2011-2018 Matthias Richter
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
