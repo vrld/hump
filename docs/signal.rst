@@ -11,7 +11,7 @@ A simple yet effective implementation of `Signals and Slots
 bound to signals. When a *signal* is *emitted*, all registered functions will
 be invoked. Simple as that.
 
-``hump.signal`` makes things a little more interesing by allowing to emit all
+``hump.signal`` makes things a little more interesting by allowing to emit all
 signals that match a `Lua string pattern
 <http://www.lua.org/manual/5.1/manual.html#5.4.1>`_.
 
@@ -62,7 +62,7 @@ Function Reference
    :returns: A new signal registry.
 
 Creates a new signal registry that is independent of the default registry: It
-will manage it's own list of signals and does not in any way affect the the
+will manage its own list of signals and does not in any way affect the the
 global registry. Likewise, the global registry does not affect the instance.
 
 .. note::
