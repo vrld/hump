@@ -20,6 +20,12 @@ worry about that.
         local dx,dy = player.x - camera.x, player.y - camera.y
         camera:move(dx/2, dy/2)
     end
+    
+    function love.draw()
+        camera:attach()
+        -- do your drawing here
+        camera:detach()
+    end
 
 List of Functions
 -----------------
