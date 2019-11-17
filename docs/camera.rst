@@ -38,9 +38,9 @@ List of Functions
 * :func:`camera:rotateTo(angle) <camera:rotateTo>`
 * :func:`camera:zoom(mul) <camera:zoom>`
 * :func:`camera:zoomTo(zoom) <camera:zoomTo>`
-* :func:`camera:attach() <camera:attach>`
+* :func:`camera:attach(x, y, width, height, noclip) <camera:attach>`
 * :func:`camera:detach() <camera:detach>`
-* :func:`camera:draw(func) <camera:draw>`
+* :func:`camera:draw([x, y, width, height, noclip], func) <camera:draw>`
 * :func:`camera:worldCoords(x, y) <camera:worldCoords>`
 * :func:`camera:cameraCoords(x, y) <camera:cameraCoords>`
 * :func:`camera:mousePosition() <camera:mousePosition>`
@@ -213,7 +213,10 @@ Set zoom: ``camera.scale = zoom``.
     camera:zoomTo(1) -- reset zoom
 
 
-.. function:: camera:attach()
+.. function:: camera:attach(x, y, width, height, noclip)
+
+    :param numbers x,y,width,height: Defines a custom viewport, it defaults to 0, 0, love.graphics.getWidth/Height (optional).
+    :param boolean noclip: Whether to cut the outside of the viewport or not, it defaults to true (optional).
 
 Start looking through the camera.
 
@@ -246,9 +249,10 @@ Stop looking through the camera.
     end
 
 
-.. function:: camera:draw(func)
+.. function:: camera:draw([x, y, width, height, noclip], func)
 
    :param function func:  Drawing function to be wrapped.
+   :param numbers x,y,width,height,noclip: Same as in camera:attach (optional).
 
 Wrap a function between a ``camera:attach()``/``camera:detach()`` pair.
 Equivalent to::
