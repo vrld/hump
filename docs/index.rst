@@ -13,7 +13,7 @@ You want to write games, not boilerplate!
 **hump**'s components are so loosely coupled that every component is
 independent of the others.
 You can choose what you need and leave the rest behind.
-hump wont judge.
+hump won't judge.
 
 **hump** just wants to make you happy.
 
@@ -46,7 +46,7 @@ Using `Git <http://git-scm.com>`_, you can clone the project by running:
 
     git clone git://github.com/vrld/hump
 
-Once done, tou can check for updates by running
+Once done, you can check for updates by running
 
     git pull
 
