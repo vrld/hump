@@ -28,6 +28,7 @@ local Timer = {}
 Timer.__index = Timer
 
 local function _nothing_() end
+local unpack = unpack or table.unpack
 
 local function updateTimerHandle(handle, dt)
 		-- handle: {
