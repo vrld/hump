@@ -128,6 +128,10 @@ local function project(x,y, u,v)
 	return s*u, s*v
 end
 
+local function reject(x,y, u,v)
+	return sub(x,y, project(x,y, u,v))
+end
+
 local function mirror(x,y, u,v)
 	local s = 2 * (x*u + y*v) / (u*u + v*v)
 	return s*u - x, s*v - y
@@ -180,6 +184,7 @@ return {
 	rotate        = rotate,
 	perpendicular = perpendicular,
 	project       = project,
+	reject        = reject,
 	mirror        = mirror,
 	trim          = trim,
 	angleTo       = angleTo,
