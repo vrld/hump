@@ -182,8 +182,8 @@ old one::
     a = vector(1,1) -- create vector
     b = a           -- b references a
     c = a:clone()   -- c is a copy of a
-    b.x = 0         -- changes a,b and c
-    print(a,b,c)    -- prints '(1,0), (1,0), (1,1)'
+    b.x = 0         -- changes a, b and c
+    print(a,b,c)    -- prints '(0,1), (0,1), (1,1)'
 
 **Example**::
 
