@@ -82,7 +82,7 @@ local function new(class)
 end
 
 -- interface for cross class-system compatibility (see https://github.com/bartbes/Class-Commons).
-if class_commons ~= false and not common then
+if class_commons and not common then
 	common = {}
 	function common.class(name, prototype, parent)
 		return new{__includes = {prototype, parent}}
